@@ -1,0 +1,79 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/dev/Leticia
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+<<<<<<< HEAD
+=======
+# Gradle
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# Local configuration
+/local.properties
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+captures/
+
+# Logs
+*.log
+
+# Generated files
+.externalNativeBuild/
+.cxx/
+
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services / Firebase
+google-services.json
+firebase-debug.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Crashlytics / Fabric
+crashlytics-build.properties
+crashlytics.properties
+
+# Lint
+lint/intermediates/
+lint/generated/
+
+# NDK / CMake
+.externalNativeBuild/
+.cxx/
+
+# Kotlin/Java temp
+*.class
+*.jar
+*.war
+*.ear
+
+# Misc
+*.orig
+>>>>>>> 785c243fed661c3257eb266a3c3884318d9e1fb3
+=======
+>>>>>>> origin/dev/Leticia
