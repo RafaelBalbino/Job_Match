@@ -12,9 +12,9 @@
     <string name="botao_anexo">Anexo</string>
 
     <string name="criterios_senha_lista"><![CDATA[
-• Pelo menos 8 caracteres<br/>
-• Pelo menos uma letra maiúscula<br/>
-• Pelo menos um número<br/>
+• Pelo menos 8 caracteres\n
+• Pelo menos uma letra maiúscula\n
+• Pelo menos um número\n
 • Pelo menos um símbolo (ex: !, #, ?)
     ]]></string>
 
