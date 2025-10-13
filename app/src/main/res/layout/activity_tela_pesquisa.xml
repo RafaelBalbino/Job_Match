@@ -19,7 +19,11 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+<<<<<<< HEAD
         app:layout_constraintVertical_bias="0.229" />
+=======
+        app:layout_constraintVertical_bias="0.183" />
+>>>>>>> b442f4f9085b9f7c5ba414030884792ea7b17add
 
     <LinearLayout
         android:layout_width="419dp"

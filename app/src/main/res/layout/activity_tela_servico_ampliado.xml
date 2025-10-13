@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".telaServicoAmpliado">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="19dp"
+            android:layout_height="17dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/ic_estrela_24"
+            tools:layout_editor_absoluteX="229dp"
+            tools:layout_editor_absoluteY="348dp" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="429dp"
+            android:layout_height="328dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/imagem_montagem_computadores"
+            tools:layout_editor_absoluteX="-9dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Montagem de Computador"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="346dp" />
+
+        <EditText
+            android:id="@+id/editTextTextMultiLine"
+            android:layout_width="274dp"
+            android:layout_height="151dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            tools:layout_editor_absoluteX="21dp"
+            tools:layout_editor_absoluteY="433dp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="47dp"
+            android:layout_height="22dp"
+            android:text="Sobre"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="21dp"
+            tools:layout_editor_absoluteY="402dp" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fazer Pedido"
+            tools:layout_editor_absoluteX="40dp"
+            tools:layout_editor_absoluteY="629dp" />
+
+        <Button
+            android:id="@+id/button8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="#00FFFFFF"
+            app:icon="@drawable/ic_voltar_24"
+            app:iconSize="25dp"
+            app:iconTint="@color/secundaria_variante"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5.0"
+            tools:layout_editor_absoluteX="255dp"
+            tools:layout_editor_absoluteY="348dp" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="106dp"
+            android:layout_height="19dp"
+            android:text="(500 avaliações)"
+            tools:layout_editor_absoluteX="289dp"
+            tools:layout_editor_absoluteY="348dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
