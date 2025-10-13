@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TelaMeuPerfil">
+
+  <LinearLayout
+      android:layout_width="414dp"
+      android:layout_height="296dp"
+      android:background="#18B49D"
+      android:backgroundTint="#18B49D"
+      android:orientation="vertical"
+      app:layout_constraintBottom_toTopOf="@+id/img_logo2"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.555"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.0"></LinearLayout>
+
+  <TextView
+      android:id="@+id/textView54"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Fulano de Tal"
+      android:textColor="@color/branco"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      tools:layout_editor_absoluteX="145dp"
+      tools:layout_editor_absoluteY="183dp" />
+
+  <TextView
+      android:id="@+id/textView53"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="fulanodetal@hotmail.com"
+      android:textColor="@color/branco"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      tools:layout_editor_absoluteX="88dp"
+      tools:layout_editor_absoluteY="244dp" />
+
+  <ImageView
+      android:id="@+id/imageView13"
+      android:layout_width="54dp"
+      android:layout_height="35dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.044"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.045"
+      app:srcCompat="@drawable/ic_voltar_24"
+      app:tint="#211C73" />
+
+  <ImageView
+      android:id="@+id/imageView12"
+      android:layout_width="127dp"
+      android:layout_height="117dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.086"
+      app:srcCompat="@drawable/circle_white"
+      app:tint="#8E8E8E" />
+
+  <TextView
+      android:id="@+id/textView50"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Informações do seu documento de identidade e ocupação profissional."
+      android:textColor="@color/cinza_escuro"
+      android:textSize="16sp"
+      android:textStyle="bold"
+      tools:layout_editor_absoluteX="11dp"
+      tools:layout_editor_absoluteY="371dp" />
+
+  <TextView
+      android:id="@+id/textView52"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Métodos de verificação da sua conta e dispositivos vinculados a sua sessão."
+      android:textColor="@color/cinza_escuro"
+      android:textSize="16sp"
+      android:textStyle="bold"
+      tools:layout_editor_absoluteX="11dp"
+      tools:layout_editor_absoluteY="594dp" />
+
+  <TextView
+      android:id="@+id/textView49"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="-140dp"
+      android:layout_marginBottom="140dp"
+      android:text="Segurança"
+      android:textColor="@color/preto"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.009"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/img_logo2"
+      app:layout_constraintVertical_bias="0.43" />
+
+  <LinearLayout
+      android:id="@+id/linearLayout"
+      android:layout_width="388dp"
+      android:layout_height="6dp"
+      android:layout_marginTop="428dp"
+      android:background="#18B49D"
+      android:backgroundTint="#18B49D"
+      android:orientation="vertical"
+      app:layout_constraintBottom_toTopOf="@+id/img_logo2"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.26"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.0" />
+
+  <TextView
+      android:id="@+id/textView42"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Informações Pessoais"
+      android:textColor="@color/preto"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      tools:layout_editor_absoluteX="11dp"
+      tools:layout_editor_absoluteY="331dp" />
+
+  <TextView
+      android:id="@+id/textView48"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="-140dp"
+      android:layout_marginBottom="244dp"
+      android:text="Dados das Contas"
+      android:textColor="@color/preto"
+      android:textSize="20sp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.012"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/img_logo2"
+      app:layout_constraintVertical_bias="0.43" />
+
+  <LinearLayout
+      android:id="@+id/linearLayout"
+      android:layout_width="388dp"
+      android:layout_height="6dp"
+      android:layout_marginTop="544dp"
+      android:background="#18B49D"
+      android:backgroundTint="#18B49D"
+      android:orientation="vertical"
+      app:layout_constraintBottom_toTopOf="@+id/img_logo2"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.26"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.0" />
+
+  <TextView
+      android:id="@+id/textView51"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Dados que representam a sua conta de usuário e sua conta freelancer."
+      android:textColor="@color/cinza_escuro"
+      android:textSize="16sp"
+      android:textStyle="bold"
+      tools:layout_editor_absoluteX="11dp"
+      tools:layout_editor_absoluteY="486dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
