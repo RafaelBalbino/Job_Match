@@ -42,24 +42,7 @@
         <activity
             android:name=".TelaPesquisa"
             android:exported="false" />
-        <activity
-            android:name=".TelaRecuperarSenha"
-            android:exported="false" />
-        <activity
-            android:name=".TelaCodigoSenha"
-            android:exported="false" />
-        <activity
-            android:name=".TelaLogin"
-            android:exported="false" />
-        <activity
-            android:name=".TelaCadastro"
-            android:exported="false" />
-        <activity
-            android:name=".activity_cadastrar_servico"
-            android:exported="false" />
-        <activity
-            android:name=".TelaEdicaoPerfilFreelaActivity"
-            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true" >
