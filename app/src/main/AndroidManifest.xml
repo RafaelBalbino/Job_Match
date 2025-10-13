@@ -45,11 +45,10 @@
             android:name=".TelaPesquisa"
             android:exported="false" />
         <activity
-            android:name=".TelaRecuperarSenha"
+            android:name=".TelaLogin"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -57,7 +56,7 @@
             android:name=".TelaCodigoSenha"
             android:exported="false" />
         <activity
-            android:name=".TelaLogin"
+            android:name=".TelaRecuperarSenha"
             android:exported="false" />
         <activity
             android:name=".TelaCadastro"
