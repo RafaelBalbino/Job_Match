@@ -106,13 +106,13 @@
         app:layout_constraintTop_toBottomOf="@+id/textView30" />
 
     <EditText
-        android:id="@+id/txt_email_senha2"
+        android:id="@+id/txt_senha_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_edittext_background"
         android:ems="10"
         android:hint="Senha"
-        android:inputType="textEmailAddress"
+        android:inputType="textPassword"
         android:textColorHint="@color/cinza_escuro"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.0"
@@ -141,7 +141,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/txt_email_senha2" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_senha_login" />
 
     <Button
         android:id="@+id/btn_iniciar_sessao"
@@ -152,13 +152,13 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/txt_email_senha2" />
+        app:layout_constraintTop_toBottomOf="@+id/lbl_esqueceu_senha" />
 
     <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="Não tem cadastro? Cadastre-se aqui"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
