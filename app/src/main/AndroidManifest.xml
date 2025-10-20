@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JobMatch" >
         <activity
+            android:name=".telaAvaliacao"
+            android:exported="false" />
+        <activity
             android:name=".telaEntrada"
             android:exported="false" />
         <activity

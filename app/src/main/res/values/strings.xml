@@ -1,26 +1,5 @@
 <resources>
     <string name="app_name">JobMatch</string>
-    <
-    <
-    <
-    <
-    <
-    <
-    < HEAD
-    <
-    <
-    <
-    <
-    <
-    <
-    < HEAD
-    <
-    <
-    <
-    <
-    <
-    <
-    < HEAD
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -63,36 +42,15 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-    =======
     <string name="aplique_a_nova_senha">APLIQUE A NOVA SENHA</string>
-    <string name="criterios_senha"><![CDATA[
-    - Tenha ao menos 9 caracteres\n
-- Pelo menos 1 letra maiúscula\n
-- Pelo menos 1 letra minúscula\n
-- Pelo menos 1 número\n
-- Pelo menos 1 caractere especial (ex: !, #, ?, etc)]]></string>
-    <
-    <
-    <
-    <
-    <
-    <
-    < HEAD>>>>>>> 785c243fed661c3257eb266a3c3884318d9e1fb3
-    =======
-    <string name="aplique_a_nova_senha">APLIQUE A NOVA SENHA</string>
-    <string name="criterios_senha"><![CDATA[
-<b>Crie uma senha que siga esses critérios:</b>\n
-- Tenha ao menos 9 caracteres\n
-- Com pelo menos 1 letra maiúscula\n
-- Com pelo menos 1 letra minúscula\n
-- Com pelo menos 1 número\n
-- Com pelo menos 1 caractere especial (ex: !, #, ?, etc).]]></string>
-    >>>>>>> origin/dev/Leticia
-    =======
     <string name="politicas_de_privacidade">Eu concordo com as políticas de privacidade\ne termos e condições</string>
-    >>>>>>> origin/dev/Rafael
-    =======
     <string name="botao_salvar">Salvar</string>
     <string name="botao_anexo">Anexo</string>
-    >>>>>>> origin/dev/adriekas
+
+    <string name="criterios_senha"><![CDATA[
+    - Pelo menos 8 caracteres\n
+    - Pelo menos 1 letra maiúscula\n
+    - Pelo menos 1 número\n
+    - Pelo menos 1 caractere especial (ex: !, #, ?, etc)]]></string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
