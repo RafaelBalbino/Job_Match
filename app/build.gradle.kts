@@ -56,6 +56,7 @@ dependencies {
     //Armazenamento
     implementation("com.google.firebase:firebase-storage")
 
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -64,6 +65,7 @@ dependencies {
     implementation(libs.androidx.cardview)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.ui.text)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

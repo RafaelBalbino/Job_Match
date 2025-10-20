@@ -5,10 +5,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".telaMudanca">
+    tools:context=".TelaMudanca">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/ivLogo"
         android:layout_width="190dp"
         android:layout_height="187dp"
         android:layout_marginTop="32dp"
@@ -18,93 +18,65 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:contentDescription="Requisitos para a nova senha"
-        android:text="@string/criterios_senha"
-        android:textColor="@color/preto_cinza"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-    <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="@string/aplique_a_nova_senha"
+        android:text="APLIQUE A NOVA SENHA"
         android:textColor="@color/primaria"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
 
+    <!-- 1. NOVO TEXTVIEW APENAS PARA A INSTRUÇÃO EM NEGRITO -->
     <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvInstrucaoCriterios"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="32dp"
         android:text="Crie uma senha que siga esses critérios:"
         android:textColor="@color/preto"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.258"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitulo" />
+
+    <!-- 2. TEXTVIEW ANTIGO, AGORA APENAS PARA OS CRITÉRIOS (sem negrito) -->
+    <TextView
+        android:id="@+id/tvCriteriosSenha"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/criterios_senha_lista"
+        android:textColor="@color/preto_cinza"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvInstrucaoCriterios" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/tvLabelNovaSenha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
         android:text="Nova Senha:"
         android:textColor="@color/preto"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.09"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Confirme a Nova Senha:"
-        android:textColor="@color/preto"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.107"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_nova_senha" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCriteriosSenha" />
 
     <EditText
-        android:id="@+id/txt_nova_senha_confirma"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginEnd="28dp"
-        android:background="@drawable/rounded_edittext_background"
-        android:ems="10"
-        android:hint="Digite a senha novamente"
-        android:inputType="text|textPassword"
-        android:minHeight="48dp"
-        android:textColor="@color/preto"
-        android:textColorHint="@color/cinza_escuro"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.149"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-    <EditText
-        android:id="@+id/txt_nova_senha"
+        android:id="@+id/etNovaSenha"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
@@ -112,23 +84,53 @@
         android:background="@drawable/rounded_edittext_background"
         android:ems="10"
         android:hint="Digite a nova senha"
-        android:inputType="text|textPassword|textAutoCorrect"
+        android:inputType="textPassword"
         android:minHeight="48dp"
         android:textColorHint="@color/cinza_escuro"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.154"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLabelNovaSenha" />
 
-    <Button
-        android:id="@+id/btn_confirmar"
+    <TextView
+        android:id="@+id/tvLabelConfirmaSenha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Confirme a Nova Senha:"
+        android:textColor="@color/preto"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etNovaSenha" />
+
+    <EditText
+        android:id="@+id/etConfirmaSenha"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:background="@drawable/rounded_edittext_background"
+        android:ems="10"
+        android:hint="Digite a senha novamente"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:textColor="@color/preto"
+        android:textColorHint="@color/cinza_escuro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLabelConfirmaSenha" />
+
+    <Button
+        android:id="@+id/btnConfirmar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:text="Confirmar"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_nova_senha_confirma" />
+        app:layout_constraintTop_toBottomOf="@+id/etConfirmaSenha" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
