@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp">
+
+    <ImageView
+        android:id="@+id/iv_avatar_contratante"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="Avatar do Contratante"
+        android:src="@drawable/ic_usuario_padrao_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_nome_contratante"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/tv_data_avaliacao"
+        app:layout_constraintStart_toEndOf="@+id/iv_avatar_contratante"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Maria Antônia L." />
+
+    <RatingBar
+        android:id="@+id/rb_nota_avaliacao"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:stepSize="1"
+        app:layout_constraintStart_toEndOf="@+id/iv_avatar_contratante"
+        app:layout_constraintTop_toBottomOf="@+id/tv_nome_contratante"
+        tools:rating="5" />
+
+    <TextView
+        android:id="@+id/tv_data_avaliacao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="24 de Outubro, 2025" />
+
+    <TextView
+        android:id="@+id/tv_comentario"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_avatar_contratante"
+        tools:text="O serviço foi excelente! O Victor resolveu o problema do meu computador em menos de 2 horas. Recomendo muito!" />
+
+    <View
+        android:id="@+id/divider_item"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_comentario" />
+</androidx.constraintlayout.widget.ConstraintLayout>

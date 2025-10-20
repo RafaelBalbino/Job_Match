@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">JobMatch</string>
+<<<<<<< HEAD
+    <!-- Strings used for fragments for navigation -->
+=======
 
+>>>>>>> 27c30865ee5fcf5938fb1d6054b50b495ee38e44
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
@@ -54,5 +58,20 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+<<<<<<< HEAD
+    <string name="aplique_a_nova_senha">APLIQUE A NOVA SENHA</string>
+    <string name="politicas_de_privacidade">Eu concordo com as políticas de privacidade\ne termos e condições</string>
+    <string name="botao_salvar">Salvar</string>
+    <string name="botao_anexo">Anexo</string>
+
+    <string name="criterios_senha"><![CDATA[
+    - Pelo menos 8 caracteres\n
+    - Pelo menos 1 letra maiúscula\n
+    - Pelo menos 1 número\n
+    - Pelo menos 1 caractere especial (ex: !, #, ?, etc)]]></string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
+=======
 
 </resources>
+>>>>>>> 27c30865ee5fcf5938fb1d6054b50b495ee38e44
