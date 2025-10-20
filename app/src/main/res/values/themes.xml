@@ -20,19 +20,7 @@
 
         <!-- Cor da barra de status -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 785c243fed661c3257eb266a3c3884318d9e1fb3
-=======
-        
->>>>>>> origin/dev/Leticia
-=======
-        
->>>>>>> origin/dev/adriekas
         <!-- Cores de textos -->
         <item name="colorOnBackground">@color/texto_primario</item>
         <item name="colorOnSurface">@color/texto_secundario</item>

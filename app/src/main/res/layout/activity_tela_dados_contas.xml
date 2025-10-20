@@ -297,7 +297,7 @@
       app:tint="#211C73" />
 
   <LinearLayout
-      android:id="@+id/linearLayout"
+      android:id="@+id/linearLayout2"
       android:layout_width="411dp"
       android:layout_height="6dp"
       android:layout_marginTop="72dp"

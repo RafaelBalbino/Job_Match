@@ -115,6 +115,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="#00FFFFFF"
+            android:contentDescription="Botão de voltar pro menu principal"
             app:icon="@drawable/ic_voltar_24"
             app:iconSize="25dp"
             app:iconTint="@color/secundaria_variante"
