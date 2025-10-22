@@ -65,12 +65,12 @@
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
     <EditText
-        android:id="@+id/edtxNomeServico"
+        android:id="@+id/txt_NomeServico"
         android:layout_width="0dp"
         android:layout_height="36dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        android:background="#D8D8D8"
+        android:background="@drawable/rounded_edittext_background"
         android:ems="10"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -89,15 +89,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.146"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtxNomeServico" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_NomeServico" />
 
     <EditText
-        android:id="@+id/edtxDescricaoNegocio"
+        android:id="@+id/txt_DescricaoNegocio"
         android:layout_width="332dp"
         android:layout_height="51dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        android:background="#D8D8D8"
+        android:background="@drawable/rounded_edittext_background"
         android:ems="10"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -116,10 +116,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.128"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtxDescricaoNegocio" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_DescricaoNegocio" />
 
     <Button
-        android:id="@+id/btnAnexo"
+        android:id="@+id/btn_Anexo"
         android:layout_width="104dp"
         android:layout_height="38dp"
         android:layout_marginTop="8dp"
@@ -151,12 +151,12 @@
         app:layout_constraintTop_toTopOf="@+id/guideline4" />
 
     <EditText
-        android:id="@+id/edtxModeloCobranca"
+        android:id="@+id/txt_ModeloCobranca"
         android:layout_width="0dp"
         android:layout_height="36dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        android:background="#D8D8D8"
+        android:background="@drawable/rounded_edittext_background"
         android:ems="10"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -188,15 +188,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.106"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtxModeloCobranca" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_ModeloCobranca" />
 
     <EditText
-        android:id="@+id/edtxPreco"
+        android:id="@+id/txt_Preco"
         android:layout_width="0dp"
         android:layout_height="36dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        android:background="#D8D8D8"
+        android:background="@drawable/rounded_edittext_background"
         android:ems="10"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -205,7 +205,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
     <Button
-        android:id="@+id/btnSalvar"
+        android:id="@+id/btn_SalvarServico"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/botao_salvar"
@@ -214,6 +214,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtxPreco" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_Preco" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
