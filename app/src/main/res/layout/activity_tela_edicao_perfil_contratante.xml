@@ -178,7 +178,7 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="16dp"
       android:background="?attr/selectableItemBackgroundBorderless"
-      android:contentDescription="Botão pra oltar"
+      android:contentDescription="Botão pra voltar"
       app:icon="@drawable/ic_voltar_24"
       app:iconSize="25dp"
       app:iconTint="@color/secundaria_variante"

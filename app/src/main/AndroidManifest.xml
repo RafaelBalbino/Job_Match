@@ -65,20 +65,17 @@
             android:name=".TelaCadastro"
             android:exported="false" />
         <activity
-            android:name=".activity_cadastrar_servico"
+            android:name=".TelaPerfilAutonomo"
             android:exported="false" />
         <activity
-            android:name=".TelaEdicaoPerfilFreelaActivity"
+            android:name=".activity_cadastrar_servico"
+            android:exported="true" />
+        <activity
+            android:name=".TelaEdicaoPerfilAutonomo"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" >
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
+            android:exported="true" />
     </application>
 
 </manifest>
