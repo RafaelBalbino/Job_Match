@@ -25,69 +25,67 @@
       android:id="@+id/textView46"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginStart="24dp"
       android:layout_marginTop="24dp"
       android:text="Ocupação Profissional (Opcional)"
       android:textColor="@color/preto"
       android:textSize="18sp"
       android:textStyle="bold"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.132"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/txt_email_login3" />
+      app:layout_constraintTop_toBottomOf="@+id/txt_email_perfil_contratante" />
 
   <TextView
       android:id="@+id/textView45"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginStart="24dp"
+      android:layout_marginTop="32dp"
       android:text="Nome"
       android:textColor="@color/preto"
       android:textSize="18sp"
       android:textStyle="bold"
-      app:layout_constraintBottom_toTopOf="@+id/txt_nome_perfil_contrat"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.044"
-      app:layout_constraintStart_toStartOf="parent" />
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/textView41" />
 
   <TextView
       android:id="@+id/textView43"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginStart="24dp"
+      android:layout_marginTop="32dp"
       android:text="Email"
       android:textColor="@color/preto"
       android:textSize="18sp"
       android:textStyle="bold"
-      app:layout_constraintBottom_toTopOf="@+id/txt_email_login3"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.043"
-      app:layout_constraintStart_toStartOf="parent" />
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/txt_nome_perfil_contrat" />
 
   <EditText
       android:id="@+id/txt_nome_perfil_contrat"
       android:layout_width="373dp"
       android:layout_height="48dp"
-      android:layout_marginBottom="24dp"
       android:background="@drawable/rounded_edittext_background"
       android:ems="10"
       android:hint="Nome"
       android:textColorHint="@color/cinza_escuro"
-      app:layout_constraintBottom_toTopOf="@+id/textView43"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.5"
-      app:layout_constraintStart_toStartOf="parent" />
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/textView45" />
 
   <TextView
       android:id="@+id/textView41"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="40dp"
+      android:layout_marginTop="24dp"
       android:text="Dados Pessoais"
       android:textColor="#18B49D"
       android:textSize="20sp"
       android:textStyle="bold"
-      app:layout_constraintBottom_toTopOf="@+id/textView45"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.5"
-      app:layout_constraintStart_toStartOf="parent" />
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
   <Button
       android:id="@+id/btn_voltar7"
@@ -118,30 +116,27 @@
       android:id="@+id/textView40"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
+      android:layout_marginEnd="90dp"
       android:text="Informações Pessoais"
       android:textColor="@color/preto"
       android:textSize="24sp"
       android:textStyle="bold"
-      app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+      app:layout_constraintBottom_toBottomOf="@+id/btnVoltarPerfilAutonomo"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.5"
-      app:layout_constraintStart_toEndOf="@+id/btn_voltar_meu_perfil"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0.347" />
+      app:layout_constraintTop_toTopOf="@+id/btnVoltarPerfilAutonomo" />
 
   <LinearLayout
       android:id="@+id/linearLayout2"
       android:layout_width="411dp"
       android:layout_height="6dp"
-      android:layout_marginBottom="16dp"
+      android:layout_marginTop="32dp"
       android:background="#18B49D"
       android:backgroundTint="#18B49D"
       android:orientation="vertical"
-      app:layout_constraintBottom_toTopOf="@+id/textView41"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"
-      app:layout_constraintStart_toStartOf="parent" />
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/textView40" />
 
   <EditText
       android:id="@+id/txt_ocupacao_perfil_contrat"
@@ -157,7 +152,7 @@
       app:layout_constraintTop_toBottomOf="@+id/textView46" />
 
   <EditText
-      android:id="@+id/txt_email_login3"
+      android:id="@+id/txt_email_perfil_contratante"
       android:layout_width="373dp"
       android:layout_height="48dp"
       android:background="@drawable/rounded_edittext_background"
@@ -165,25 +160,30 @@
       android:hint="Email"
       android:inputType="textEmailAddress"
       android:textColorHint="@color/cinza_escuro"
-      app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.421"
+      app:layout_constraintHorizontal_bias="0.5"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0.461" />
+      tools:layout_editor_absoluteY="315dp" />
 
   <Button
-      android:id="@+id/btn_voltar_meu_perfil"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
+      android:id="@+id/btnVoltarPerfilAutonomo"
+      android:layout_width="35dp"
+      android:layout_height="39dp"
+      android:layout_marginStart="24dp"
+      android:layout_marginTop="28dp"
       android:background="?attr/selectableItemBackgroundBorderless"
-      android:contentDescription="Botão pra oltar"
+      android:contentDescription="Botão pra voltar"
+      android:includeFontPadding="false"
+      android:padding="0dp"
+      android:paddingStart="0dp"
+      android:paddingLeft="0dp"
+      android:paddingTop="0dp"
+      android:paddingRight="0dp"
+      android:paddingBottom="0dp"
       app:icon="@drawable/ic_voltar_24"
+      app:iconPadding="0dp"
       app:iconSize="25dp"
       app:iconTint="@color/secundaria_variante"
-      app:layout_constraintEnd_toStartOf="@+id/textView40"
-      app:layout_constraintHorizontal_bias="0.5"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 

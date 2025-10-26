@@ -1,179 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".TelaEdicaoPerfilAutonomoActivity"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".TelaEdicaoPerfilFreelaActivity">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="48dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="16dp"
+
+
+    <Button
+        android:id="@+id/btnVoltarPerfilAutonomo"
+        android:layout_width="41dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Botão Voltar"
+        android:padding="0dp"
+        android:paddingStart="0dp"
+        android:paddingLeft="0dp"
+        android:paddingTop="0dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="0dp"
+        app:icon="@drawable/ic_voltar_24"
+        app:iconPadding="0dp"
+        app:iconSize="28dp"
+        app:iconTint="@color/secundaria_variante"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_voltar_24" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="115dp"
         android:text="Edição de Perfil"
-        android:textAlignment="center"
-        android:textSize="30sp"
+        android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintBottom_toBottomOf="@+id/btnVoltarPerfilAutonomo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.264"
-        app:layout_constraintStart_toEndOf="@+id/imageView5"
-        app:layout_constraintTop_toTopOf="@+id/imageView5" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnVoltarPerfilAutonomo"
+        app:layout_constraintTop_toTopOf="@+id/btnVoltarPerfilAutonomo" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
+        android:id="@+id/guideline_header_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="visible"
-        app:layout_constraintGuide_percent="0.12"
-        tools:visibility="visible" />
+        app:layout_constraintGuide_percent="0.12" />
 
+    <!-- SEÇÃO DADOS PESSOAIS -->
     <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Dados Pessoais"
-        android:textColor="#009688"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.08"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
-
-    <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/textView6_section_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Nome"
-        android:textColor="#000000"
-        android:textSize="16sp"
+        android:text="Dados Pessoais"
+        android:textColor="#009688"
+        android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.086"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toTopOf="@+id/guideline_header_bottom" />
+
+    <!-- CAMPO NOME -->
+    <TextView
+        android:id="@+id/textView7_label_nome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:labelFor="@id/txt_nome_autonomo"
+        android:text="Nome"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6_section_title" />
 
     <EditText
         android:id="@+id/txt_nome_autonomo"
-        android:layout_width="347dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/rounded_edittext_background"
         android:ems="10"
-        android:inputType="text"
+        android:inputType="textPersonName"
+        android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7_label_nome" />
 
+    <!-- CAMPO ENDEREÇO -->
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/textView8_label_endereco"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
+        android:labelFor="@id/txt_endereco_autonomo"
         android:text="Endereço"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.093"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_nome_autonomo" />
 
     <EditText
         android:id="@+id/txt_endereco_autonomo"
-        android:layout_width="347dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/rounded_edittext_background"
         android:ems="10"
-        android:inputType="text"
+        android:inputType="textPostalAddress"
+        android:padding="12dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/textView8_label_endereco" />
 
+    <!-- CAMPO DESCRIÇÃO DE NEGÓCIO -->
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/textView9_label_descricao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
+        android:labelFor="@id/txt_descricao_negocio"
         android:text="Descrição de Negócio"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.125"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_endereco_autonomo" />
 
     <EditText
         android:id="@+id/txt_descricao_negocio"
-        android:layout_width="346dp"
-        android:layout_height="78dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/rounded_edittext_background"
         android:ems="10"
-        android:inputType="text"
+        android:gravity="top"
+        android:hint="@string/dica_preenchimento_negocio"
+        android:inputType="textMultiLine"
+        android:minHeight="80dp"
+        android:padding="12dp"
+        android:textColorHint="@color/cinza_escuro"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintTop_toBottomOf="@+id/textView9_label_descricao" />
 
+    <!-- SEÇÃO PERFIL (Anexo) -->
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/textView11_label_perfil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:text="Perfil"
         android:textColor="#000000"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.086"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_descricao_negocio" />
 
     <Button
         android:id="@+id/btn_anexo_autonomo"
-        android:layout_width="94dp"
-        android:layout_height="36dp"
-        android:text="@string/botao_anexo"
-        android:textSize="12sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:minWidth="100dp"
+        android:text="Anexo"
+        android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        app:layout_constraintTop_toBottomOf="@+id/textView11_label_perfil" />
 
+    <!-- BOTÃO SALVAR -->
     <Button
         android:id="@+id/btn_salvar_autonomo"
-        android:layout_width="135dp"
-        android:layout_height="75dp"
-        android:text="@string/botao_salvar"
-        android:textSize="24sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:minHeight="64dp"
+        android:text="Salvar"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_anexo_autonomo" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_anexo_autonomo"
+        app:layout_constraintVertical_bias="1.0" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -94,9 +94,9 @@
             android:text="Criação de Pedido"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_voltar"
+            app:layout_constraintBottom_toBottomOf="@+id/btnVoltarPerfilAutonomo2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btn_voltar"
+            app:layout_constraintTop_toTopOf="@+id/btnVoltarPerfilAutonomo2"
             app:layout_constraintVertical_bias="0.296" />
 
         <View
@@ -134,7 +134,7 @@
             app:layout_constraintTop_toBottomOf="@+id/txt_nome" />
 
         <Button
-            android:id="@+id/btn_voltar"
+            android:id="@+id/btnVoltarPerfilAutonomo2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

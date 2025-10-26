@@ -59,8 +59,8 @@ class TelaCadastro : AppCompatActivity() {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true
                 ds.color = verdeAgua
-                ds.typeface = Typeface.create(androidx.compose.ui.text.font.Typeface.DEFAULT,
-                    androidx.compose.ui.text.font.Typeface.BOLD)
+                // CORREÇÃO: Usando a classe Typeface correta (android.graphics.Typeface)
+                ds.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             }
         }
 
