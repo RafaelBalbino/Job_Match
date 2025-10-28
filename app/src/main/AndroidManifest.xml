@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JobMatch">
         <activity
-            android:name=".TelaPerfilAutonomoActivity"
+            android:name=".TelaPerfilAutonomo"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".telaAvaliacao"
+            android:name=".TelaAvaliacao"
             android:exported="false" />
         <activity
             android:name=".telaEntrada"
@@ -69,10 +69,10 @@
             android:name=".TelaCadastro"
             android:exported="false" />
         <activity
-            android:name=".CadastrarServicoActivity"
+            android:name=".CadastrarServico"
             android:exported="true" />
         <activity
-            android:name=".TelaEdicaoPerfilAutonomoActivity"
+            android:name=".TelaEdicaoPerfilAutonomo"
             android:exported="false" />
 
         <activity

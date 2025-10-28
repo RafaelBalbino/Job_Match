@@ -2,13 +2,10 @@ package com.jobmatch
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.jobmatch.databinding.ActivityTelaPerfilAutonomoBinding
 
-class TelaPerfilAutonomoActivity : AppCompatActivity() {
+class TelaPerfilAutonomo : AppCompatActivity() {
     private val binding by lazy {
         ActivityTelaPerfilAutonomoBinding.inflate( layoutInflater )
     }
@@ -23,7 +20,7 @@ class TelaPerfilAutonomoActivity : AppCompatActivity() {
             startActivity(
                 Intent(
                 this,
-                TelaEdicaoPerfilAutonomoActivity::class.java
+                TelaEdicaoPerfilAutonomo::class.java
                 )
             )
         }
@@ -33,7 +30,7 @@ class TelaPerfilAutonomoActivity : AppCompatActivity() {
             startActivity(
                 Intent(
                 this,
-                CadastrarServicoActivity::class.java
+                CadastrarServico::class.java
                 )
             )
         }
