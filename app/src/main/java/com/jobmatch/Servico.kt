@@ -12,6 +12,22 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.jobmatch.databinding.ActivityTelaCodigoSenhaBinding
 
+//Serviço
+data class Servico(
+    val nomeServico: String = "",
+    val descricaoServico: String = "",
+    val fotoServico: String = "", //URL para o Firebase Storage
+    val modeloCobranca: String = "", //Ex: "Por Hora", "Preço Fixo"
+    val categoria: String = "" //Ex: "TI", "Elétrica", "Geral"
+) {
+
+    //Método para cadastrar (embora a lógica esteja na classe Autônomo)
+    fun cadastrarServico() {
+        println("Cadastrando detalhes do serviço no Firestore.")
+    }
+
+}
+
 class TelaCodigoSenha : AppCompatActivity() {
 
     private lateinit var binding: ActivityTelaCodigoSenhaBinding
@@ -82,7 +98,8 @@ class TelaCodigoSenha : AppCompatActivity() {
     }
 
     // Classe interna para gerenciar a mudança de foco entre os EditTexts.
-    inner class GenericTextWatcher(private val currentView: EditText, private val nextView: EditText?) : TextWatcher {
+    inner class GenericTextWatcher(private val currentView: EditText, private val nextView: EditText?) :
+        TextWatcher {
         override fun afterTextChanged(editable: Editable?) {
             if (editable.toString().length == 1) {
                 nextView?.requestFocus()

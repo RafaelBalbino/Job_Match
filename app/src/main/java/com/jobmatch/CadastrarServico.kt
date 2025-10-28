@@ -12,7 +12,7 @@ class CadastrarServico : AppCompatActivity() {
         ActivityCadastrarServicoBinding.inflate(layoutInflater)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
