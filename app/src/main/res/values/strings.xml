@@ -7,7 +7,8 @@
     <string name="previous">Previous</string>
     <string name="voltar_icone_descricao">Botão Voltar para a tela anterior</string>
 
-    Se você quiser que eu mude o ícone para o de perfil (assumindo que você criou o arquivo `ic_profile_icon`), me avise
+    Se você quiser que eu mude o ícone para o de perfil (assumindo que você criou o arquivo
+    `ic_profile_icon`), me avise
     <string name="criterios_senha_lista"><![CDATA[
 • Pelo menos 8 caracteres\n
 • Pelo menos uma letra maiúscula\n
