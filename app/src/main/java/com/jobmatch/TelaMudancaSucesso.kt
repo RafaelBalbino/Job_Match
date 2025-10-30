@@ -13,6 +13,7 @@ import com.jobmatch.databinding.ActivityTelaMudancaSucessoBinding
 class TelaMudancaSucesso : AppCompatActivity() {
 
     private lateinit var binding: ActivityTelaMudancaSucessoBinding
+    private val TEMPO_DE_ESPERA: Long = 3000 // 3 segundos
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +35,10 @@ class TelaMudancaSucesso : AppCompatActivity() {
             // Cria a intenção para navegar para a TelaLogin
             val intent = Intent(this, TelaLogin::class.java).apply {
                 // Limpa as telas anteriores da pilha de navegação
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
             startActivity(intent)
             finish() // Finaliza a tela de sucesso para que o usuário não possa voltar para ela
-        }, 3000) // 3000 milissegundos = 3 segundos
+        }, TEMPO_DE_ESPERA)
     }
 }

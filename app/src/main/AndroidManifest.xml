@@ -11,19 +11,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.JobMatch">
+
+        <!-- Define a TelaLogin como a única porta de entrada do aplicativo por enquanto -->
         <activity
-            android:name=".TelaPerfilAutonomo"
+            android:name=".TelaLogin"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Todas as outras telas não são de entrada -->
+        <activity
+            android:name=".TelaPerfilAutonomo"
+            android:exported="false" />
         <activity
             android:name=".TelaAvaliacao"
             android:exported="false" />
         <activity
-            android:name=".telaEntrada"
+            android:name=".telaEntrada" 
             android:exported="false" />
         <activity
             android:name=".telaCriacaoPedido"
@@ -56,10 +63,6 @@
             android:name=".TelaPesquisa"
             android:exported="false" />
         <activity
-            android:name=".TelaLogin"
-            android:exported="true">
-        </activity>
-        <activity
             android:name=".TelaCodigoSenha"
             android:exported="false" />
         <activity
@@ -70,14 +73,14 @@
             android:exported="false" />
         <activity
             android:name=".CadastrarServico"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".TelaEdicaoPerfilAutonomo"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="false" />
+
     </application>
 
 </manifest>

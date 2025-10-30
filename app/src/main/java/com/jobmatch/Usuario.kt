@@ -1,22 +1,21 @@
 package com.jobmatch
 
-//Usuário
-open class Usuario(
-    open var nome: String = "",
-    open var numeroTelefone: String = "",
-    open var email: String = "",
-    private var senha: String = "", //Propriedade privada por segurança
-    open var endereco: Endereco? = null //Relação 0..1 com Endereço
-){
-    //Métodos de Usuário
-    fun login() {
-        //Lógica de autenticação com Firebase Auth
-        println("Usuário tentando logar...")
-    }
+import com.google.firebase.firestore.IgnoreExtraProperties
 
-    fun cadastro() {
-        //Lógica para registrar novo usuário no Firebase Auth e Firestore
-        println("Realizando cadastro...")
-    }
-
+/**
+ * Representa o usuário principal do sistema.
+ * Agora, em vez de herança, ele "compõe" os perfis usando as classes Contratante e Autonomo.
+ */
+@IgnoreExtraProperties
+data class Usuario(
+    val uid: String? = null,
+    val nome: String? = null,
+    val email: String? = null,
+    val numeroTelefone: String? = null,
+    val endereco: Endereco? = null,
+    val contratante: Contratante? = null, // Perfil de contratante (pode ser nulo, mas no nosso caso, sempre existirá)
+    val autonomo: Autonomo? = null      // Perfil de autônomo (opcional)
+) {
+    // Construtor vazio para o Firebase
+    constructor() : this(null, null, null, null, null, null, null)
 }

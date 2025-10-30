@@ -7,6 +7,19 @@
     android:layout_height="match_parent"
     tools:context=".TelaMudanca">
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_voltar"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:icon="@drawable/ic_voltar_24"
+        app:iconSize="25dp"
+        app:iconTint="@color/secundaria"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/ivLogo"
         android:layout_width="190dp"
@@ -22,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="APLIQUE A NOVA SENHA"
+        android:text="@string/change_password_title"
         android:textColor="@color/primaria"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -30,107 +43,84 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
 
-    <!-- 1. NOVO TEXTVIEW APENAS PARA A INSTRUÇÃO EM NEGRITO -->
-    <TextView
-        android:id="@+id/tvInstrucaoCriterios"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_nova_senha"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
-        android:text="Crie uma senha que siga esses critérios:"
-        android:textColor="@color/preto"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:hint="@string/change_password_new_hint"
+        app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitulo" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitulo">
 
-    <!-- 2. TEXTVIEW ANTIGO, AGORA APENAS PARA OS CRITÉRIOS (sem negrito) -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNovaSenha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
     <TextView
         android:id="@+id/tvCriteriosSenha"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="32dp"
-        android:lineSpacingExtra="4dp"
         android:text="@string/criterios_senha_lista"
-        android:textColor="@color/preto_cinza"
-        android:textSize="16sp"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvInstrucaoCriterios" />
+        app:layout_constraintTop_toBottomOf="@+id/til_nova_senha" />
 
-    <TextView
-        android:id="@+id/tvLabelNovaSenha"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:text="Nova Senha:"
-        android:textColor="@color/preto"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCriteriosSenha" />
-
-    <EditText
-        android:id="@+id/etNovaSenha"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_confirma_senha"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginEnd="28dp"
-        android:background="@drawable/rounded_edittext_background"
-        android:ems="10"
-        android:hint="Digite a nova senha"
-        android:inputType="textPassword"
-        android:minHeight="48dp"
-        android:textColorHint="@color/cinza_escuro"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLabelNovaSenha" />
-
-    <TextView
-        android:id="@+id/tvLabelConfirmaSenha"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
-        android:text="Confirme a Nova Senha:"
-        android:textColor="@color/preto"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNovaSenha" />
-
-    <EditText
-        android:id="@+id/etConfirmaSenha"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginEnd="28dp"
-        android:background="@drawable/rounded_edittext_background"
-        android:ems="10"
-        android:hint="Digite a senha novamente"
-        android:inputType="textPassword"
-        android:minHeight="48dp"
-        android:textColor="@color/preto"
-        android:textColorHint="@color/cinza_escuro"
+        android:layout_marginEnd="32dp"
+        android:hint="@string/change_password_confirm_hint"
+        app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLabelConfirmaSenha" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCriteriosSenha">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etConfirmaSenha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btnConfirmar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Confirmar"
+        android:layout_marginTop="32dp"
+        android:text="@string/change_password_button_text"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etConfirmaSenha" />
+        app:layout_constraintTop_toBottomOf="@+id/til_confirma_senha" />
+
+    <ProgressBar
+        android:id="@+id/change_password_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/btnConfirmar"
+        app:layout_constraintEnd_toEndOf="@+id/btnConfirmar"
+        app:layout_constraintStart_toStartOf="@+id/btnConfirmar"
+        app:layout_constraintTop_toTopOf="@+id/btnConfirmar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

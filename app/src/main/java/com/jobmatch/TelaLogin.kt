@@ -14,61 +14,106 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.jobmatch.databinding.ActivityTelaLoginBinding // Importe a classe de binding
 
 class TelaLogin : AppCompatActivity() {
 
     // Declare a variável para o view binding
     private lateinit var binding: ActivityTelaLoginBinding
+    // Declare a variável do Firebase Auth
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Infla o layout usando o view binding
+        // Inicializa o Firebase Auth
+        auth = FirebaseAuth.getInstance()
+
+        // **VERIFICAÇÃO DE LOGIN**
+        // Se o usuário já estiver logado, pula direto para a tela principal.
+        if (auth.currentUser != null) {
+            val intent = Intent(this, TelaMenuPrincipal::class.java)
+            startActivity(intent)
+            finish() // Finaliza a TelaLogin para que ela não fique na pilha
+            return   // Interrompe a execução do onCreate para não inflar o layout desnecessariamente
+        }
+
+        // Se não houver usuário logado, continua e infla o layout da tela de login
         binding = ActivityTelaLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // --- LÓGICA DO BOTÃO INICIAR SESSÃO ---
         binding.btnIniciarSessao.setOnClickListener {
+            // Limpa erros anteriores
+            binding.tilEmailLogin.error = null
+            binding.tilSenhaLogin.error = null
+            
             val email = binding.txtEmailLogin.text.toString().trim()
-            // ALTERAÇÃO AQUI: de txtEmailSenha2 para txtSenhaLogin
             val senha = binding.txtSenhaLogin.text.toString()
 
             // 1. Checar se os campos estão preenchidos
             if (email.isEmpty()) {
-                binding.txtEmailLogin.error = "Email é obrigatório"
-                return@setOnClickListener // Para a execução aqui
+                binding.tilEmailLogin.error = "Email é obrigatório"
+                return@setOnClickListener
             }
             if (senha.isEmpty()) {
-                // ALTERAÇÃO AQUI: de txtEmailSenha2 para txtSenhaLogin
-                binding.txtSenhaLogin.error = "Senha é obrigatória"
-                return@setOnClickListener // Para a execução aqui
+                binding.tilSenhaLogin.error = "Senha é obrigatória"
+                return@setOnClickListener
             }
+            
+            showLoading(true)
 
-            // 2. Lógica de login de teste
-            if (email == "jobmatch@hotmail.com" && senha == "12345") {
-                Toast.makeText(this, "Login bem-sucedido!", Toast.LENGTH_SHORT).show()
+            // 2. Lógica de login com Firebase
+            auth.signInWithEmailAndPassword(email, senha)
+                .addOnCompleteListener(this) { task ->
+                    showLoading(false)
+                    if (task.isSuccessful) {
+                        // Login bem-sucedido
+                        Toast.makeText(this, "Login bem-sucedido!", Toast.LENGTH_SHORT).show()
 
-                // Navega para a tela principal
-                val intent = Intent(this, TelaMenuPrincipal::class.java)
-                // Limpa as activities anteriores para que o usuário não volte para a tela de login
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish() // Finaliza a TelaLogin
-            } else {
-                // Credenciais incorretas
-                Toast.makeText(this, "Email ou senha incorretos.", Toast.LENGTH_LONG).show()
-            }
+                        // Navega para a tela principal
+                        val intent = Intent(this, TelaMenuPrincipal::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish() // Finaliza a TelaLogin
+                    } else {
+                        // Trata os erros de login
+                        val exception = task.exception
+                        val errorMessage = when (exception) {
+                            is FirebaseAuthInvalidUserException -> "Nenhuma conta encontrada com este e-mail."
+                            is FirebaseAuthInvalidCredentialsException -> "Senha incorreta. Tente novamente."
+                            else -> "Falha na autenticação: Verifique sua conexão."
+                        }
+                        
+                        if (exception is FirebaseAuthInvalidUserException) {
+                            binding.tilEmailLogin.error = errorMessage
+                        } else if (exception is FirebaseAuthInvalidCredentialsException) {
+                            binding.tilSenhaLogin.error = errorMessage
+                        } else {
+                            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
         }
 
-
         // --- LÓGICA EXISTENTE PARA LINKS (ADAPTADA PARA VIEW BINDING) ---
-
-        // Link para TelaCadastro
         setupClickableTextToCadastro()
-
-        // Link para TelaRecuperarSenha
         setupClickableTextToRecuperarSenha()
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.btnIniciarSessao.text = ""
+            binding.loginProgressBar.visibility = View.VISIBLE
+            binding.btnIniciarSessao.isEnabled = false
+        } else {
+            binding.btnIniciarSessao.text = getString(R.string.login_button_text) // Usa a string do resources
+            binding.loginProgressBar.visibility = View.GONE
+            binding.btnIniciarSessao.isEnabled = true
+        }
     }
 
     private fun setupClickableTextToCadastro() {
@@ -107,13 +152,12 @@ class TelaLogin : AppCompatActivity() {
         val textViewToRecuperarSenha = binding.lblEsqueceuSenha
         val fullTextRecuperarSenha = textViewToRecuperarSenha.text.toString()
         val spannableStringRecuperarSenha = SpannableString(fullTextRecuperarSenha)
-        val linkColorRecuperarSenha = ContextCompat.getColor(this, R.color.texto_secundario)
         val startRecuperarSenha = 0
         val endRecuperarSenha = fullTextRecuperarSenha.length
 
         val clickableSpanRecuperarSenha = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                // Checando: O código já está corretamente apontando para TelaRecuperarSenha. Nenhuma mudança necessária.
+                 // Apontando para a tela correta de recuperação de senha
                 val intent = Intent(this@TelaLogin, TelaRecuperarSenha::class.java)
                 startActivity(intent)
             }
@@ -121,7 +165,7 @@ class TelaLogin : AppCompatActivity() {
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true
-                ds.color = linkColorRecuperarSenha
+                ds.color = ContextCompat.getColor(this@TelaLogin, R.color.texto_secundario)
             }
         }
         spannableStringRecuperarSenha.setSpan(clickableSpanRecuperarSenha, startRecuperarSenha, endRecuperarSenha, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

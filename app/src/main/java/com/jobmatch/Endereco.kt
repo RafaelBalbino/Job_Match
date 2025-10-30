@@ -1,16 +1,16 @@
 package com.jobmatch
 
-// Endereço
+import com.google.firebase.firestore.IgnoreExtraProperties
+
+// Classe de dados para representar um Endereço, compatível com o Firestore.
+@IgnoreExtraProperties
 data class Endereco(
-    var rua: String = "",
-    var cidade: String = "",
-    var estado: String = "",
-    var cep: String = "",
-    var pais: String = ""
+    val rua: String? = null,
+    val cidade: String? = null,
+    val estado: String? = null,
+    val cep: String? = null,
+    val pais: String? = null
 ) {
-    //Métodos de Endereço
-    fun rastrear() {
-        //Lógica para rastrear a localização (ex: abrir mapa ou usar GeoPoint)
-        println("Rastreando endereço...")
-    }
+    // Um construtor vazio é necessário para que o Firebase possa recriar o objeto a partir dos dados.
+    constructor() : this(null, null, null, null, null)
 }

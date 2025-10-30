@@ -8,18 +8,16 @@
     tools:context=".TelaCodigoSenha">
 
     <Button
-        android:id="@+id/btn_voltar_codigo"
+        android:id="@+id/btn_voltar_recuperacao"
+        style="@style/Widget.Material3.Button.IconButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:background="#00FFFFFF"
-        android:contentDescription="Botão de voltar para o início do programa"
+        android:contentDescription="@string/voltar_icone_descricao"
         app:icon="@drawable/ic_voltar_24"
         app:iconSize="25dp"
         app:iconTint="@color/secundaria"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.015"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,14 +31,14 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12"
-        tools:text="exemplo@email.com" />
+        tools:text="(11) 99999-9999" />
 
     <Button
         android:id="@+id/btn_verificar_codigo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Verificar"
+        android:text="@string/code_button_text"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textSize="16sp"
@@ -55,7 +53,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Um código de quatro dígitos foi enviado para o endereço abaixo:"
+        android:text="@string/code_instructions"
         android:textAlignment="center"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -69,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:text="Recuperação de Senha"
+        android:text="@string/code_title"
         android:textColor="@color/primaria"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -102,10 +100,10 @@
 
         <EditText
             android:id="@+id/etCodigo1"
-            android:layout_width="50dp"
+            style="@style/Widget.AppCompat.EditText"
+            android:layout_width="40dp"
             android:layout_height="50dp"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_edittext_quadrado"
             android:gravity="center"
             android:inputType="number"
             android:maxLength="1"
@@ -114,10 +112,9 @@
 
         <EditText
             android:id="@+id/etCodigo2"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="50dp"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_edittext_quadrado"
             android:gravity="center"
             android:inputType="number"
             android:maxLength="1"
@@ -126,10 +123,9 @@
 
         <EditText
             android:id="@+id/etCodigo3"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="50dp"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_edittext_quadrado"
             android:gravity="center"
             android:inputType="number"
             android:maxLength="1"
@@ -138,9 +134,30 @@
 
         <EditText
             android:id="@+id/etCodigo4"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="50dp"
-            android:background="@drawable/bg_edittext_quadrado"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textSize="24sp"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <EditText
+            android:id="@+id/etCodigo5"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textSize="24sp"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <EditText
+            android:id="@+id/etCodigo6"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
             android:gravity="center"
             android:inputType="number"
             android:maxLength="1"
