@@ -11,11 +11,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.JobMatch">
-        <activity
-            android:name=".Servicos"
-            android:exported="false"
-            android:label="@string/title_activity_servicos"
-            android:theme="@style/Theme.JobMatch" />
         <!-- Define a TelaLogin como a única porta de entrada do aplicativo por enquanto -->
         <activity
             android:name=".TelaLogin"
