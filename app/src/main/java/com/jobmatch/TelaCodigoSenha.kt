@@ -30,31 +30,41 @@ class TelaCodigoSenha : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        // Recupera o ID de verificação passado pela TelaRecuperarSenha
-        verificationId = intent.getStringExtra("VERIFICATION_ID")
-
-        if (verificationId == null) {
+        // Tenta recuperar o ID de verificação. Se falhar, encerra a tela com segurança.
+        val receivedVerificationId = intent.getStringExtra("VERIFICATION_ID")
+        if (receivedVerificationId == null) {
             Toast.makeText(this, "Erro: ID de verificação não encontrado.", Toast.LENGTH_LONG).show()
             finish()
             return
         }
+        verificationId = receivedVerificationId
 
         setupEditTexts()
 
         binding.btnVerificarCodigo.setOnClickListener {
-            val codigo = getCodigoFromEditTexts()
-
-            if (codigo.length < 6) {
-                Toast.makeText(this, "Por favor, preencha todos os campos.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val credential = PhoneAuthProvider.getCredential(verificationId!!, codigo)
-            signInWithPhoneAuthCredential(credential)
+            verificarCodigo()
         }
 
         binding.btnVoltarRecuperacao.setOnClickListener {
             finish()
+        }
+    }
+    
+    private fun verificarCodigo() {
+        val codigo = getCodigoFromEditTexts()
+
+        if (codigo.length < 6) {
+            Toast.makeText(this, "Por favor, preencha todos os campos.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Abordagem segura: só executa se o verificationId não for nulo.
+        verificationId?.let { validVerificationId ->
+            val credential = PhoneAuthProvider.getCredential(validVerificationId, codigo)
+            signInWithPhoneAuthCredential(credential)
+        } ?: run {
+            // Este bloco é executado se verificationId for nulo, como uma segurança extra.
+            Toast.makeText(this, "Erro crítico: ID de verificação perdido.", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -92,8 +102,6 @@ class TelaCodigoSenha : AppCompatActivity() {
                     Toast.makeText(this, "Verificação bem-sucedida!", Toast.LENGTH_SHORT).show()
 
                     val intent = Intent(this, TelaMudanca::class.java)
-                    // Opcional: passar alguma informação, se a tela de mudança precisar
-                    // intent.putExtra("USER_UID", task.result?.user?.uid)
                     startActivity(intent)
                     finishAffinity() // Limpa a pilha de recuperação de senha
 
