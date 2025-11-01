@@ -2,6 +2,7 @@ package com.jobmatch
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
@@ -13,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.jobmatch.databinding.ActivityTelaCodigoSenhaBinding
 
 //Serviço
+
 data class Servico(
     val nomeServico: String = "",
     val descricaoServico: String = "",

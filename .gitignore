@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> origin/dev/Leticia
 *.iml
 .gradle
 /local.properties
@@ -17,8 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
-<<<<<<< HEAD
-=======
+
 # Gradle
 .gradle/
 build/
@@ -74,6 +69,3 @@ lint/generated/
 
 # Misc
 *.orig
->>>>>>> 785c243fed661c3257eb266a3c3884318d9e1fb3
-=======
->>>>>>> origin/dev/Leticia
