@@ -15,27 +15,26 @@
     android:layout_height="match_parent">
 
 
-
-    <Button
-        android:id="@+id/btnVoltarPerfilAutonomo"
-        android:layout_width="41dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Botão Voltar"
-        android:padding="0dp"
-        android:paddingStart="0dp"
-        android:paddingLeft="0dp"
-        android:paddingTop="0dp"
-        android:paddingRight="0dp"
-        android:paddingBottom="0dp"
-        app:icon="@drawable/ic_voltar_24"
-        app:iconPadding="0dp"
-        app:iconSize="28dp"
-        app:iconTint="@color/secundaria_variante"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:id="@+id/btnVoltarPerfilAutonomo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Botão Voltar"
+            android:padding="0dp"
+            android:paddingStart="0dp"
+            android:paddingLeft="0dp"
+            android:paddingTop="0dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="0dp"
+            app:icon="@drawable/ic_voltar_24"
+            app:iconPadding="0dp"
+            app:iconSize="28dp"
+            app:iconTint="@color/secundaria_variante"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView5"
@@ -193,22 +192,23 @@
         app:layout_constraintTop_toBottomOf="@+id/textView11_label_perfil" />
 
     <!-- BOTÃO SALVAR -->
-    <Button
-        android:id="@+id/btn_salvar_autonomo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:minHeight="64dp"
-        android:text="Salvar"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_anexo_autonomo"
-        app:layout_constraintVertical_bias="1.0" />
+        <Button
+            android:id="@+id/btn_salvar_autonomo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:minHeight="64dp"
+            android:text="Salvar"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_anexo_autonomo"
+            app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
