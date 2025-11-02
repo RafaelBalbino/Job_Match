@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/spnModeloCobranca"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TelaMudanca">
@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:contentDescription="Botão de voltar"
         app:icon="@drawable/ic_voltar_24"
         app:iconSize="25dp"
         app:iconTint="@color/secundaria"
@@ -37,25 +38,57 @@
         android:layout_marginTop="20dp"
         android:text="@string/change_password_title"
         android:textColor="@color/primaria"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
 
+    <!-- Bloco de texto com as instruções restaurado para a posição original -->
+    <TextView
+        android:id="@+id/tvInstrucaoCriterios"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/change_password_criteria_intro"
+        android:textColor="@color/preto"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitulo" />
+
+    <TextView
+        android:id="@+id/tvCriteriosSenha"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/criterios_senha_lista"
+        android:textColor="@color/preto_cinza"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvInstrucaoCriterios" />
+
+    <!-- Campos de senha modernos mantidos abaixo do bloco de texto -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_nova_senha"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:hint="@string/change_password_new_hint"
         app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitulo">
+        app:layout_constraintTop_toBottomOf="@+id/tvCriteriosSenha">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etNovaSenha"
@@ -65,32 +98,19 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/tvCriteriosSenha"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="32dp"
-        android:text="@string/criterios_senha_lista"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_nova_senha" />
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_confirma_senha"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:hint="@string/change_password_confirm_hint"
         app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCriteriosSenha">
+        app:layout_constraintTop_toBottomOf="@+id/til_nova_senha">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etConfirmaSenha"
@@ -104,7 +124,7 @@
         android:id="@+id/btnConfirmar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:text="@string/change_password_button_text"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
