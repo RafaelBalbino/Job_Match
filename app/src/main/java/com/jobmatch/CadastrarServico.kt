@@ -40,17 +40,19 @@ class CadastrarServico : AppCompatActivity() {
         val descricaoServico = binding.txtDescricaoNegocio.text.toString().trim()
         val categoria = binding.txtCategoriaServico.text.toString()
         //spinner para Modelo de Cobrança
-        val modeloCobranca = binding.spinnerModeloCobranca.selectedItem.toString()
+        val modeloCobranca = binding.ModeloCobranca.selectedItem.toString()
         val precoStr = binding.txtPreco.text.toString()
         //Já está armazenado na variável global da Activity
         val fotoUri = fotoUri ?: "" //Se for nulo, envia string vazia
 
         //--------------------------------------------------------------------------------
         //Validação dos dados
-        if (nomeServico.isEmpty() || descricaoServico.isEmpty() || precoStr.isEmpty()){
+        if (nomeServico.isEmpty() || descricaoServico.isEmpty() || precoStr.isEmpty()) {
             Toast.makeText(this, "Por favor, preencha todos os campos.", Toast.LENGTH_SHORT).show()
             return
         }
+
+
 
         val descricaoCompleta = "$descricaoServico | Preço: $precoStr | Modelo: $modeloCobranca"
 
@@ -71,17 +73,22 @@ class CadastrarServico : AppCompatActivity() {
             return
         }
 
-        val mensagem = "Serviço '$nomeServico', Preço: R$$preco, Possui foto?: ${if(fotoUri != null) "Sim" else "Não"}, Modelo de Cobrança: '$modeloCobranca'"
+        val mensagem =
+            "Serviço '$nomeServico', Preço: R$$preco, Possui foto?: ${if (fotoUri != null) "Sim" else "Não"}, Modelo de Cobrança: '$modeloCobranca'"
         Toast.makeText(this, mensagem, Toast.LENGTH_LONG).show()
 
         //Enviar o Objeto de volta para Tela de Perfil do Autonomo
-        val resultIntent = Intent().apply {
-            putExtra("NOVO_SERVICO", novoServico)
+        val resultIntent = intent.apply {
+            putExtra("NOME_SERVICO", novoServico.nomeServico)
+            putExtra("DESCRICAO_COMPLETA", novoServico.descricaoServico)
+            putExtra("FOTO_URI", novoServico.fotoServico)
+            putExtra("MODELO_COBRANCA", novoServico.modeloCobranca)
+            putExtra("CATEGORIA", novoServico.categoria)
         }
         setResult(RESULT_OK, resultIntent)
+        Toast.makeText(this, "Serviço '${novoServico.nomeServico}' salvo com sucesso!", Toast.LENGTH_SHORT).show()
         finish()
     }
-
     private fun mostrarTipoCobranca(){
         val tipoCobrancas = arrayOf(
             "Selecione o tipo de cobrança",
@@ -91,14 +98,15 @@ class CadastrarServico : AppCompatActivity() {
             "Por Unidade",
             "A Combinar"
         )
-        val spinnerCobrancas: Spinner = findViewById(R.id.spnModeloCobranca)
+        val spinnerCobrancas: Spinner = binding.ModeloCobranca
+
         val adapter = ArrayAdapter(
             this,
-            R.layout.spinner_item_personalizado,
+            R.layout.custom_spinner_item,
             tipoCobrancas
         )
 
-        adapter.setDropDownViewResource(R.layout.spinner_item_personalizado)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCobrancas.adapter = adapter
 
         spinnerCobrancas.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -124,6 +132,12 @@ class CadastrarServico : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
 
+        mostrarTipoCobranca()
+
+        binding.imgSeletor.setOnClickListener {
+            binding.ModeloCobranca.performClick()
+        }
+
 
         //função do botão voltar
         binding.btnVoltarPerfilAutonomo2.setOnClickListener {
@@ -140,12 +154,6 @@ class CadastrarServico : AppCompatActivity() {
             // Lógica para salvar o serviço
             salvarServico()
             }
-        //Aplica os insets da barra de status
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.spnModeloCobranca)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
 
         }

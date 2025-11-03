@@ -8,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.jobmatch.databinding.ActivityTelaEdicaoPerfilAutonomoBinding
 
 
+
 class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
     private val binding by lazy {
         ActivityTelaEdicaoPerfilAutonomoBinding.inflate( layoutInflater)

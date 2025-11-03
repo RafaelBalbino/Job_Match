@@ -20,6 +20,7 @@
     <color name="primaria_variante">@color/verde_agua_escuro</color>
     <color name="secundaria">@color/azul_escuro</color>
     <color name="secundaria_variante">@color/azul_escuro_oceano</color>
+    <color name="borda_servico">@color/primaria_variante</color>
 
     <!-- Cores de fundo -->
     <color name="fundo">@color/branco</color>

@@ -11,14 +11,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/spnModeloCobranca"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     >
 
 
-
-
-
-    <Button
+        <Button
         android:id="@+id/btnVoltarPerfilAutonomo2"
         android:layout_width="35dp"
         android:layout_height="39dp"
@@ -103,28 +100,30 @@
             app:layout_constraintTop_toBottomOf="@+id/txt_NomeServico" />
 
         <EditText
-        android:id="@+id/txt_NomeServico"
-        android:layout_width="0dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/rounded_edittext_background"
-        android:ems="10"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13" />
-
-        <EditText
-            android:id="@+id/txtCategoriaServico"
+            android:id="@+id/txt_NomeServico"
             android:layout_width="0dp"
-            android:layout_height="36dp"
+            android:layout_height="45dp"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
             android:background="@drawable/rounded_edittext_background"
             android:ems="10"
             android:inputType="text"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+        <EditText
+            android:id="@+id/txtCategoriaServico"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/rounded_edittext_background"
+            android:ems="10"
+            android:inputType="text"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -143,21 +142,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtCategoriaServico" />
 
-    <EditText
-        android:id="@+id/txt_DescricaoNegocio"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/rounded_edittext_background"
-        android:ems="10"
-        android:gravity="top"
-        android:inputType="textMultiLine"
-        android:minHeight="80dp"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+        <EditText
+            android:id="@+id/txt_DescricaoNegocio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/rounded_edittext_background"
+            android:ems="10"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:minHeight="80dp"
+            android:padding="12dp"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
         <TextView
             android:id="@+id/textView15"
@@ -221,21 +221,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.106"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerModeloCobranca" />
+            app:layout_constraintTop_toBottomOf="@+id/ModeloCobranca" />
 
-    <EditText
-        android:id="@+id/txt_Preco"
-        android:layout_width="0dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/rounded_edittext_background"
-        android:ems="10"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+        <EditText
+            android:id="@+id/txt_Preco"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/rounded_edittext_background"
+            android:ems="10"
+            android:inputType="text"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
     <Button
         android:id="@+id/btn_SalvarServico"
@@ -250,18 +251,29 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_Preco" />
 
         <Spinner
-            android:id="@+id/spinnerModeloCobranca"
+            android:id="@+id/ModeloCobranca"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
             android:background="@drawable/rounded_edittext_background"
+            android:contextClickable="false"
             android:minHeight="48dp"
             android:spinnerMode="dropdown"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+        <ImageView
+            android:id="@+id/imgSeletor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/ModeloCobranca"
+            app:layout_constraintEnd_toEndOf="@+id/ModeloCobranca"
+            app:layout_constraintTop_toTopOf="@+id/ModeloCobranca"
+            app:srcCompat="@drawable/ic_dropdown_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

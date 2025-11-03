@@ -61,7 +61,9 @@ dependencies {
     //Armazenamento
     implementation("com.google.firebase:firebase-storage")
 
-
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("androidx.activity:activity-compose:1.11.0")
+    implementation("androidx.cardview:cardview:1.0.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
