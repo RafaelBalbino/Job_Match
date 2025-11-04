@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.jobmatch.databinding.ActivityCadastrarServicoBinding
+import android.content.Intent
 
 class CadastrarServico : AppCompatActivity() {
     private val binding: ActivityCadastrarServicoBinding by lazy {
@@ -42,8 +43,7 @@ class CadastrarServico : AppCompatActivity() {
         //spinner para Modelo de Cobrança
         val modeloCobranca = binding.ModeloCobranca.selectedItem.toString()
         val precoStr = binding.txtPreco.text.toString()
-        //Já está armazenado na variável global da Activity
-        val fotoUri = fotoUri ?: "" //Se for nulo, envia string vazia
+
 
         //--------------------------------------------------------------------------------
         //Validação dos dados
@@ -53,43 +53,66 @@ class CadastrarServico : AppCompatActivity() {
         }
 
 
-
         val descricaoCompleta = "$descricaoServico | Preço: $precoStr | Modelo: $modeloCobranca"
 
         //Instanciar o Objeto Serviço
         val novoServico = Servico(
+            uidUsuario = "uidUsuarioLogado",
             nomeServico = nomeServico,
             descricaoServico = descricaoCompleta,
             categoria = categoria,
             modeloCobranca = modeloCobranca,
-            fotoServico = fotoUri
+            fotoServico = fotoUri,
+            preco = precoStr.toDoubleOrNull()
         )
 
         val preco: Double
         try {
-            preco = precoStr.toDouble()
-        } catch (e: NumberFormatException) {
-            Toast.makeText(this, "Por favor, insira um preço válido.", Toast.LENGTH_SHORT).show()
-            return
-        }
+            // Tenta obter o modelo de cobrança (Ponto de falha 1)
+            val modeloCobranca = binding.ModeloCobranca.selectedItem.toString()
 
-        val mensagem =
-            "Serviço '$nomeServico', Preço: R$$preco, Possui foto?: ${if (fotoUri != null) "Sim" else "Não"}, Modelo de Cobrança: '$modeloCobranca'"
-        Toast.makeText(this, mensagem, Toast.LENGTH_LONG).show()
+            // Tenta obter o preço (Ponto de falha 2)
+            val preco: Double? = precoStr.toDoubleOrNull()
 
-        //Enviar o Objeto de volta para Tela de Perfil do Autonomo
-        val resultIntent = intent.apply {
-            putExtra("NOME_SERVICO", novoServico.nomeServico)
-            putExtra("DESCRICAO_COMPLETA", novoServico.descricaoServico)
-            putExtra("FOTO_URI", novoServico.fotoServico)
-            putExtra("MODELO_COBRANCA", novoServico.modeloCobranca)
-            putExtra("CATEGORIA", novoServico.categoria)
+            if (nomeServico.isEmpty() || descricaoServico.isEmpty() || preco == null || precoStr.isEmpty()) {
+                Toast.makeText(
+                    this,
+                    "Por favor, preencha todos os campos e use um preço válido.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
+
+            val mensagem =
+                "Serviço '$nomeServico', Preço: R$$preco, Possui foto?: ${if (fotoUri != null) "Sim" else "Não"}, Modelo de Cobrança: '$modeloCobranca'"
+            Toast.makeText(this, mensagem, Toast.LENGTH_LONG).show()
+
+            //Enviar o Objeto de volta para Tela de Perfil do Autonomo
+            val resultIntent =
+                Intent().apply { // CORRIGIDO: Usando 'Intent()' em vez de 'intent.apply'
+                    // ... (Seus putExtra's)
+                    putExtra("UID_USUARIO", novoServico.uidUsuario)
+                    putExtra("NOME_SERVICO", novoServico.nomeServico)
+                    putExtra("DESCRICAO_COMPLETA", novoServico.descricaoServico)
+                    putExtra("FOTO_URI", novoServico.fotoServico)
+                    putExtra("MODELO_COBRANCA", novoServico.modeloCobranca)
+                    putExtra("CATEGORIA", novoServico.categoria)
+                    putExtra("PRECO_BASE", novoServico.preco.toString()) // Adiciona o preço
+                }
+
+            setResult(RESULT_OK, resultIntent)
+            Toast.makeText(this, "Serviço salvo com sucesso!", Toast.LENGTH_SHORT).show()
+            finish()
+
+        } catch (e: Exception) {
+            // Se houver qualquer falha (incluindo Spinner/View Binding/Conversão)
+            Toast.makeText(this, "Erro ao processar os dados: ${e.message}", Toast.LENGTH_LONG)
+                .show()
+            e.printStackTrace() // Imprime o rastreamento de pilha para o Logcat
         }
-        setResult(RESULT_OK, resultIntent)
-        Toast.makeText(this, "Serviço '${novoServico.nomeServico}' salvo com sucesso!", Toast.LENGTH_SHORT).show()
-        finish()
     }
-    private fun mostrarTipoCobranca(){
+
+    private fun mostrarTipoCobranca() {
         val tipoCobrancas = arrayOf(
             "Selecione o tipo de cobrança",
             "Por Hora",
@@ -110,11 +133,20 @@ class CadastrarServico : AppCompatActivity() {
         spinnerCobrancas.adapter = adapter
 
         spinnerCobrancas.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 if (position > 0) {
                     val selectedItem = parent.getItemAtPosition(position).toString()
                     // Faça algo com o item selecionado
-                    Toast.makeText(applicationContext, "Selecionado: $selectedItem", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext,
+                        "Selecionado: $selectedItem",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
@@ -154,7 +186,6 @@ class CadastrarServico : AppCompatActivity() {
             // Lógica para salvar o serviço
             salvarServico()
             }
-
 
         }
 }

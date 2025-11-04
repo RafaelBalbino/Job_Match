@@ -1,10 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/spnModeloCobranca"
+<androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".TelaMenuPrincipal">
 
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/Main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="411dp"
+        android:layout_height="136dp"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgPerfil"
+        android:layout_width="44dp"
+        android:layout_height="43dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgNavegacaoMenu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imgNavegacaoMenu"
+        app:srcCompat="@drawable/circle_white" />
+
+    <ImageView
+        android:id="@+id/imgNavegacaoMenu"
+        android:layout_width="38dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.197"
+        app:srcCompat="@drawable/ic_menu_24" />
+
+    <SearchView
+        android:id="@+id/scViewPesquisa"
+        android:layout_width="302dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="32dp"
+        android:background="#FFFBFB"
+        app:cardCornerRadius="150dp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.801" />
+
+    <ImageView
+        android:id="@+id/imgFiltro"
+        android:layout_width="47dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar"
+        app:layout_constraintHorizontal_bias="0.351"
+        app:layout_constraintStart_toEndOf="@+id/scViewPesquisa"
+        app:layout_constraintTop_toBottomOf="@+id/imgPerfil"
+        app:srcCompat="@drawable/ic_filtro_24" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="339dp"
+        android:layout_height="144dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <TextView
+        android:id="@+id/textView31"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="24dp"
+        android:text="Principais Categorias"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/textView42"
+        app:layout_constraintHorizontal_bias="0.122"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/adView" />
+
+    <TextView
+        android:id="@+id/textView42"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:text="ver todos"
+        android:textColor="@color/primaria"
+        android:textSize="12dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/textView31"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView31" />
+
+    <HorizontalScrollView
+        android:id="@+id/HscrViewCategorias"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:paddingVertical="8dp"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView31">
+
+        <LinearLayout
+            android:id="@+id/category_container"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp">
+
+            <TextView
+                android:id="@+id/txtViewPopular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="#009688"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp"
+                android:text="Categoria 1"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="#DDDDDD"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp"
+                android:text="Categoria 2"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="#DDDDDD"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp"
+                android:text="Categoria 3"
+                android:textSize="18sp" />
+
+            <!-- Adicione mais categorias aqui, se necessário -->
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:id="@+id/HscrViewPerfis"
+        android:layout_width="415dp"
+        android:layout_height="163dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HscrViewCategorias">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imgViewAutonomo1"
+                android:layout_width="119dp"
+                android:layout_height="144dp"
+                android:layout_margin="10dp"
+                app:srcCompat="@drawable/rounded_edittext_background" />
+
+            <ImageView
+                android:id="@+id/imgViewAutonomo2"
+                android:layout_width="119dp"
+                android:layout_height="144dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/rounded_edittext_background" />
+
+            <ImageView
+                android:id="@+id/imgViewAutonomo3"
+                android:layout_width="119dp"
+                android:layout_height="144dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/rounded_edittext_background" />
+
+            <ImageView
+                android:id="@+id/imgViewAutonomo4"
+                android:layout_width="119dp"
+                android:layout_height="144dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/rounded_edittext_background" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>
+

@@ -10,7 +10,7 @@
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/spnModeloCobranca"
+        android:id="@+id/Main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="24dp">
@@ -210,15 +210,6 @@
 
                 <!-- Adicione mais categorias aqui, se necessário -->
 
-                <ImageView
-                    android:id="@+id/imgViewAdicionar"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginStart="8dp"
-                    android:contentDescription="Adicionar Categoria"
-                    app:srcCompat="@drawable/ic_adicionar_24"
-                    app:tint="#000000" />
-
             </LinearLayout>
         </HorizontalScrollView>
 
@@ -236,21 +227,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/HscrViewCategorias" />
 
-        <!-- LINHA 1 DA GALERIA -->
-
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/containerServicos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:orientation="vertical"
+            android:layout_width="409dp"
+            android:layout_height="256dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtViewServicos">
+            app:layout_constraintTop_toBottomOf="@+id/txtViewServicos" />
 
-        </LinearLayout>
+        <!-- LINHA 1 DA GALERIA -->
 
         <!-- LINHA 2 DA GALERIA -->
 

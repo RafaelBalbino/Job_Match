@@ -8,15 +8,18 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import coil.load
 import com.jobmatch.databinding.ActivityTelaPerfilAutonomoBinding
 import com.jobmatch.databinding.ItemServicoButtonBinding
+import androidx.recyclerview.widget.GridLayoutManager
 
 class TelaPerfilAutonomo : AppCompatActivity() {
     private val binding by lazy {
         ActivityTelaPerfilAutonomoBinding.inflate(layoutInflater)
     }
-
+    private val listaServico = mutableListOf<Servico>()
+    private lateinit var servicosAdapter: ServicosAdapter
 
     //Lista para armaazenar e gerenciar serviços
     private val listaServicos = mutableListOf<Servico>()
@@ -69,7 +72,7 @@ class TelaPerfilAutonomo : AppCompatActivity() {
         val itemServicoView = criarCardViewServico(novoServico)
 
         //Adiciona ao container
-        binding.containerServicos.addView(itemServicoView)
+        binding.categoryContainer.addView(itemServicoView)
 
     }
 
@@ -77,80 +80,94 @@ class TelaPerfilAutonomo : AppCompatActivity() {
     private fun criarCardViewServico(servico: Servico): CardView {
         // 1. Infla o layout do CardView
         val binding = ItemServicoButtonBinding.inflate(LayoutInflater.from(this))
-        val cardView = binding.root
+        val cardView = binding.cardServicoRoot
 
 
         // 2. Encontra os elementos internos usando findViewById no CardView inflado
 
         // Título do Serviço (em cima)
-        val tvNomeServico = binding.txtNomeCard
-        // Imagem de Fundo/Principal
+        val tvNomeServico = binding.txtNameCardServico
         val ivFundo = binding.imageServicoFundo
-        // Ícone de Edição (canto superior direito)
-        val ivEditar = binding.imgEditar
-        // Icone de Alerta/Status (central)
-        val ivAlerta = binding.imgAlerta
-        // Texto de Alerta/Status (central)
-        val layoutAlerta = binding.layoutAlerta
-        val tvAlerta = binding.textAbaixoIcone
-
-
+        val ivEditar = binding.iconEditar
+        val ivExcluir = binding.iconExcluir
 
         // 3. Define os dados dinâmicos do Serviço
-        tvNomeServico.text = servico.nomeServico ?: "Novo Serviço"
+        tvNomeServico.text = servico.nomeServico ?: "Serviço Desconhecido"
+
+        val fotoUrl = servico.fotoServico
 
         val dadosCompletos = servico.nomeServico.isNullOrBlank() && !servico.fotoServico.isNullOrBlank()
 
-        // Lógica para imagem de fundo (exemplo)
-        if (dadosCompletos) {
-            // 1. Oculta o bloco de alerta
-            layoutAlerta.visibility = View.GONE
-
-            // 2. Define a foto do serviço
-            ivFundo.load(servico.fotoServico){
+        // Lógica para carregar a imagem (assumindo que você usa Coil/Glide)
+        if (!fotoUrl.isNullOrBlank()) {
+            // Exemplo usando a extensão load() do Coil
+            ivFundo.load(fotoUrl) {
                 crossfade(true)
+                // placeholder(R.drawable.ic_placeholder_loading) // Se você tiver um placeholder
             }
+            // Remove o fundo de cor (se for usado pelo placeholder)
+            ivFundo.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent))
+
         } else {
-            // 1. Torna o bloco de alerta VISÍVEL
-            layoutAlerta.visibility = View.VISIBLE
+            // Se não houver foto, mostra um ícone de placeholder e cor de fundo
+            ivFundo.setImageResource(R.drawable.ic_alerta_24) // Use um ícone de placeholder aqui
+            ivFundo.setBackgroundColor(ContextCompat.getColor(this, R.color.cinza_claro))
 
-            // 2. Define o texto de alerta
-            val fotoAusente = servico.fotoServico.isNullOrBlank()
-            val nomeAusente = servico.nomeServico.isNullOrBlank()
-
-            tvAlerta.text = when {
-                fotoAusente -> "Imagem Pendente"
-                nomeAusente -> "Nome Pendente"
-                else -> "Dados Incompletos" // Caso não deva acontecer se a lógica de dadosCompletos estiver correta
-            }
-
-            // 3. Remove qualquer imagem definida (mostra o fundo cinza de alerta)
-            ivFundo.setImageDrawable(null)
         }
+
 
         // 4. Define as ações de clique
 
         // Ação principal (clicar no card)
-        cardView.setOnClickListener {
-            Toast.makeText(this, "Abrir detalhes de: ${servico.nomeServico}", Toast.LENGTH_SHORT).show()
-            // Implemente aqui a navegação para a tela de detalhes
-        }
+    cardView.setOnClickListener {
+        Toast.makeText(this@TelaPerfilAutonomo, "Abrir detalhes de: ${servico.nomeServico}", Toast.LENGTH_SHORT).show()
+        // Implemente aqui a navegação para a tela de detalhes
+    }
 
         // Ação do botão de edição
         ivEditar.setOnClickListener {
-            Toast.makeText(this, "Editar serviço: ${servico.nomeServico}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@TelaPerfilAutonomo, "Editar serviço: ${servico.nomeServico}", Toast.LENGTH_SHORT).show()
             // Implemente aqui a lógica para editar
+        }
+        // Ação do botão de exclusão
+        ivExcluir.setOnClickListener {
+            Toast.makeText(this@TelaPerfilAutonomo, "Excluir serviço: ${servico.nomeServico}", Toast.LENGTH_SHORT).show()
+            // Implemente aqui a lógica para exclusão (ex: exclusão no Firebase e remoção da lista)
         }
 
         // 5. Retorna o CardView preenchido
         return cardView
     }
 
+    private fun setupRecyclerView() {
+        // 1. Inicializa o Adapter
+        // O último parâmetro (onServiceClick) é o que acontece ao clicar em um Card
+        servicosAdapter = ServicosAdapter(listaServicos) { servicoClicado ->
+            // Exemplo: mostrar um Toast
+            Toast.makeText(this, "Você clicou no serviço: ${servicoClicado.nomeServico}", Toast.LENGTH_SHORT).show()
+            // Implemente aqui a navegação para a tela de detalhes do serviço
+        }
+
+        // 2. Configura o RecyclerView
+        // O ID do seu RecyclerView no XML é 'containerServicos'
+        binding.containerServicos.apply {
+
+            // ** CONFIGURAÇÃO DO LAYOUT EM GRID **
+            // spanCount = 2 significa 2 colunas
+            layoutManager = GridLayoutManager(context, 2)
+
+            adapter = servicosAdapter
+
+            // 3. Otimização para NestedScrollView:
+            // Desativa a rolagem interna do RecyclerView, deixando a rolagem para o NestedScrollView
+            isNestedScrollingEnabled = false
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+        setupRecyclerView()
 
         // botão Editar Perfil
         binding.btnEditarPerfil.setOnClickListener {
@@ -163,7 +180,7 @@ class TelaPerfilAutonomo : AppCompatActivity() {
             )
         }
 
-        // ✅ BOTÃO CADASTRAR SERVIÇO: Inicia o Launcher
+
         binding.btnCadastrarServico.setOnClickListener {
             val intent = Intent(this, CadastrarServico::class.java)
             cadastrarServicoLauncher.launch(intent)
