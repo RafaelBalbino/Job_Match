@@ -1,12 +1,16 @@
 package com.jobmatch
 
+import android.os.Parcelable
 import com.google.firebase.firestore.IgnoreExtraProperties
+import kotlinx.parcelize.Parcelize
 
 /**
  * Representa um Serviço oferecido por um Autônomo.
  * Esta classe é compatível com o Firestore para ser salva e lida diretamente.
+ * Também é Parcelable para poder ser passada entre Activities.
  */
 @IgnoreExtraProperties
+@Parcelize
 data class Servico(
     val uidUsuario: String? = null, // ID do Autônomo que oferece o serviço
     val nomeServico: String? = null,
@@ -14,8 +18,8 @@ data class Servico(
     val fotoServico: String? = null,    // URL para a imagem no Firebase Storage
     val modeloCobranca: String? = null, // Ex: "Por Hora", "Preço Fixo"
     val categoria: String? = null,      // Ex: "TI", "Elétrica", "Geral"
-    val preco: Double? = 0.0
-) {
+    val precoBase: Double? = 0.0
+) : Parcelable {
     // Construtor vazio para o Firebase
     constructor() : this(null, null, null, null, null, null, 0.0)
 }

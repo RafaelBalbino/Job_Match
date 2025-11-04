@@ -101,8 +101,8 @@
         <EditText
             android:id="@+id/etCodigo1"
             style="@style/Widget.AppCompat.EditText"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="8dp"
             android:gravity="center"
             android:inputType="number"
@@ -112,8 +112,8 @@
 
         <EditText
             android:id="@+id/etCodigo2"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="8dp"
             android:gravity="center"
             android:inputType="number"
@@ -123,8 +123,8 @@
 
         <EditText
             android:id="@+id/etCodigo3"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="8dp"
             android:gravity="center"
             android:inputType="number"
@@ -134,8 +134,8 @@
 
         <EditText
             android:id="@+id/etCodigo4"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="8dp"
             android:gravity="center"
             android:inputType="number"
@@ -145,8 +145,8 @@
 
         <EditText
             android:id="@+id/etCodigo5"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginEnd="8dp"
             android:gravity="center"
             android:inputType="number"
@@ -156,8 +156,8 @@
 
         <EditText
             android:id="@+id/etCodigo6"
-            android:layout_width="40dp"
-            android:layout_height="50dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:gravity="center"
             android:inputType="number"
             android:maxLength="1"
