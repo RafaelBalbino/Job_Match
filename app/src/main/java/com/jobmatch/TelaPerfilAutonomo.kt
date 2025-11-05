@@ -52,7 +52,7 @@ class TelaPerfilAutonomo : AppCompatActivity() {
                 fotoServico = fotoUri,
                 modeloCobranca = modeloCobranca,
                 categoria = categoria,
-                preco = preco
+                precoBase = preco
             )
 
             //Adicionar e Atualiza

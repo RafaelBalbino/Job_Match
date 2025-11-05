@@ -83,7 +83,7 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
                         binding.txtTelefoneContratante.setText(it.numeroTelefone)
                         // binding.txtEnderecoContratante.setText(it.endereco?.toString())
 
-                        val fotoUrl = it.contratante?.fotoUrl
+                        val fotoUrl = it.fotoUrl
                         if (!fotoUrl.isNullOrEmpty()) {
                             binding.imgPerfilContratante.load(fotoUrl) { crossfade(true) }
                             binding.imgPerfilContratante.visibility = View.VISIBLE

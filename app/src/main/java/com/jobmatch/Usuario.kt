@@ -7,15 +7,17 @@ import com.google.firebase.firestore.IgnoreExtraProperties
  * Agora, em vez de herança, ele "compõe" os perfis usando as classes Contratante e Autonomo.
  */
 @IgnoreExtraProperties
+// Em Usuario.kt
 data class Usuario(
     val uid: String? = null,
     val nome: String? = null,
     val email: String? = null,
+    val fotoUrl: String? = null, // <--- CAMPO DE FOTO PRINCIPAL AQUI
     val numeroTelefone: String? = null,
     val endereco: Endereco? = null,
-    val contratante: Contratante? = null, // Perfil de contratante (pode ser nulo, mas no nosso caso, sempre existirá)
-    val autonomo: Autonomo? = null      // Perfil de autônomo (opcional)
+    val contratante: Contratante? = null,
+    val autonomo: Autonomo? = null
 ) {
-    // Construtor vazio para o Firebase
-    constructor() : this(null, null, null, null, null, null, null)
+    constructor() : this(null, null, null, null, null, null, null, null)
 }
+

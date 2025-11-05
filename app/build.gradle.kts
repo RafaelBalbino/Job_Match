@@ -46,6 +46,12 @@ android {
 
 dependencies {
 
+    // Dependência Coil
+    implementation("io.coil-kt:coil:2.6.0")
+
+    // Dependência CircleImageView
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+
     //Dependência Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
 

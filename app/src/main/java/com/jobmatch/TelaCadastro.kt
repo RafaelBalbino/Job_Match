@@ -23,13 +23,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.firestore.FirebaseFirestore
-import com.jobmatch.databinding.ActivityTelaCadastroBinding // Importe a classe de binding gerada
+import com.jobmatch.databinding.ActivityTelaCadastroBinding
 
 class TelaCadastro : AppCompatActivity() {
 
     private lateinit var binding: ActivityTelaCadastroBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+
+    //                                         ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+    // PASSO FINAL: SUBSTITUA ESTA LINHA PELA SUA URL DO FIREBASE STORAGE
+    private val DEFAULT_PROFILE_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/jobmatch-3faec.firebasestorage.app/o/avatar-do-usuario.png?alt=media&token=d1d15194-bf59-4a2b-9df3-75c0a23053d1"
+    //                                         ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,15 +55,44 @@ class TelaCadastro : AppCompatActivity() {
         setupClickableText()
         setupPasswordFocusListener()
         setupUserTypeSelection()
+        setupPrivacyPolicyClick()
 
         binding.btnEnviaCadastro.setOnClickListener {
             cadastrarUsuario()
         }
     }
 
-    /**
-     * Configura a visibilidade dos campos de autônomo com base na seleção do RadioGroup.
-     */
+    private fun setupPrivacyPolicyClick() {
+        val radioButton = binding.radioButton
+        val fullText = radioButton.text.toString()
+        val clickableText = "Políticas de Privacidade"
+        val spannableString = SpannableString(fullText)
+        val verdeAgua = ContextCompat.getColor(this, R.color.verde_agua)
+
+        val start = fullText.indexOf(clickableText)
+        if (start == -1) return
+
+        val end = start + clickableText.length
+
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val privacyPolicyText = "Nossa política de privacidade segue as diretrizes da LGPD, garantindo a proteção e o uso consciente dos seus dados. Ao se cadastrar, você concorda com a coleta e o tratamento de suas informações para os fins descritos em nossos termos."
+                Toast.makeText(this@TelaCadastro, privacyPolicyText, Toast.LENGTH_LONG).show()
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = true
+                ds.color = verdeAgua
+                ds.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            }
+        }
+        spannableString.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        radioButton.text = spannableString
+        radioButton.movementMethod = LinkMovementMethod.getInstance()
+        radioButton.highlightColor = Color.TRANSPARENT
+    }
+
     private fun setupUserTypeSelection() {
         binding.rgUserType.setOnCheckedChangeListener { _, checkedId ->
             val isFreelancer = checkedId == R.id.rb_freelancer
@@ -66,12 +100,8 @@ class TelaCadastro : AppCompatActivity() {
         }
     }
 
-    /**
-     * Mostra ou esconde os campos específicos de autônomo.
-     */
     private fun toggleFreelancerFields(show: Boolean) {
         val visibility = if (show) View.VISIBLE else View.GONE
-        // Anima a visibilidade para uma transição suave
         binding.tilCnpj.visibility = visibility
         binding.tilSpecialization.visibility = visibility
     }
@@ -83,6 +113,7 @@ class TelaCadastro : AppCompatActivity() {
         val verdeAgua = ContextCompat.getColor(this, R.color.verde_agua)
 
         val start = fullText.indexOf("Inicie")
+        if (start == -1) return
         val end = fullText.length
 
         val clickableSpan = object : ClickableSpan() {
@@ -98,9 +129,7 @@ class TelaCadastro : AppCompatActivity() {
                 ds.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             }
         }
-
         spannableString.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
         textView.text = spannableString
         textView.movementMethod = LinkMovementMethod.getInstance()
         textView.highlightColor = Color.TRANSPARENT
@@ -123,7 +152,7 @@ class TelaCadastro : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
             binding.btnEnviaCadastro.text = ""
@@ -137,7 +166,7 @@ class TelaCadastro : AppCompatActivity() {
     }
 
     private fun cadastrarUsuario() {
-        // Limpa erros anteriores
+        // Validação dos campos...
         binding.tilNome.error = null
         binding.tilEmail.error = null
         binding.tilTelefone.error = null
@@ -170,7 +199,6 @@ class TelaCadastro : AppCompatActivity() {
                 binding.tilSpecialization.error = "Especialização é obrigatória para autônomo"
                 return
             }
-            // Cria o objeto Autonomo se o usuário escolheu ser um
             autonomo = Autonomo(cnpj = cnpj.ifEmpty { null }, especializacao = especializacao)
         }
 
@@ -184,15 +212,14 @@ class TelaCadastro : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, senha)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Todo usuário, por padrão, pode contratar. Cria o perfil de contratante.
-                    val contratante = Contratante() // O CPF pode ser adicionado depois, no perfil.
+                    val contratante = Contratante()
                     salvarDadosUsuario(nome, email, telefone, contratante, autonomo)
                 } else {
                     showLoading(false)
                     val exception = task.exception
                     val errorMessage = when (exception) {
                         is FirebaseAuthUserCollisionException -> "Este e-mail já está em uso por outra conta."
-                        is FirebaseAuthWeakPasswordException -> "A senha é muito fraca. A senha deve ter no mínimo 6 caracteres."
+                        is FirebaseAuthWeakPasswordException -> "A senha é muito fraca. A senha deve ter no mínimo 8 caracteres."
                         else -> "Falha no cadastro: ${exception?.message}"
                     }
                     if (exception is FirebaseAuthUserCollisionException) {
@@ -214,24 +241,25 @@ class TelaCadastro : AppCompatActivity() {
             return
         }
 
-        // Monta o objeto Usuario com a nova arquitetura de composição
+        // Monta o objeto Usuario, incluindo a URL da imagem padrão
         val novoUsuario = Usuario(
             uid = userId,
             nome = nome,
             email = email,
             numeroTelefone = telefone,
-            contratante = contratante, // Aninha o objeto Contratante
-            autonomo = autonomo      // Aninha o objeto Autonomo (pode ser nulo)
+            fotoUrl = DEFAULT_PROFILE_IMAGE_URL, // <-- USANDO A URL DO FIREBASE STORAGE
+            contratante = contratante,
+            autonomo = autonomo
         )
 
         db.collection("users").document(userId)
             .set(novoUsuario)
-            .addOnSuccessListener { 
+            .addOnSuccessListener {
                 Log.d("Firestore", "Usuário salvo com a nova estrutura. ID: $userId")
                 val intent = Intent(this, TelaMenuPrincipal::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
-                finish() 
+                finish()
             }
             .addOnFailureListener { e ->
                 showLoading(false)

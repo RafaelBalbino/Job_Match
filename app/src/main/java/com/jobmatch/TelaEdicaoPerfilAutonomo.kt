@@ -85,7 +85,7 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
                             binding.txtCnpjAutonomo.setText(it.cnpj)
                         }
                         
-                        val fotoUrl = it.autonomo?.fotoUrl
+                        val fotoUrl = it.fotoUrl
                         if (!fotoUrl.isNullOrEmpty()) {
                             binding.imgPerfilAutonomo.load(fotoUrl) { crossfade(true) }
                             binding.imgPerfilAutonomo.visibility = View.VISIBLE

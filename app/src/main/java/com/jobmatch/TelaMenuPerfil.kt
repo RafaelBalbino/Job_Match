@@ -1,4 +1,4 @@
-package com.jobmatch
+package com.jobmatch // Mantenha seu pacote original aqui
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,12 +9,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import coil.load
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaMenuPerfilBinding
 
 class TelaMenuPerfil : AppCompatActivity() {
 
+    // A variável 'binding' acessa os componentes do XML com os nomes corretos
     private lateinit var binding: ActivityTelaMenuPerfilBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
@@ -29,45 +31,43 @@ class TelaMenuPerfil : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+        // Usa o ID do layout raiz: 'layout_root_menu'
+        ViewCompat.setOnApplyWindowInsetsListener(binding.layoutRootMenu) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Funções principais chamadas ao criar a tela
         carregarDadosUsuario()
-        configurarBotaoLogout()
-        configurarBotaoFechar()
+        configurarCliquesDoMenu()
     }
 
     private fun carregarDadosUsuario() {
         val userId = auth.currentUser?.uid
         if (userId == null) {
-            // Se não houver usuário, encerra a sessão e volta para o login
             Log.e("TelaMenuPerfil", "Usuário não autenticado.")
             fazerLogout()
             return
         }
-
-        // Mostra um shimmer/loading aqui se desejar
 
         db.collection("users").document(userId).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
                     val usuario = document.toObject(Usuario::class.java)
                     if (usuario != null) {
-                        // Preenche os campos da UI com os dados do usuário
-                        binding.textView23.text = usuario.nome
-                        binding.textView24.text = usuario.email
+                        // Usa os IDs corretos para nome, email e imagem
+                        binding.txtNomeUsuario.text = usuario.nome
+                        binding.txtEmailUsuario.text = usuario.email
 
-                        // **LÓGICA CONDICIONAL DO MENU**
-                        // Mostra ou esconde opções com base no perfil do usuário
-                        if (usuario.autonomo != null) {
-                            binding.textView16.visibility = View.VISIBLE // "Projetos"
-                        } else {
-                            binding.textView16.visibility = View.GONE
+                        // CORREÇÃO: Carregando a imagem de forma explícita com Coil
+                        val imageView = binding.imgPerfilUsuario
+                        imageView.load(usuario.fotoUrl) {
+                            crossfade(true) // Adiciona uma transição suave
+                            placeholder(R.drawable.ic_profile_placeholder)
+                            error(R.drawable.ic_profile_placeholder)
                         }
+
+                        binding.btnProjetos.visibility = View.GONE
 
                     } else {
                         Log.e("TelaMenuPerfil", "Falha ao converter o documento para objeto Usuario.")
@@ -82,24 +82,54 @@ class TelaMenuPerfil : AppCompatActivity() {
             }
     }
 
-    private fun configurarBotaoLogout() {
-        binding.textView21.setOnClickListener {
+    // Função que centraliza todos os cliques do menu com a LÓGICA ATUALIZADA
+    private fun configurarCliquesDoMenu() {
+        // Botão de fechar (X) no canto superior direito
+        binding.btnFecharMenu.setOnClickListener {
+            finish() // Fecha a tela atual e volta para a anterior
+        }
+
+        // --- CLIQUES DOS ITENS DE MENU ---
+        binding.btnMeuPerfil.setOnClickListener {
+            val intent = Intent(this, TelaMeuPerfil::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnMeusPedidos.setOnClickListener {
+            val intent = Intent(this, TelaRealizarPedidos::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnProjetos.setOnClickListener {
+            showToast("Será implementado no futuro")
+        }
+
+        binding.btnPagamentos.setOnClickListener {
+            showToast("Será implementado no futuro")
+        }
+
+        binding.btnConfiguracoes.setOnClickListener {
+            showToast("Será implementado no futuro")
+        }
+
+        // Botão para encerrar a sessão
+        binding.btnEncerrarSessao.setOnClickListener {
             fazerLogout()
         }
     }
 
-    private fun configurarBotaoFechar() {
-        binding.imageView4.setOnClickListener {
-            finish() // Simplesmente fecha a tela atual, voltando para a anterior (TelaMenuPrincipal)
-        }
-    }
-
+    // Função para fazer o logout do usuário e levá-lo à tela de login
     private fun fazerLogout() {
         auth.signOut()
         val intent = Intent(this, TelaLogin::class.java)
-        // Limpa todas as activities anteriores e inicia a TelaLogin como a nova tarefa principal
+        // Limpa a pilha de telas para que o usuário não possa "voltar" para a área logada
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
+    }
+
+    // Função auxiliar para exibir mensagens rápidas
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

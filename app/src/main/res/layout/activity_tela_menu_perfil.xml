@@ -2,14 +2,15 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main" 
+    android:id="@+id/layout_root_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     tools:context=".TelaMenuPerfil">
 
+    <!-- Botão de fechar (X) -->
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/btn_fechar_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
@@ -19,20 +20,23 @@
         app:tint="#18B49D"
         android:contentDescription="Botão para fechar o menu" />
 
-    <ImageView
-        android:id="@+id/imageView9"
+    <!-- Imagem de perfil -->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_perfil_usuario"
         android:layout_width="76dp"
         android:layout_height="79dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/circle_white"
-        app:tint="#8E8E8E"
-        android:contentDescription="Ícone de perfil do usuário" />
+        android:contentDescription="Foto de perfil do usuário"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#E0E0E0"
+        tools:src="@tools:sample/avatars" />
 
+    <!-- Nome do Usuário -->
     <TextView
-        android:id="@+id/textView23"
+        android:id="@+id/txt_nome_usuario"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -40,143 +44,205 @@
         android:textColor="@color/preto"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/imageView4"
-        app:layout_constraintStart_toEndOf="@+id/imageView9"
-        app:layout_constraintTop_toTopOf="@+id/imageView9" />
+        app:layout_constraintEnd_toStartOf="@+id/btn_fechar_menu"
+        app:layout_constraintStart_toEndOf="@+id/img_perfil_usuario"
+        app:layout_constraintTop_toTopOf="@+id/img_perfil_usuario" />
 
+    <!-- Email do Usuário -->
     <TextView
-        android:id="@+id/textView24"
+        android:id="@+id/txt_email_usuario"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
-        android:text="fulano.tal@gmail.com (email)"
+        android:text="fulano.tal@gmail.com"
         android:textColor="@color/preto"
         android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/imageView4"
-        app:layout_constraintStart_toEndOf="@+id/imageView9"
-        app:layout_constraintTop_toBottomOf="@+id/textView23" />
+        app:layout_constraintEnd_toStartOf="@+id/btn_fechar_menu"
+        app:layout_constraintStart_toEndOf="@+id/img_perfil_usuario"
+        app:layout_constraintTop_toBottomOf="@+id/txt_nome_usuario" />
 
+    <!-- Divisor do Cabeçalho -->
     <View
-        android:id="@+id/divider_header"
+        android:id="@+id/divider_header_menu"
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:layout_marginTop="24dp"
         android:background="#18B49D"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView9" />
+        app:layout_constraintTop_toBottomOf="@+id/img_perfil_usuario" />
 
-    <TextView
-        android:id="@+id/textView14"
+    <!-- Container vertical para os itens do menu -->
+    <LinearLayout
+        android:id="@+id/container_opcoes_menu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:text="Meu Perfil"
-        android:textColor="@color/preto"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider_header" />
+        app:layout_constraintTop_toBottomOf="@+id/divider_header_menu">
 
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Meus Pedidos"
-        android:textColor="@color/preto"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+        <!-- Item 1: Meu Perfil -->
+        <FrameLayout
+            android:id="@+id/btn_meu_perfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
 
-    <TextView
-        android:id="@+id/textView16"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Projetos"
-        android:textColor="@color/preto"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="20dp"
+                android:text="Meu Perfil"
+                android:textColor="@color/preto"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Notificações"
-        android:textColor="@color/preto"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView16" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="#E0E0E0" />
+        </FrameLayout>
 
-    <TextView
-        android:id="@+id/textView18"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Configurações"
-        android:textColor="@color/preto"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView17" />
+        <!-- Item 2: Meus Pedidos -->
+        <FrameLayout
+            android:id="@+id/btn_meus_pedidos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
 
-    <TextView
-        android:id="@+id/textView19"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Sobre Nós"
-        android:textColor="@color/preto"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="20dp"
+                android:text="Meus Pedidos"
+                android:textColor="@color/preto"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textView20"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Termos &amp; Condições"
-        android:textColor="@color/preto"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView19" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="#E0E0E0" />
+        </FrameLayout>
 
-    <TextView
-        android:id="@+id/textView21"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="Encerrar Sessão"
-        android:textColor="#C62828"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView20" />
+        <!-- Item 3: Projetos -->
+        <FrameLayout
+            android:id="@+id/btn_projetos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="20dp"
+                android:text="Projetos"
+                android:textColor="@color/preto"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="#E0E0E0" />
+        </FrameLayout>
+
+        <!-- Item 4: Pagamentos -->
+        <FrameLayout
+            android:id="@+id/btn_pagamentos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="20dp"
+                android:text="Pagamentos"
+                android:textColor="@color/preto"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="#E0E0E0" />
+        </FrameLayout>
+
+        <!-- Item 5: Configurações -->
+        <FrameLayout
+            android:id="@+id/btn_configuracoes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="20dp"
+                android:text="Configurações"
+                android:textColor="@color/preto"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="#E0E0E0" />
+        </FrameLayout>
+
+        <!-- Último Item: Encerrar Sessão (sem linha) -->
+        <FrameLayout
+            android:id="@+id/btn_encerrar_sessao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="20dp"
+                android:text="Encerrar Sessão"
+                android:textColor="#C62828"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

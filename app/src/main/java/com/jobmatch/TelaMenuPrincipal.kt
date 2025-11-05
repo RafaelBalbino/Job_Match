@@ -54,7 +54,7 @@ class TelaMenuPrincipal : AppCompatActivity() {
                     val usuario = document.toObject(Usuario::class.java)
                     usuario?.let {
                         // Determina qual URL de foto usar
-                        val fotoUrl = if (it.autonomo != null) it.autonomo?.fotoUrl else it.contratante?.fotoUrl
+                        val fotoUrl = it.fotoUrl
                         if (!fotoUrl.isNullOrEmpty()) {
                             binding.imgPerfil.load(fotoUrl) {
                                 crossfade(true)
@@ -64,6 +64,7 @@ class TelaMenuPrincipal : AppCompatActivity() {
                     }
                 }
             }
+
             // Falha ao carregar a foto não é um erro crítico, então não mostramos Toast
     }
 
