@@ -1,213 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".TelaEdicaoPerfilAutonomo"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".TelaEdicaoPerfilAutonomo">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/Main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="32dp">
 
         <Button
             android:id="@+id/btnVoltarPerfilAutonomo"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Botão Voltar"
-            android:padding="0dp"
-            android:paddingStart="0dp"
-            android:paddingLeft="0dp"
-            android:paddingTop="0dp"
-            android:paddingRight="0dp"
-            android:paddingBottom="0dp"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/voltar_icone_descricao"
             app:icon="@drawable/ic_voltar_24"
-            app:iconPadding="0dp"
             app:iconSize="28dp"
             app:iconTint="@color/secundaria_variante"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="115dp"
-        android:text="Edição de Perfil"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/btnVoltarPerfilAutonomo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnVoltarPerfilAutonomo"
-        app:layout_constraintTop_toTopOf="@+id/btnVoltarPerfilAutonomo" />
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_profile_title"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/btnVoltarPerfilAutonomo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnVoltarPerfilAutonomo" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_header_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.12" />
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="16dp"
+            android:background="#18B49D"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnVoltarPerfilAutonomo" />
 
-    <!-- SEÇÃO DADOS PESSOAIS -->
-    <TextView
-        android:id="@+id/textView6_section_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Dados Pessoais"
-        android:textColor="#009688"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline_header_bottom" />
+        <!-- SEÇÃO DADOS PESSOAIS -->
+        <TextView
+            android:id="@+id/textView6_section_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/edit_profile_section_personal"
+            android:textColor="@color/verde_agua"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
 
-    <!-- CAMPO NOME -->
-    <TextView
-        android:id="@+id/textView7_label_nome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:labelFor="@id/txt_nome_autonomo"
-        android:text="Nome"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6_section_title" />
-
-    <EditText
-        android:id="@+id/txt_nome_autonomo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/rounded_edittext_background"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7_label_nome" />
-
-    <!-- CAMPO ENDEREÇO -->
-    <TextView
-        android:id="@+id/textView8_label_endereco"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:labelFor="@id/txt_endereco_autonomo"
-        android:text="Endereço"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_nome_autonomo" />
-
-    <EditText
-        android:id="@+id/txt_endereco_autonomo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/rounded_edittext_background"
-        android:ems="10"
-        android:inputType="textPostalAddress"
-        android:padding="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8_label_endereco" />
-
-    <!-- CAMPO DESCRIÇÃO DE NEGÓCIO -->
-    <TextView
-        android:id="@+id/textView9_label_descricao"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:labelFor="@id/txt_descricao_negocio"
-        android:text="Descrição de Negócio"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_endereco_autonomo" />
-
-    <EditText
-        android:id="@+id/txt_descricao_negocio"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/rounded_edittext_background"
-        android:ems="10"
-        android:gravity="top"
-        android:hint="@string/dica_preenchimento_negocio"
-        android:inputType="textMultiLine"
-        android:minHeight="80dp"
-        android:padding="12dp"
-        android:textColorHint="@color/cinza_escuro"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9_label_descricao" />
-
-    <!-- SEÇÃO PERFIL (Anexo) -->
-    <TextView
-        android:id="@+id/textView11_label_perfil"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:text="Perfil"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_descricao_negocio" />
-
-    <Button
-        android:id="@+id/btn_anexo_autonomo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:minWidth="100dp"
-        android:text="Anexo"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11_label_perfil" />
-
-    <!-- BOTÃO SALVAR -->
-        <Button
-            android:id="@+id/btn_salvar_autonomo"
+        <!-- CAMPOS DE TEXTO -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_nome_autonomo"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
-            android:minHeight="64dp"
-            android:text="Salvar"
+            android:hint="@string/edit_profile_hint_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView6_section_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_nome_autonomo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_telefone_autonomo"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:hint="@string/edit_profile_hint_phone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_nome_autonomo">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_telefone_autonomo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_endereco_autonomo"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:hint="@string/edit_profile_hint_address"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_telefone_autonomo">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_endereco_autonomo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_especializacao_autonomo"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:hint="@string/register_specialization_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_endereco_autonomo">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_especializacao_autonomo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_cnpj_autonomo"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:hint="@string/register_cnpj_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_especializacao_autonomo">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_cnpj_autonomo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- SEÇÃO PERFIL (Anexo) -->
+        <TextView
+            android:id="@+id/textView11_label_perfil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/edit_profile_section_photo"
+            android:textColor="@color/verde_agua"
             android:textSize="22sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_cnpj_autonomo" />
+
+        <Button
+            android:id="@+id/btn_anexo_autonomo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/edit_profile_button_attach_image"
+            android:textSize="16sp"
+            app:icon="@android:drawable/ic_menu_gallery"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView11_label_perfil" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_perfil_autonomo"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="16dp"
+            android:background="#E0E0E0"
+            android:contentDescription="Pré-visualização da imagem de perfil"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_anexo_autonomo"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CornerSize16dp"
+            tools:srcCompat="@tools:sample/avatars"
+            tools:visibility="visible" />
+
+        <!-- BOTÃO SALVAR -->
+        <Button
+            android:id="@+id/btn_salvar_autonomo"
+            android:layout_width="150sp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:minHeight="56dp"
+            android:text="@string/botao_salvar"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_perfil_autonomo"
             app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

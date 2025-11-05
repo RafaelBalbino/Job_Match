@@ -1,5 +1,7 @@
 package com.jobmatch
 
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -7,109 +9,107 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityCadastrarServicoBinding
-import android.content.Intent
 
 class CadastrarServico : AppCompatActivity() {
     private val binding: ActivityCadastrarServicoBinding by lazy {
         ActivityCadastrarServicoBinding.inflate(layoutInflater)
     }
+
+    // Firebase
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+
     //Variável para armazenar URI da foto
-    private var fotoUri: String? = null
+    private var fotoSelecionadaUri: String? = null
 
 
     //Função para chamar foto da galeria
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        if (uri != null){
-            fotoUri = uri.toString() //Armazena URI como string
+        if (uri != null) {
+            fotoSelecionadaUri = uri.toString()
+            binding.imgAnexo.setImageURI(uri)
+            binding.imgAnexo.visibility = View.VISIBLE // Torna a imagem visível
             Toast.makeText(this, "Foto anexada com sucesso!", Toast.LENGTH_SHORT).show()
-        } else{
+        } else {
             Toast.makeText(this, "Seleção de foto cancelada.", Toast.LENGTH_SHORT).show()
         }
     }
 
     //Função para coletar, validar e salvar os dados do serviço
     private fun salvarServico() {
+        // 1. Obter dados dos campos
         val nomeServico = binding.txtNomeServico.text.toString().trim()
         val descricaoServico = binding.txtDescricaoNegocio.text.toString().trim()
-        val categoria = binding.txtCategoriaServico.text.toString()
-        //spinner para Modelo de Cobrança
+        val categoria = binding.txtCategoriaServico.text.toString().trim()
         val modeloCobranca = binding.ModeloCobranca.selectedItem.toString()
-        val precoStr = binding.txtPreco.text.toString()
-
+        val precoStr = binding.txtPreco.text.toString().trim()
+        val userId = auth.currentUser?.uid
 
         //--------------------------------------------------------------------------------
-        //Validação dos dados
-        if (nomeServico.isEmpty() || descricaoServico.isEmpty() || precoStr.isEmpty()) {
-            Toast.makeText(this, "Por favor, preencha todos os campos.", Toast.LENGTH_SHORT).show()
+        // 2. Validação dos dados
+        if (userId == null) {
+            Toast.makeText(this, "Erro: Usuário não autenticado. Faça o login novamente.", Toast.LENGTH_LONG).show()
+            return
+        }
+        if (nomeServico.isEmpty() || descricaoServico.isEmpty() || precoStr.isEmpty() || categoria.isEmpty()) {
+            Toast.makeText(this, "Por favor, preencha todos os campos obrigatórios.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (binding.ModeloCobranca.selectedItemPosition == 0) {
+            Toast.makeText(this, "Por favor, selecione um modelo de cobrança.", Toast.LENGTH_SHORT).show()
             return
         }
 
+        val preco = try {
+            precoStr.toDouble()
+        } catch (e: NumberFormatException) {
+            Toast.makeText(this, "Por favor, insira um preço válido.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        val descricaoCompleta = "$descricaoServico | Preço: $precoStr | Modelo: $modeloCobranca"
+        showLoading(true)
 
-        //Instanciar o Objeto Serviço
+        // 3. Instanciar o Objeto Serviço com os dados corretos e validados
         val novoServico = Servico(
-            uidUsuario = "uidUsuarioLogado",
+            uidUsuario = userId, // O ID real do usuário logado
             nomeServico = nomeServico,
-            descricaoServico = descricaoCompleta,
+            descricaoServico = descricaoServico,
             categoria = categoria,
             modeloCobranca = modeloCobranca,
-            fotoServico = fotoUri,
-            preco = precoStr.toDoubleOrNull()
+            fotoServico = fotoSelecionadaUri, // A URI da imagem (pode ser nula)
+            precoBase = preco // O preço convertido para Double
         )
 
-        val preco: Double
-        try {
-            // Tenta obter o modelo de cobrança (Ponto de falha 1)
-            val modeloCobranca = binding.ModeloCobranca.selectedItem.toString()
-
-            // Tenta obter o preço (Ponto de falha 2)
-            val preco: Double? = precoStr.toDoubleOrNull()
-
-            if (nomeServico.isEmpty() || descricaoServico.isEmpty() || preco == null || precoStr.isEmpty()) {
-                Toast.makeText(
-                    this,
-                    "Por favor, preencha todos os campos e use um preço válido.",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return
-            }
-
-            val mensagem =
-                "Serviço '$nomeServico', Preço: R$$preco, Possui foto?: ${if (fotoUri != null) "Sim" else "Não"}, Modelo de Cobrança: '$modeloCobranca'"
-            Toast.makeText(this, mensagem, Toast.LENGTH_LONG).show()
-
-            //Enviar o Objeto de volta para Tela de Perfil do Autonomo
-            val resultIntent =
-                Intent().apply { // CORRIGIDO: Usando 'Intent()' em vez de 'intent.apply'
-                    // ... (Seus putExtra's)
-                    putExtra("UID_USUARIO", novoServico.uidUsuario)
-                    putExtra("NOME_SERVICO", novoServico.nomeServico)
-                    putExtra("DESCRICAO_COMPLETA", novoServico.descricaoServico)
-                    putExtra("FOTO_URI", novoServico.fotoServico)
-                    putExtra("MODELO_COBRANCA", novoServico.modeloCobranca)
-                    putExtra("CATEGORIA", novoServico.categoria)
-                    putExtra("PRECO_BASE", novoServico.preco.toString()) // Adiciona o preço
+        // 4. Salvar o objeto no Firestore
+        db.collection("servicos").add(novoServico)
+            .addOnSuccessListener { documentReference ->
+                showLoading(false)
+                Toast.makeText(this, "Serviço '${novoServico.nomeServico}' cadastrado com sucesso!", Toast.LENGTH_LONG).show()
+                
+                // Opcional: Enviar o serviço de volta se a tela anterior precisar dele
+                val resultIntent = Intent().apply {
+                    putExtra("NOVO_SERVICO", novoServico)
                 }
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish() // Fecha a tela e volta para a anterior
+            }
+            .addOnFailureListener { e ->
+                showLoading(false)
+                Toast.makeText(this, "Erro ao salvar serviço: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+    }
 
-            setResult(RESULT_OK, resultIntent)
-            Toast.makeText(this, "Serviço salvo com sucesso!", Toast.LENGTH_SHORT).show()
-            finish()
-
-        } catch (e: Exception) {
-            // Se houver qualquer falha (incluindo Spinner/View Binding/Conversão)
-            Toast.makeText(this, "Erro ao processar os dados: ${e.message}", Toast.LENGTH_LONG)
-                .show()
-            e.printStackTrace() // Imprime o rastreamento de pilha para o Logcat
-        }
+    private fun showLoading(isLoading: Boolean) {
+        binding.btnSalvarServico.isEnabled = !isLoading
+        // Adicione um ProgressBar ao seu layout e controle a visibilidade aqui
+        // binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     private fun mostrarTipoCobranca() {
@@ -134,20 +134,8 @@ class CadastrarServico : AppCompatActivity() {
 
         spinnerCobrancas.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                if (position > 0) {
-                    val selectedItem = parent.getItemAtPosition(position).toString()
-                    // Faça algo com o item selecionado
-                    Toast.makeText(
-                        applicationContext,
-                        "Selecionado: $selectedItem",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                // A lógica pode ser adicionada aqui se necessário
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -155,21 +143,22 @@ class CadastrarServico : AppCompatActivity() {
                 // Este método fica vazio, pois nenhuma ação é necessária se a seleção for nula.
             }
         }
-
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(binding.root)
+
+        // Inicializa o Firebase
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         mostrarTipoCobranca()
 
         binding.imgSeletor.setOnClickListener {
             binding.ModeloCobranca.performClick()
         }
-
 
         //função do botão voltar
         binding.btnVoltarPerfilAutonomo2.setOnClickListener {
@@ -185,7 +174,6 @@ class CadastrarServico : AppCompatActivity() {
         binding.btnSalvarServico.setOnClickListener {
             // Lógica para salvar o serviço
             salvarServico()
-            }
-
         }
+    }
 }

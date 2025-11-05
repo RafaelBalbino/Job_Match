@@ -1,82 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".TelaMenuPrincipal">
 
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/Main"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:paddingBottom="32dp" >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="411dp"
-        android:layout_height="136dp"
+        android:layout_width="0dp"
+        android:layout_height="160dp" 
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/imgNavegacaoMenu"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/menu_main_cd_navigation"
+        android:padding="4dp"
+        app:layout_constraintStart_toStartOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:srcCompat="@drawable/ic_menu_24" />
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imgPerfil"
-        android:layout_width="44dp"
-        android:layout_height="43dp"
-        android:layout_marginEnd="24dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="4dp"
+        android:background="?attr/colorPrimary"
+        android:contentDescription="@string/menu_main_cd_user_profile"
+        android:padding="4dp"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/imgNavegacaoMenu"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imgNavegacaoMenu"
-        app:srcCompat="@drawable/circle_white" />
-
-    <ImageView
-        android:id="@+id/imgNavegacaoMenu"
-        android:layout_width="38dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintStart_toStartOf="@+id/toolbar"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.197"
-        app:srcCompat="@drawable/ic_menu_24" />
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <SearchView
         android:id="@+id/scViewPesquisa"
-        android:layout_width="302dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="32dp"
-        android:background="#FFFBFB"
-        app:cardCornerRadius="150dp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/rounded_edittext_background"
+        android:queryHint="@string/menu_main_search_hint"
+        app:layout_constraintEnd_toStartOf="@+id/imgFiltro"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.801" />
+        app:layout_constraintTop_toBottomOf="@+id/imgNavegacaoMenu" />
 
     <ImageView
         android:id="@+id/imgFiltro"
-        android:layout_width="47dp"
-        android:layout_height="39dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/toolbar"
-        app:layout_constraintHorizontal_bias="0.351"
-        app:layout_constraintStart_toEndOf="@+id/scViewPesquisa"
-        app:layout_constraintTop_toBottomOf="@+id/imgPerfil"
-        app:srcCompat="@drawable/ic_filtro_24" />
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/menu_main_cd_filter"
+        android:padding="4dp"
+        app:srcCompat="@drawable/ic_filtro_24"
+        app:layout_constraintBottom_toBottomOf="@+id/scViewPesquisa"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/scViewPesquisa" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
-        android:layout_width="339dp"
-        android:layout_height="144dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        app:adSize="BANNER"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
@@ -84,13 +93,11 @@
         android:id="@+id/textView31"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="24dp"
-        android:text="Principais Categorias"
-        android:textSize="12dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="48dp"
+        android:text="@string/menu_main_title_categories"
+        android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/textView42"
-        app:layout_constraintHorizontal_bias="0.122"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/adView" />
 
@@ -98,10 +105,10 @@
         android:id="@+id/textView42"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:text="ver todos"
+        android:layout_marginEnd="24dp"
+        android:text="@string/menu_main_view_all"
         android:textColor="@color/primaria"
-        android:textSize="12dp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textView31"
         app:layout_constraintEnd_toEndOf="parent"
@@ -115,7 +122,6 @@
         android:paddingVertical="8dp"
         android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView31">
 
@@ -135,7 +141,7 @@
                 android:background="#009688"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="8dp"
-                android:text="Categoria 1"
+                android:text="@string/menu_main_category_1"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -147,7 +153,7 @@
                 android:background="#DDDDDD"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="8dp"
-                android:text="Categoria 2"
+                android:text="@string/menu_main_category_2"
                 android:textSize="18sp" />
 
             <TextView
@@ -157,7 +163,7 @@
                 android:background="#DDDDDD"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="8dp"
-                android:text="Categoria 3"
+                android:text="@string/menu_main_category_3"
                 android:textSize="18sp" />
 
             <!-- Adicione mais categorias aqui, se necessário -->
@@ -167,11 +173,13 @@
 
     <HorizontalScrollView
         android:id="@+id/HscrViewPerfis"
-        android:layout_width="415dp"
-        android:layout_height="163dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="16dp"
+        android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/HscrViewCategorias">
 
@@ -180,46 +188,46 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imgViewAutonomo1"
-                android:layout_width="119dp"
-                android:layout_height="144dp"
-                android:layout_margin="10dp"
-                app:srcCompat="@drawable/rounded_edittext_background" />
+                android:layout_width="130dp"
+                android:layout_height="160dp"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/menu_main_cd_featured_profile"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CornerSize16dp"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imgViewAutonomo2"
-                android:layout_width="119dp"
-                android:layout_height="144dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/rounded_edittext_background" />
+                android:layout_width="130dp"
+                android:layout_height="160dp"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/menu_main_cd_featured_profile"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CornerSize16dp"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imgViewAutonomo3"
-                android:layout_width="119dp"
-                android:layout_height="144dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/rounded_edittext_background" />
+                android:layout_width="130dp"
+                android:layout_height="160dp"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/menu_main_cd_featured_profile"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CornerSize16dp"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imgViewAutonomo4"
-                android:layout_width="119dp"
-                android:layout_height="144dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/rounded_edittext_background" />
+                android:layout_width="130dp"
+                android:layout_height="160dp"
+                android:contentDescription="@string/menu_main_cd_featured_profile"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CornerSize16dp"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         </LinearLayout>
-    </HorizontalScrollView>
-
-
-
-
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </HorizontalScrollView></androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>
-

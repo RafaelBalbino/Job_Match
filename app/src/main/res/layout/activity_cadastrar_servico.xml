@@ -1,279 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".CadastrarServico"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".CadastrarServico">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/Main"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
-
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="32dp">
 
         <Button
-        android:id="@+id/btnVoltarPerfilAutonomo2"
-        android:layout_width="35dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="28dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Botão pra voltar"
-        android:includeFontPadding="false"
-        android:padding="0dp"
-        android:paddingStart="0dp"
-        android:paddingLeft="0dp"
-        android:paddingTop="0dp"
-        android:paddingRight="0dp"
-        android:paddingBottom="0dp"
-        app:icon="@drawable/ic_voltar_24"
-        app:iconPadding="0dp"
-        app:iconSize="25dp"
-        app:iconTint="@color/secundaria_variante"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="115dp"
-        android:text="Cadastrar Serviço"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/btnVoltarPerfilAutonomo2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnVoltarPerfilAutonomo2"
-        app:layout_constraintTop_toTopOf="@+id/btnVoltarPerfilAutonomo2"
-        app:layout_constraintVertical_bias="0.514" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.12" />
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Dados Gerais"
-        android:textColor="@color/verde_agua"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.11"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
-
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Nome do Serviço"
-        android:textColor="@color/preto"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.132"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
-
-        <TextView
-            android:id="@+id/textView30"
+            android:id="@+id/btnVoltarPerfilAutonomo2"
+            style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Categoria do Serviço"
-            android:textColor="@color/preto"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.147"
+            android:contentDescription="@string/cadastrar_servico_back_button_description"
+            app:icon="@drawable/ic_voltar_24"
+            app:iconSize="25dp"
+            app:iconTint="@color/secundaria_variante"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_NomeServico" />
-
-        <EditText
-            android:id="@+id/txt_NomeServico"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            android:background="@drawable/rounded_edittext_background"
-            android:ems="10"
-            android:inputType="text"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView13" />
-
-        <EditText
-            android:id="@+id/txtCategoriaServico"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            android:background="@drawable/rounded_edittext_background"
-            android:ems="10"
-            android:inputType="text"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView30" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/textView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/cadastrar_servico_title"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/btnVoltarPerfilAutonomo2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnVoltarPerfilAutonomo2" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
             android:layout_marginTop="16dp"
-            android:text="Descrição de Serviço"
-            android:textColor="@color/preto"
-            android:textStyle="bold"
+            android:background="#18B49D"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.146"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtCategoriaServico" />
+            app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
-        <EditText
-            android:id="@+id/txt_DescricaoNegocio"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            android:background="@drawable/rounded_edittext_background"
-            android:ems="10"
-            android:gravity="top"
-            android:inputType="textMultiLine"
-            android:minHeight="80dp"
-            android:padding="12dp"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView14" />
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="24dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="24dp" />
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/textView12"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/cadastrar_servico_section_general"
+            android:textColor="@color/verde_agua"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_NomeServico"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Foto do Serviço"
-            android:textColor="@color/preto"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.128"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_DescricaoNegocio" />
+            android:hint="@string/cadastrar_servico_hint_name"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/textView12">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_NomeServico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_CategoriaServico"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/cadastrar_servico_hint_category"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/til_NomeServico">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtCategoriaServico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_DescricaoNegocio"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/cadastrar_servico_hint_description"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/til_CategoriaServico">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_DescricaoNegocio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:minLines="3" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-        android:id="@+id/btn_Anexo"
-        android:layout_width="104dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/botao_anexo"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.13"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+            android:id="@+id/btn_Anexo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/cadastrar_servico_button_photo"
+            android:textSize="16sp"
+            app:icon="@android:drawable/ic_menu_gallery"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/til_DescricaoNegocio" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgAnexo"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="16dp"
+            android:background="#E0E0E0"
+            android:contentDescription="@string/cadastrar_servico_image_preview_description"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/btn_Anexo"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CornerSize16dp"
+            tools:srcCompat="@tools:sample/avatars"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/textView16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Forma de Pagamentos"
+            android:layout_marginTop="24dp"
+            android:text="@string/cadastrar_servico_section_payment"
             android:textColor="@color/verde_agua"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/imgAnexo" />
+
+        <FrameLayout
+            android:id="@+id/spinner_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_edittext_background"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/textView16">
+
+            <Spinner
+                android:id="@+id/ModeloCobranca"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:spinnerMode="dropdown" />
+
+            <ImageView
+                android:id="@+id/imgSeletor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="16dp"
+                app:srcCompat="@drawable/ic_dropdown_24" />
+
+        </FrameLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_Preco"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/cadastrar_servico_hint_price"
+            app:layout_constraintEnd_toEndOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_container">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txt_Preco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_SalvarServico"
+            android:layout_width="150sp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:minHeight="56dp"
+            android:text="@string/botao_salvar"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.134"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_Anexo" />
-
-        <TextView
-        android:id="@+id/textView17"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Modelo de Cobrança"
-        android:textColor="@color/preto"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.142"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView16" />
-
-        <TextView
-            android:id="@+id/textView18"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Preço"
-            android:textColor="@color/preto"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.106"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ModeloCobranca" />
-
-        <EditText
-            android:id="@+id/txt_Preco"
-            android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            android:background="@drawable/rounded_edittext_background"
-            android:ems="10"
-            android:inputType="text"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView18" />
-
-    <Button
-        android:id="@+id/btn_SalvarServico"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/botao_salvar"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_Preco" />
-
-        <Spinner
-            android:id="@+id/ModeloCobranca"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            android:background="@drawable/rounded_edittext_background"
-            android:contextClickable="false"
-            android:minHeight="48dp"
-            android:spinnerMode="dropdown"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView17" />
-
-        <ImageView
-            android:id="@+id/imgSeletor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            app:layout_constraintBottom_toBottomOf="@+id/ModeloCobranca"
-            app:layout_constraintEnd_toEndOf="@+id/ModeloCobranca"
-            app:layout_constraintTop_toTopOf="@+id/ModeloCobranca"
-            app:srcCompat="@drawable/ic_dropdown_24" />
+            app:layout_constraintTop_toBottomOf="@+id/til_Preco" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
