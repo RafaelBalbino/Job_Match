@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaCadastroBinding
+import kotlin.math.min
 
 class TelaCadastro : AppCompatActivity() {
 
