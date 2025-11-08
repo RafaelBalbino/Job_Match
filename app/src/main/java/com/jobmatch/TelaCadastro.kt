@@ -6,9 +6,11 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
+import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
@@ -56,11 +58,54 @@ class TelaCadastro : AppCompatActivity() {
         setupPasswordFocusListener()
         setupUserTypeSelection()
         setupPrivacyPolicyClick()
+        setupPhoneMask()
 
         binding.btnEnviaCadastro.setOnClickListener {
             cadastrarUsuario()
         }
     }
+
+    private fun setupPhoneMask() {
+        binding.txtTelefone.setText("+55")
+        binding.txtTelefone.addTextChangedListener(object : TextWatcher {
+            private var isUpdating = false
+            private var old = ""
+
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                // Não é necessário
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                // Não é necessário
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                val str = s.toString().replace(Regex("[^\\d]"), "")
+                if (isUpdating || str == old) {
+                    return
+                }
+
+                isUpdating = true
+                var formatted = "+55"
+
+                if (str.length > 2) {
+                    formatted += " (${str.substring(2, min(4, str.length))}"
+                }
+                if (str.length >= 5) {
+                    formatted += ") ${str.substring(4, min(9, str.length))}"
+                }
+                if (str.length >= 10) {
+                    formatted += "-${str.substring(9, min(13, str.length))}"
+                }
+
+                s.replace(0, s.length, formatted)
+
+                old = str
+                isUpdating = false
+            }
+        })
+    }
+
 
     private fun setupPrivacyPolicyClick() {
         val radioButton = binding.radioButton
@@ -176,13 +221,13 @@ class TelaCadastro : AppCompatActivity() {
 
         val nome = binding.txtNome.text.toString().trim()
         val email = binding.txtEmail.text.toString().trim()
-        val telefone = binding.txtTelefone.text.toString().trim()
+        val telefone = binding.txtTelefone.text.toString().replace(Regex("[^\\d]"), "")
         val senha = binding.txtSenha.text.toString()
         val confirmarSenha = binding.txtConfirmarSenha.text.toString()
         val politicasAceitas = binding.radioButton.isChecked
         val isFreelancer = binding.rbFreelancer.isChecked
 
-        if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty()) {
+        if (nome.isEmpty() || email.isEmpty() || telefone.length < 13 || senha.isEmpty() || confirmarSenha.isEmpty()) {
             Toast.makeText(this, "Por favor, preencha todos os campos básicos.", Toast.LENGTH_SHORT).show()
             return
         }

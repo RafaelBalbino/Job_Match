@@ -10,10 +10,13 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityCadastrarServicoBinding
+import kotlin.math.max
+import kotlin.math.min
 
 class CadastrarServico : AppCompatActivity() {
     private val binding: ActivityCadastrarServicoBinding by lazy {
@@ -41,6 +44,37 @@ class CadastrarServico : AppCompatActivity() {
             Toast.makeText(this, "Seleção de foto cancelada.", Toast.LENGTH_SHORT).show()
         }
     }
+
+    //Função para calcular a distância de Levenshtein
+    private fun levenshteinDistance(a: String, b: String): Int {
+        val costs = IntArray(b.length + 1)
+        for (j in 0..b.length) {
+            costs[j] = j
+        }
+        for (i in 1..a.length) {
+            costs[0] = i
+            var newValue = i - 1
+            for (j in 1..b.length) {
+                val match = if (a[i - 1] == b[j - 1]) 0 else 1
+                val costReplace = costs[j - 1] + match
+                val costInsert = costs[j] + 1
+                val costDelete = newValue + 1
+                costs[j - 1] = newValue
+                newValue = min(min(costInsert, costDelete), costReplace)
+            }
+        }
+        return costs[b.length]
+    }
+
+    private fun calculateSimilarity(a: String, b: String): Double {
+        val longerLength = max(a.length, b.length)
+        if (longerLength == 0) {
+            return 1.0 // Ambos estão vazios, 100% de similaridade
+        }
+        val distance = levenshteinDistance(a.lowercase(), b.lowercase())
+        return (longerLength - distance) / longerLength.toDouble()
+    }
+
 
     //Função para coletar, validar e salvar os dados do serviço
     private fun salvarServico() {
@@ -76,6 +110,88 @@ class CadastrarServico : AppCompatActivity() {
 
         showLoading(true)
 
+        // 3. Verificar serviços existentes
+        db.collection("servicos")
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val similarServices = mutableListOf<String>()
+                for (document in querySnapshot.documents) {
+                    val nomeServicoExistente = document.getString("nomeServico") ?: ""
+                    if(nomeServicoExistente.isNotBlank()){
+                        val similarity = calculateSimilarity(nomeServico, nomeServicoExistente)
+                        if (similarity >= 0.8) {
+                            similarServices.add(nomeServicoExistente)
+                        }
+                    }
+                }
+
+                if (similarServices.isNotEmpty()) {
+                    showLoading(false)
+                    val similarServicesText = "- " + similarServices.joinToString("\n- ")
+                    val dialogMessage = "Foram encontrados os seguintes serviços com nomes parecidos:\n\n$similarServicesText"
+
+                    AlertDialog.Builder(this)
+                        .setTitle("Serviço a Ser Cadastrado: '$nomeServico'")
+                        .setMessage(dialogMessage)
+                        .setPositiveButton("Continuar Operação") { _, _ ->
+                            prosseguirComSalvamento(
+                                userId,
+                                nomeServico,
+                                descricaoServico,
+                                categoria,
+                                modeloCobranca,
+                                fotoSelecionadaUri,
+                                preco
+                            )
+                        }
+                        .setNegativeButton("Cancelar Operação") { dialog, _ ->
+                            resetarCampos()
+                            dialog.dismiss()
+                        }
+                        .setCancelable(false)
+                        .show()
+                } else {
+                    prosseguirComSalvamento(
+                        userId,
+                        nomeServico,
+                        descricaoServico,
+                        categoria,
+                        modeloCobranca,
+                        fotoSelecionadaUri,
+                        preco
+                    )
+                }
+            }
+            .addOnFailureListener { e ->
+                showLoading(false)
+                Toast.makeText(this, "Erro ao verificar serviços: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun resetarCampos() {
+        binding.txtNomeServico.text?.clear()
+        binding.txtCategoriaServico.text?.clear()
+        binding.txtDescricaoNegocio.text?.clear()
+        binding.txtPreco.text?.clear()
+        binding.ModeloCobranca.setSelection(0)
+        binding.imgAnexo.setImageURI(null)
+        binding.imgAnexo.visibility = View.GONE
+        fotoSelecionadaUri = null
+        Toast.makeText(this, "Operação cancelada.", Toast.LENGTH_SHORT).show()
+    }
+
+
+    private fun prosseguirComSalvamento(
+        userId: String,
+        nomeServico: String,
+        descricaoServico: String,
+        categoria: String,
+        modeloCobranca: String,
+        fotoServico: String?,
+        preco: Double
+    ) {
+        showLoading(true)
+
         // 3. Instanciar o Objeto Serviço com os dados corretos e validados
         val novoServico = Servico(
             uidUsuario = userId, // O ID real do usuário logado
@@ -83,7 +199,7 @@ class CadastrarServico : AppCompatActivity() {
             descricaoServico = descricaoServico,
             categoria = categoria,
             modeloCobranca = modeloCobranca,
-            fotoServico = fotoSelecionadaUri, // A URI da imagem (pode ser nula)
+            fotoServico = fotoServico, // A URI da imagem (pode ser nula)
             precoBase = preco // O preço convertido para Double
         )
 
@@ -92,7 +208,7 @@ class CadastrarServico : AppCompatActivity() {
             .addOnSuccessListener { documentReference ->
                 showLoading(false)
                 Toast.makeText(this, "Serviço '${novoServico.nomeServico}' cadastrado com sucesso!", Toast.LENGTH_LONG).show()
-                
+
                 // Opcional: Enviar o serviço de volta se a tela anterior precisar dele
                 val resultIntent = Intent().apply {
                     putExtra("NOVO_SERVICO", novoServico)

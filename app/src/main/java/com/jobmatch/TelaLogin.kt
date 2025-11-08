@@ -32,15 +32,6 @@ class TelaLogin : AppCompatActivity() {
         // Inicializa o Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        // **VERIFICAÇÃO DE LOGIN**
-        // Se o usuário já estiver logado, pula direto para a tela principal.
-        if (auth.currentUser != null) {
-            val intent = Intent(this, TelaMenuPrincipal::class.java)
-            startActivity(intent)
-            finish() // Finaliza a TelaLogin para que ela não fique na pilha
-            return   // Interrompe a execução do onCreate para não inflar o layout desnecessariamente
-        }
-
         // Se não houver usuário logado, continua e infla o layout da tela de login
         binding = ActivityTelaLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)

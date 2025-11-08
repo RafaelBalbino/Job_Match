@@ -14,25 +14,27 @@
         <!--<activity
             android:name=".ServicosAdapter"
             android:exported="false" />-->
-        <!-- Define a TelaLogin como a única porta de entrada do aplicativo por enquanto -->
+        <activity
+            android:name=".telaEntrada"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Todas as outras telas não são de entrada -->
         <activity
             android:name=".TelaLogin"
-            android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-        </activity><!-- Todas as outras telas não são de entrada -->
+            android:exported="false">
+        </activity>
         <activity
             android:name=".TelaPerfilAutonomo"
             android:exported="false">
         </activity>
         <activity
             android:name=".TelaAvaliacao"
-            android:exported="false" />
-        <activity
-            android:name=".telaEntrada"
             android:exported="false" />
         <activity
             android:name=".telaCriacaoPedido"
