@@ -81,7 +81,7 @@ class TelaCadastro : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable) {
-                val str = s.toString().replace(Regex("[^\\d]"), "")
+                val str = s.toString().replace(Regex("\\D"), "")
                 if (isUpdating || str == old) {
                     return
                 }

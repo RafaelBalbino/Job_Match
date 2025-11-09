@@ -1,233 +1,263 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
     tools:context=".TelaMenuPrincipal">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="32dp" >
+    <!-- 1. AppBarLayout com a cor primária restaurada -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="?attr/colorPrimary">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="160dp" 
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imgNavegacaoMenu"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="@string/menu_main_cd_navigation"
-        android:padding="4dp"
-        app:layout_constraintStart_toStartOf="@+id/toolbar"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
-        app:srcCompat="@drawable/ic_menu_24" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imgPerfil"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginEnd="4dp"
-        android:background="?attr/colorPrimary"
-        android:contentDescription="@string/menu_main_cd_user_profile"
-        android:padding="4dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@+id/imgNavegacaoMenu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imgNavegacaoMenu"
-        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <SearchView
-        android:id="@+id/scViewPesquisa"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/rounded_edittext_background"
-        android:queryHint="@string/menu_main_search_hint"
-        app:layout_constraintEnd_toStartOf="@+id/imgFiltro"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgNavegacaoMenu" />
-
-    <ImageView
-        android:id="@+id/imgFiltro"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginEnd="16dp"
-        android:contentDescription="@string/menu_main_cd_filter"
-        android:padding="4dp"
-        app:srcCompat="@drawable/ic_filtro_24"
-        app:layout_constraintBottom_toBottomOf="@+id/scViewPesquisa"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/scViewPesquisa" />
-
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        app:adSize="BANNER"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <TextView
-        android:id="@+id/textView31"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="48dp"
-        android:text="@string/menu_main_title_categories"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adView" />
-
-    <TextView
-        android:id="@+id/textView42"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:text="@string/menu_main_view_all"
-        android:textColor="@color/primaria"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/textView31"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView31" />
-
-    <HorizontalScrollView
-        android:id="@+id/HscrViewCategorias"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:paddingVertical="8dp"
-        android:scrollbars="none"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView31">
-
-        <LinearLayout
-            android:id="@+id/category_container"
-            android:layout_width="wrap_content"
+        <!-- Toolbar do Material 3 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp">
+            android:paddingBottom="16dp">
 
+            <ImageButton
+                android:id="@+id/imgNavegacaoMenu"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Menu"
+                android:padding="0dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_menu_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.search.SearchBar
+                android:id="@+id/scViewPesquisa"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:hint="Pesquisar..."
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imgFiltro"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <ImageButton
+                android:id="@+id/imgFiltro"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="16dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Filtro"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_filtro_24"
+                app:layout_constraintBottom_toBottomOf="@+id/scViewPesquisa"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/scViewPesquisa"
+                app:layout_constraintTop_toTopOf="@+id/scViewPesquisa" />
+
+            <ImageButton
+                android:id="@+id/imgPerfil"
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Perfil"
+                android:padding="0dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/circle_white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- 3. Conteúdo rolável principal -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/Main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- AdView -->
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="16dp"
+                app:adSize="BANNER"
+                app:adUnitId="ca-app-pub-3940256099942544/6300978111"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_height="144dp"/>
+
+            <!-- Título da seção de categorias -->
             <TextView
-                android:id="@+id/txtViewPopular"
+                android:id="@+id/textView31"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Principais Categorias"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/adView" />
+
+            <!-- Texto "ver todos" -->
+            <TextView
+                android:id="@+id/textView42"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:background="#009688"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="8dp"
-                android:text="@string/menu_main_category_1"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:text="ver todos"
+                android:textAppearance="?attr/textAppearanceLabelLarge"
+                android:textColor="?attr/colorPrimary"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/textView31"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView31" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Categorias com cores restauradas -->
+            <HorizontalScrollView
+                android:id="@+id/HscrViewCategorias"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:background="#DDDDDD"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="8dp"
-                android:text="@string/menu_main_category_2"
-                android:textSize="18sp" />
+                android:layout_marginTop="8dp"
+                android:scrollbars="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView31">
 
-            <TextView
-                android:layout_width="wrap_content"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/category_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    app:singleLine="true">
+
+                    <!-- Chip Popular com cor de fundo e texto personalizadas -->
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/txtViewPopular"
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Categoria 1"
+                        android:textColor="@android:color/white"
+                        app:chipBackgroundColor="?attr/colorPrimary"
+                        android:textStyle="bold"
+                        android:checkable="true"
+                        android:checked="true"/>
+
+                    <!-- Outros chips com estilo padrão preenchido -->
+                    <com.google.android.material.chip.Chip
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Categoria 2"
+                        android:checkable="true" />
+
+                    <com.google.android.material.chip.Chip
+                        style="@style/Widget.Material3.Chip.Suggestion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Categoria 3"
+                        android:checkable="true"/>
+
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+
+            <!-- Perfis em MaterialCardView (sem alterações aqui) -->
+            <HorizontalScrollView
+                android:id="@+id/HscrViewPerfis"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:background="#DDDDDD"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="8dp"
-                android:text="@string/menu_main_category_3"
-                android:textSize="18sp" />
+                android:layout_marginTop="16dp"
+                android:paddingBottom="16dp"
+                android:clipToPadding="false"
+                android:scrollbars="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/HscrViewCategorias">
 
-            <!-- Adicione mais categorias aqui, se necessário -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp">
 
-        </LinearLayout>
-    </HorizontalScrollView>
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="119dp"
+                        android:layout_height="144dp"
+                        android:layout_marginEnd="16dp">
+                        <ImageView
+                            android:id="@+id/imgViewAutonomo1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            app:srcCompat="@drawable/rounded_edittext_background" />
+                    </com.google.android.material.card.MaterialCardView>
 
-    <HorizontalScrollView
-        android:id="@+id/HscrViewPerfis"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:clipToPadding="false"
-        android:paddingHorizontal="16dp"
-        android:scrollbars="none"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/HscrViewCategorias">
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="119dp"
+                        android:layout_height="144dp"
+                        android:layout_marginEnd="16dp">
+                        <ImageView
+                            android:id="@+id/imgViewAutonomo2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            app:srcCompat="@drawable/rounded_edittext_background" />
+                    </com.google.android.material.card.MaterialCardView>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="119dp"
+                        android:layout_height="144dp"
+                        android:layout_marginEnd="16dp">
+                        <ImageView
+                            android:id="@+id/imgViewAutonomo3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            app:srcCompat="@drawable/rounded_edittext_background" />
+                    </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imgViewAutonomo1"
-                android:layout_width="130dp"
-                android:layout_height="160dp"
-                android:layout_marginEnd="16dp"
-                android:contentDescription="@string/menu_main_cd_featured_profile"
-                android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CornerSize16dp"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="119dp"
+                        android:layout_height="144dp">
+                        <ImageView
+                            android:id="@+id/imgViewAutonomo4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            app:srcCompat="@drawable/rounded_edittext_background" />
+                    </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imgViewAutonomo2"
-                android:layout_width="130dp"
-                android:layout_height="160dp"
-                android:layout_marginEnd="16dp"
-                android:contentDescription="@string/menu_main_cd_featured_profile"
-                android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CornerSize16dp"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                </LinearLayout>
+            </HorizontalScrollView>
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imgViewAutonomo3"
-                android:layout_width="130dp"
-                android:layout_height="160dp"
-                android:layout_marginEnd="16dp"
-                android:contentDescription="@string/menu_main_cd_featured_profile"
-                android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CornerSize16dp"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+            <com.google.android.material.search.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Pesquisar..."
+                tools:layout_editor_absoluteX="-2dp"
+                tools:layout_editor_absoluteY="-168dp">
+                <!-- Conteúdo dos resultados da pesquisa -->
+            </com.google.android.material.search.SearchView>
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imgViewAutonomo4"
-                android:layout_width="130dp"
-                android:layout_height="160dp"
-                android:contentDescription="@string/menu_main_cd_featured_profile"
-                android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.App.CornerSize16dp"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        </LinearLayout>
-    </HorizontalScrollView></androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
