@@ -43,6 +43,15 @@ class TelaMenuPrincipal : AppCompatActivity() {
         binding.imgPerfil.setOnClickListener {
             navegarParaEdicaoDePerfil()
         }
+
+        binding.imgNavegacaoMenu.setOnClickListener {
+            navegarParaMenuPerfil()
+        }
+    }
+
+    private fun navegarParaMenuPerfil() {
+        val intent = Intent(this, TelaMenuPerfil::class.java)
+        startActivity(intent)
     }
 
     private fun carregarDadosDoCabecalho() {
