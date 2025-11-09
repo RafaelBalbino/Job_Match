@@ -29,7 +29,7 @@ class TelaMenuPrincipal : AppCompatActivity() {
         userId = auth.currentUser?.uid
 
         // Ajusta o padding para as barras do sistema
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.Main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
