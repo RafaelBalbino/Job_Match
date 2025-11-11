@@ -12,165 +12,262 @@
   <View
       android:id="@+id/view_background_header"
       android:layout_width="0dp"
-      android:layout_height="296dp"
+      android:layout_height="260dp"
       android:background="#18B49D"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
   <Button
-      android:id="@+id/btnVoltarPerfilAutonomo"
+      android:id="@+id/btnVoltar"
+      style="?attr/borderlessButtonStyle"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="8dp"
       android:layout_marginTop="8dp"
-      android:background="?attr/selectableItemBackgroundBorderless"
-      android:contentDescription="Botão pra voltar"
+      android:contentDescription="Botão para voltar"
       app:icon="@drawable/ic_voltar_24"
       app:iconSize="25dp"
-      app:iconTint="@color/secundaria_variante"
+      app:iconTint="@color/branco"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
-  <ImageView
+  <!-- Use ShapeableImageView para garantir que a imagem fique circular -->
+  <com.google.android.material.imageview.ShapeableImageView
       android:id="@+id/img_foto_meu_perfil"
-      android:layout_width="127dp"
-      android:layout_height="117dp"
-      android:layout_marginTop="60dp"
+      android:layout_width="100dp"
+      android:layout_height="100dp"
+      android:layout_marginTop="50dp"
+      android:scaleType="centerCrop"
+      android:src="@drawable/ic_profile_placeholder"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:srcCompat="@drawable/circle_white"
-      app:tint="#8E8E8E" />
+      app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
 
   <TextView
       android:id="@+id/txt_nome_meu_perfil"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
-      android:text="Fulano de Tal"
+      android:layout_marginTop="12dp"
       android:textColor="@color/branco"
       android:textSize="20sp"
       android:textStyle="bold"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/img_foto_meu_perfil" />
+      app:layout_constraintTop_toBottomOf="@+id/img_foto_meu_perfil"
+      tools:text="Fulano de Tal" />
 
   <TextView
       android:id="@+id/txt_email_meu_perfil"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      android:text="fulanodetal@hotmail.com"
+      android:layout_marginTop="4dp"
       android:textColor="@color/branco"
-      android:textSize="20sp"
-      android:textStyle="bold"
+      android:textSize="14sp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/txt_nome_meu_perfil" />
+      app:layout_constraintTop_toBottomOf="@+id/txt_nome_meu_perfil"
+      tools:text="fulanodetal@hotmail.com" />
 
-  <TextView
-      android:id="@+id/lb_info_meu_perfil"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginTop="40dp"
-      android:text="Informações Pessoais"
-      android:textColor="@color/preto"
-      android:textSize="20sp"
-      android:textStyle="bold"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/view_background_header" />
-
-  <TextView
-      android:id="@+id/txt_info_meu_perfil"
+  <!-- ScrollView para o conteúdo dinâmico -->
+  <ScrollView
       android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:layout_marginTop="4dp"
-      android:text="Informações do seu documento de identidade e ocupação profissional."
-      android:textColor="@color/cinza_escuro"
-      android:textSize="16sp"
-      android:textStyle="bold"
-      app:layout_constraintEnd_toEndOf="parent"
+      android:layout_height="0dp"
+      android:layout_marginTop="16dp"
+      app:layout_constraintTop_toBottomOf="@id/view_background_header"
+      app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/lb_info_meu_perfil" />
+      app:layout_constraintEnd_toEndOf="parent">
 
-  <View
-      android:id="@+id/linearLayout1"
-      android:layout_width="0dp"
-      android:layout_height="6dp"
-      android:layout_marginTop="24dp"
-      android:background="#18B49D"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/txt_info_meu_perfil" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="32dp">
 
-  <TextView
-      android:id="@+id/lb_dados_meu_perfil"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginTop="24dp"
-      android:text="Dados das Contas"
-      android:textColor="@color/preto"
-      android:textSize="20sp"
-      android:textStyle="bold"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/linearLayout1" />
+      <!-- Seção de Informações Pessoais -->
+      <TextView
+          android:id="@+id/lb_info_meu_perfil"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_marginEnd="16dp"
+          android:text="Informações Pessoais"
+          android:textColor="@color/preto"
+          android:textSize="18sp"
+          android:textStyle="bold" />
 
-  <TextView
-      android:id="@+id/txt_dados_meu_perfil"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:layout_marginTop="4dp"
-      android:text="Dados que representam a sua conta de usuário e sua conta freelancer."
-      android:textColor="@color/cinza_escuro"
-      android:textSize="16sp"
-      android:textStyle="bold"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/lb_dados_meu_perfil" />
+      <!-- Contêiner para dados pessoais dinâmicos -->
+      <LinearLayout
+          android:id="@+id/container_info_pessoais"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          android:orientation="vertical">
 
-  <View
-      android:id="@+id/linearLayout2"
-      android:layout_width="0dp"
-      android:layout_height="6dp"
-      android:layout_marginTop="24dp"
-      android:background="#18B49D"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/txt_dados_meu_perfil" />
+        <!-- TextView para o E-mail -->
+        <TextView
+            android:id="@+id/txt_email_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:drawablePadding="16dp"
+            android:gravity="center_vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textSize="16sp"
+            tools:text="fulanodetal@hotmail.com"/>
 
-  <TextView
-      android:id="@+id/lb_seguranca_meu_perfil"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginTop="24dp"
-      android:text="Segurança"
-      android:textColor="@color/preto"
-      android:textSize="20sp"
-      android:textStyle="bold"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        <!-- TextView para o Telefone -->
+        <TextView
+            android:id="@+id/txt_telefone_meu_perfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:drawablePadding="16dp"
+            android:gravity="center_vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textSize="16sp"
+            tools:text="(11) 99999-9999"/>
 
-  <TextView
-      android:id="@+id/txt_seguranca_meu_perfil"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="16dp"
-      android:layout_marginEnd="16dp"
-      android:layout_marginTop="4dp"
-      android:text="Métodos de verificação da sua conta e dispositivos vinculados a sua sessão."
-      android:textColor="@color/cinza_escuro"
-      android:textSize="16sp"
-      android:textStyle="bold"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/lb_seguranca_meu_perfil" />
+        <!-- ADICIONADO: TextView para o Endereço -->
+        <TextView
+            android:id="@+id/txt_endereco_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:drawablePadding="16dp"
+            android:gravity="center_vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textSize="16sp"
+            tools:text="Rua Fictícia, 123 - São Paulo, SP"/>
+
+      </LinearLayout>
+
+      <com.google.android.material.divider.MaterialDivider
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="16dp" />
+
+      <!-- Bloco do Perfil Autônomo ou Contratante (INVISÍVEL POR PADRÃO) -->
+      <androidx.constraintlayout.widget.ConstraintLayout
+          android:id="@+id/bloco_autonomo_contratante"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="16dp"
+          android:visibility="gone"
+          tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/lb_perfil_autonomo_contratante"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Perfil Autônomo"
+            android:textColor="@color/preto"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnEditarPerfil"/>
+
+        <TextView
+            android:id="@+id/txt_especializacao"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:drawablePadding="16dp"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lb_perfil_autonomo_contratante"
+            tools:text="Desenvolvedor Android" />
+
+        <TextView
+            android:id="@+id/txt_cnpj"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:drawablePadding="16dp"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_especializacao"
+            tools:text="12.345.678/0001-99" />
+
+        <Button
+            android:id="@+id/btnEditarPerfil"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Editar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/txt_especializacao"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/txt_cnpj" />
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <!-- Seção de Segurança e Conta -->
+      <TextView
+          android:id="@+id/lb_seguranca"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:layout_marginTop="16dp"
+          android:text="Conta e Segurança"
+          android:textColor="@color/preto"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+      <!-- Item clicável para Alterar Senha -->
+      <TextView
+          android:id="@+id/item_alterar_senha"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="?attr/selectableItemBackground"
+          android:clickable="true"
+          android:focusable="true"
+          android:drawablePadding="16dp"
+          android:gravity="center_vertical"
+          android:paddingStart="16dp"
+          android:paddingTop="12dp"
+          android:paddingEnd="16dp"
+          android:paddingBottom="12dp"
+          android:text="Alterar Senha" />
+
+      <!-- Botão de Sair (Logout) -->
+      <TextView
+          android:id="@+id/item_sair"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="?attr/selectableItemBackground"
+          android:clickable="true"
+          android:focusable="true"
+          android:gravity="center_vertical"
+          android:paddingStart="16dp"
+          android:paddingTop="12dp"
+          android:paddingEnd="16dp"
+          android:paddingBottom="12dp"
+          android:text="Sair da conta"
+          android:textColor="@color/design_default_color_error"
+          app:drawableTint="@color/design_default_color_error"/>
+
+    </LinearLayout>
+  </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

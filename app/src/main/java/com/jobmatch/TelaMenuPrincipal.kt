@@ -129,6 +129,8 @@ class TelaMenuPrincipal : AppCompatActivity() {
                     }
                 }
             }
+
+            // Falha ao carregar a foto não é um erro crítico, então não mostramos Toast
     }
 
     private fun navegarParaEdicaoDePerfil() {

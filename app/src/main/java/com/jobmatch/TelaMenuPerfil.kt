@@ -70,11 +70,10 @@ class TelaMenuPerfil : AppCompatActivity() {
                             error(R.drawable.ic_profile_placeholder)
                         }
 
-                        // Esconde o botão "Projetos" se não for um autônomo
-                        if (usuario.autonomo == null) {
-                            binding.btnProjetos.visibility = View.GONE
-                        } else {
+                        if (usuario.autonomo != null) {
                             binding.btnProjetos.visibility = View.VISIBLE
+                        } else {
+                            binding.btnProjetos.visibility = View.GONE
                         }
 
                     } else {
