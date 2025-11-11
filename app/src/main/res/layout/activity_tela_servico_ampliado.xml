@@ -108,17 +108,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_ver_avaliacoes" />
 
-        <Button
-            android:id="@+id/button8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="#00FFFFFF"
+        <ImageButton
+            android:id="@+id/btn_voltar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_circular_white"
             android:contentDescription="Botão de voltar pro menu principal"
-            app:icon="@drawable/ic_voltar_24"
-            app:iconSize="25dp"
-            app:iconTint="@color/secundaria_variante"
+            android:elevation="4dp"
+            android:src="@drawable/ic_voltar_24"
+            app:tint="@color/secundaria_variante"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

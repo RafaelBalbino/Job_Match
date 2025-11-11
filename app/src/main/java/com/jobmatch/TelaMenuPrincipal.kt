@@ -2,6 +2,8 @@ package com.jobmatch
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -37,6 +39,7 @@ class TelaMenuPrincipal : AppCompatActivity() {
 
         configurarListeners()
         carregarDadosDoCabecalho()
+        carregarESetarServicos() // Carrega os serviços do Firestore
     }
 
     private fun configurarListeners() {
@@ -47,6 +50,60 @@ class TelaMenuPrincipal : AppCompatActivity() {
         binding.imgNavegacaoMenu.setOnClickListener {
             navegarParaMenuPerfil()
         }
+    }
+
+    private fun carregarESetarServicos() {
+        val imageViews: List<ImageView> = listOf(
+            binding.imgViewAutonomo1,
+            binding.imgViewAutonomo2,
+            binding.imgViewAutonomo3,
+            binding.imgViewAutonomo4
+        )
+
+        db.collection("servicos").limit(4).get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    Log.d("Firestore", "Nenhum serviço encontrado.")
+                    return@addOnSuccessListener
+                }
+
+                for ((index, document) in documents.withIndex()) {
+                    if (index >= imageViews.size) break
+
+                    val servico = document.toObject(Servico::class.java)
+                    val imageView = imageViews[index]
+
+                    // Carrega a imagem usando Coil com a URL correta
+                    if (!servico.fotoServico.isNullOrEmpty()) {
+                        imageView.load(servico.fotoServico) {
+                            crossfade(true)
+                            error(R.drawable.rounded_edittext_background) // Imagem de fallback
+                        }
+                    }
+
+                    // Configura o clique para cada card usando os dados corretos
+                    imageView.setOnClickListener {
+                        abrirDetalhesDoServico(
+                            servico.nomeServico ?: "Serviço sem nome",
+                            servico.descricaoServico ?: "Sem descrição disponível",
+                            servico.fotoServico ?: ""
+                        )
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("Firestore", "Erro ao buscar serviços: ", exception)
+                Toast.makeText(this, "Erro ao carregar serviços.", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun abrirDetalhesDoServico(nomeDoServico: String, descricaoDoServico: String, urlDaImagem: String) {
+        val intent = Intent(this, telaServicoAmpliado::class.java).apply {
+            putExtra("SERVICE_NAME", nomeDoServico)
+            putExtra("SERVICE_DESCRIPTION", descricaoDoServico)
+            putExtra("SERVICE_IMAGE_URL", urlDaImagem)
+        }
+        startActivity(intent)
     }
 
     private fun navegarParaMenuPerfil() {
@@ -62,7 +119,6 @@ class TelaMenuPrincipal : AppCompatActivity() {
                 if (document != null && document.exists()) {
                     val usuario = document.toObject(Usuario::class.java)
                     usuario?.let {
-                        // Determina qual URL de foto usar
                         val fotoUrl = it.fotoUrl
                         if (!fotoUrl.isNullOrEmpty()) {
                             binding.imgPerfil.load(fotoUrl) {
@@ -73,8 +129,6 @@ class TelaMenuPrincipal : AppCompatActivity() {
                     }
                 }
             }
-
-            // Falha ao carregar a foto não é um erro crítico, então não mostramos Toast
     }
 
     private fun navegarParaEdicaoDePerfil() {
@@ -86,7 +140,6 @@ class TelaMenuPrincipal : AppCompatActivity() {
         db.collection("users").document(userId!!).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
-                    // Verifica se o campo 'autonomo' não é nulo
                     if (document.get("autonomo") != null) {
                         val intent = Intent(this, TelaEdicaoPerfilAutonomo::class.java)
                         startActivity(intent)

@@ -20,6 +20,7 @@ class TelaMenuPerfil : AppCompatActivity() {
     private lateinit var binding: ActivityTelaMenuPerfilBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+    private var currentUser: Usuario? = null // Variável para guardar os dados do usuário
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +55,8 @@ class TelaMenuPerfil : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
                     val usuario = document.toObject(Usuario::class.java)
+                    this.currentUser = usuario // Salva o usuário atual para uso posterior
+
                     if (usuario != null) {
                         // Usa os IDs corretos para nome, email e imagem
                         binding.txtNomeUsuario.text = usuario.nome
@@ -67,7 +70,12 @@ class TelaMenuPerfil : AppCompatActivity() {
                             error(R.drawable.ic_profile_placeholder)
                         }
 
-                        binding.btnProjetos.visibility = View.GONE
+                        // Esconde o botão "Projetos" se não for um autônomo
+                        if (usuario.autonomo == null) {
+                            binding.btnProjetos.visibility = View.GONE
+                        } else {
+                            binding.btnProjetos.visibility = View.VISIBLE
+                        }
 
                     } else {
                         Log.e("TelaMenuPerfil", "Falha ao converter o documento para objeto Usuario.")
@@ -95,9 +103,21 @@ class TelaMenuPerfil : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // --- LÓGICA ATUALIZADA PARA 'MEUS PEDIDOS' ---
         binding.btnMeusPedidos.setOnClickListener {
-            val intent = Intent(this, TelaRealizarPedidos::class.java)
-            startActivity(intent)
+            if (currentUser != null) {
+                // Se o campo 'autonomo' for nulo, o usuário é um contratante
+                if (currentUser?.autonomo == null) {
+                    val intent = Intent(this, TelaRealizarPedidos::class.java)
+                    startActivity(intent)
+                } else {
+                    // Se for um autônomo, exibe uma mensagem
+                    showToast("Esta seção é para contratantes. Veja seus projetos em 'Meus Projetos'.")
+                }
+            } else {
+                // Caso os dados ainda não tenham sido carregados
+                showToast("Aguarde, carregando dados do usuário.")
+            }
         }
 
         binding.btnProjetos.setOnClickListener {
