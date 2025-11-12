@@ -34,7 +34,7 @@ class fragmentListaPedidos : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lista_pedidos, container, false)
+        return inflater.inflate(R.layout.fragment_lista_pedidos_autonomo, container, false)
     }
 
     companion object {

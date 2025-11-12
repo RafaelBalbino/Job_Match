@@ -1,4 +1,4 @@
-package com.jobmatch
+package com.jobmatch // Mantendo no pacote principal
 
 import android.os.Parcelable
 import com.google.firebase.firestore.IgnoreExtraProperties
@@ -12,14 +12,16 @@ import kotlinx.parcelize.Parcelize
 @IgnoreExtraProperties
 @Parcelize
 data class Servico(
-    val uidUsuario: String? = null, // ID do Autônomo que oferece o serviço
-    val nomeServico: String? = null,
-    val descricaoServico: String? = null,
-    val fotoServico: String? = null,    // URL para a imagem no Firebase Storage
-    val modeloCobranca: String? = null, // Ex: "Por Hora", "Preço Fixo"
-    val categoria: String? = null,      // Ex: "TI", "Elétrica", "Geral"
-    val precoBase: Double? = 0.0
-) : Parcelable {
-    // Construtor vazio para o Firebase
-    constructor() : this(null, null, null, null, null, null, 0.0)
-}
+    // Propriedades movidas para o construtor primário com valores padrão
+    var id: String = "",
+    val uidUsuario: String = "",
+    val nomeServico: String = "",
+    val descricaoServico: String = "",
+    val categoria: String = "",
+    val modeloCobranca: String = "",
+
+    // Este campo pode ser nulo, pois um serviço pode não ter foto
+    val fotoServico: String? = null
+
+    // O construtor secundário foi removido, pois a data class já lida com valores padrão.
+) : Parcelable

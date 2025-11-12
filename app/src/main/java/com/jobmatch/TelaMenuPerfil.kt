@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.semantics.dismiss
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import coil.load
@@ -127,6 +130,16 @@ class TelaMenuPerfil : AppCompatActivity() {
             showToast("Será implementado no futuro")
         }
 
+        // Botão Sobre Nós
+        binding.btnSobreNos.setOnClickListener {
+            Toast.makeText(this, "Em Andamento", Toast.LENGTH_SHORT).show()
+        }
+
+        // Botão Termos e Condições
+        binding.btnTermos.setOnClickListener {
+            mostrarPopupTermos()
+        }
+
         binding.btnConfiguracoes.setOnClickListener {
             showToast("Será implementado no futuro")
         }
@@ -136,6 +149,21 @@ class TelaMenuPerfil : AppCompatActivity() {
             fazerLogout()
         }
     }
+
+    /**
+     * Exibe um AlertDialog com o texto dos termos e condições.
+     */
+    private fun mostrarPopupTermos() {
+        // Usa o AlertDialog do sistema de Views (appcompat), que é o correto para esta tela
+        AlertDialog.Builder(this)
+            .setTitle("Termos e Condições")
+            .setMessage("Nossa política de privacidade segue as diretrizes da LGPD, garantindo a proteção e o uso consciente dos seus dados. Ao se cadastrar, você concorda com a coleta e o tratamento de suas informações para os fins descritos em nossos termos.")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss() // Fecha o pop-up
+            }
+            .show()
+    }
+
 
     // Função para fazer o logout do usuário e levá-lo à tela de login
     private fun fazerLogout() {

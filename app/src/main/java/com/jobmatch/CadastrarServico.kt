@@ -28,7 +28,7 @@ class CadastrarServico : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
 
     //Variável para armazenar URI da foto
-    private var fotoSelecionadaUri: String? = null
+    private var fotoSelecionadaUri: Uri? = null
 
 
     //Função para chamar foto da galeria
@@ -36,7 +36,7 @@ class CadastrarServico : AppCompatActivity() {
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         if (uri != null) {
-            fotoSelecionadaUri = uri.toString()
+            fotoSelecionadaUri = uri
             binding.imgAnexo.setImageURI(uri)
             binding.imgAnexo.visibility = View.VISIBLE // Torna a imagem visível
             Toast.makeText(this, "Foto anexada com sucesso!", Toast.LENGTH_SHORT).show()
@@ -81,9 +81,8 @@ class CadastrarServico : AppCompatActivity() {
         // 1. Obter dados dos campos
         val nomeServico = binding.txtNomeServico.text.toString().trim()
         val descricaoServico = binding.txtDescricaoNegocio.text.toString().trim()
-        val categoria = binding.txtCategoriaServico.text.toString().trim()
+        val categoria = binding.txtCategoriaServico.text.toString().trim() // A forma de ler continua a mesma
         val modeloCobranca = binding.ModeloCobranca.selectedItem.toString()
-        val precoStr = binding.txtPreco.text.toString().trim()
         val userId = auth.currentUser?.uid
 
         //--------------------------------------------------------------------------------
@@ -92,7 +91,7 @@ class CadastrarServico : AppCompatActivity() {
             Toast.makeText(this, "Erro: Usuário não autenticado. Faça o login novamente.", Toast.LENGTH_LONG).show()
             return
         }
-        if (nomeServico.isEmpty() || descricaoServico.isEmpty() || precoStr.isEmpty() || categoria.isEmpty()) {
+        if (nomeServico.isEmpty() || descricaoServico.isEmpty() || categoria.isEmpty()) {
             Toast.makeText(this, "Por favor, preencha todos os campos obrigatórios.", Toast.LENGTH_SHORT).show()
             return
         }
@@ -101,17 +100,11 @@ class CadastrarServico : AppCompatActivity() {
             return
         }
 
-        val preco = try {
-            precoStr.toDouble()
-        } catch (e: NumberFormatException) {
-            Toast.makeText(this, "Por favor, insira um preço válido.", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         showLoading(true)
 
         // 3. Verificar serviços existentes
         db.collection("servicos")
+            .whereEqualTo("uidUsuario", userId) // Busca apenas nos serviços do usuário atual
             .get()
             .addOnSuccessListener { querySnapshot ->
                 val similarServices = mutableListOf<String>()
@@ -128,23 +121,22 @@ class CadastrarServico : AppCompatActivity() {
                 if (similarServices.isNotEmpty()) {
                     showLoading(false)
                     val similarServicesText = "- " + similarServices.joinToString("\n- ")
-                    val dialogMessage = "Foram encontrados os seguintes serviços com nomes parecidos:\n\n$similarServicesText"
+                    val dialogMessage = "Foram encontrados os seguintes serviços com nomes parecidos no seu perfil:\n\n$similarServicesText\n\nDeseja continuar mesmo assim?"
 
                     AlertDialog.Builder(this)
-                        .setTitle("Serviço a Ser Cadastrado: '$nomeServico'")
+                        .setTitle("Atenção: Serviço Similar Encontrado")
                         .setMessage(dialogMessage)
-                        .setPositiveButton("Continuar Operação") { _, _ ->
+                        .setPositiveButton("Sim, Continuar") { _, _ ->
                             prosseguirComSalvamento(
                                 userId,
                                 nomeServico,
                                 descricaoServico,
                                 categoria,
                                 modeloCobranca,
-                                fotoSelecionadaUri,
-                                preco
+                                fotoSelecionadaUri
                             )
                         }
-                        .setNegativeButton("Cancelar Operação") { dialog, _ ->
+                        .setNegativeButton("Cancelar") { dialog, _ ->
                             resetarCampos()
                             dialog.dismiss()
                         }
@@ -157,8 +149,7 @@ class CadastrarServico : AppCompatActivity() {
                         descricaoServico,
                         categoria,
                         modeloCobranca,
-                        fotoSelecionadaUri,
-                        preco
+                        fotoSelecionadaUri
                     )
                 }
             }
@@ -172,7 +163,6 @@ class CadastrarServico : AppCompatActivity() {
         binding.txtNomeServico.text?.clear()
         binding.txtCategoriaServico.text?.clear()
         binding.txtDescricaoNegocio.text?.clear()
-        binding.txtPreco.text?.clear()
         binding.ModeloCobranca.setSelection(0)
         binding.imgAnexo.setImageURI(null)
         binding.imgAnexo.visibility = View.GONE
@@ -187,31 +177,33 @@ class CadastrarServico : AppCompatActivity() {
         descricaoServico: String,
         categoria: String,
         modeloCobranca: String,
-        fotoServico: String?,
-        preco: Double
+        fotoUri: Uri?
     ) {
         showLoading(true)
 
         // 3. Instanciar o Objeto Serviço com os dados corretos e validados
         val novoServico = Servico(
-            uidUsuario = userId, // O ID real do usuário logado
+            uidUsuario = userId,
             nomeServico = nomeServico,
             descricaoServico = descricaoServico,
             categoria = categoria,
             modeloCobranca = modeloCobranca,
-            fotoServico = fotoServico, // A URI da imagem (pode ser nula)
-            precoBase = preco // O preço convertido para Double
+            fotoServico = fotoUri?.toString() // A URI da imagem como String (pode ser nula)
         )
 
         // 4. Salvar o objeto no Firestore
         db.collection("servicos").add(novoServico)
             .addOnSuccessListener { documentReference ->
+                // Atualiza o ID do objeto com o ID gerado pelo Firestore
+                val servicoId = documentReference.id
+                db.collection("servicos").document(servicoId).update("id", servicoId)
+
                 showLoading(false)
                 Toast.makeText(this, "Serviço '${novoServico.nomeServico}' cadastrado com sucesso!", Toast.LENGTH_LONG).show()
 
-                // Opcional: Enviar o serviço de volta se a tela anterior precisar dele
+                // Enviar o serviço de volta se a tela anterior precisar dele
                 val resultIntent = Intent().apply {
-                    putExtra("NOVO_SERVICO", novoServico)
+                    putExtra("NOVO_SERVICO", novoServico.copy(id = servicoId))
                 }
                 setResult(Activity.RESULT_OK, resultIntent)
                 finish() // Fecha a tela e volta para a anterior
@@ -261,6 +253,21 @@ class CadastrarServico : AppCompatActivity() {
         }
     }
 
+    // NOVA FUNÇÃO PARA CONFIGURAR O DROPDOWN DE CATEGORIAS
+    private fun configurarDropdownCategorias() {
+        val categorias = arrayOf(
+            "Ajudante Geral", "Babá", "Barbeiro", "Cabelereiro(a)", "Carpinteiro",
+            "Chaveiro", "Cuidador(a) de Idosos", "Cuidador(a) de Pets", "Decorador(a)", "Dedetizador",
+            "Desenvolvedor(a) de Sites", "Diarista", "Eletricista", "Encanador(a)", "Entregador(a)",
+            "Faxineiro(a)", "Fotógrafo(a)", "Garçom/Garçonete", "Jardineiro(a)", "Manicure e Pedicure",
+            "Marceneiro", "Maquiador(a)", "Montador(a) de Móveis", "Motorista Particular", "Motoboy",
+            "Organizador(a) de Eventos", "Pedreiro", "Personal Trainer", "Pintor(a)", "Técnico(a) de Informática"
+        )
+
+        // O ArrayAdapter conecta a lista de strings ao AutoCompleteTextView
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categorias)
+        binding.txtCategoriaServico.setAdapter(adapter)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -270,6 +277,8 @@ class CadastrarServico : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
+        // --- CONFIGURA OS DROPDOWNS ---
+        configurarDropdownCategorias() // <- CHAMADA DA NOVA FUNÇÃO
         mostrarTipoCobranca()
 
         binding.imgSeletor.setOnClickListener {
@@ -293,3 +302,4 @@ class CadastrarServico : AppCompatActivity() {
         }
     }
 }
+

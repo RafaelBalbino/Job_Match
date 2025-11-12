@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".fragmentListaPedidos">
+    tools:context=".fragmentListaPedidosContratante">
 
     <Button
         android:id="@+id/btn_voltar_lista_pedi"
@@ -54,17 +54,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider_header"
-        tools:listitem="@layout/item_pedido" />
+        tools:listitem="@layout/item_pe" />
 
     <TextView
         android:id="@+id/tv_no_pedidos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
         android:text="Nenhum pedido de serviço encontrado."
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider_header" />
+        app:layout_constraintTop_toBottomOf="@+id/divider_header"
+        tools:visibility="visible" />
+
+    <!-- ADIÇÃO: ProgressBar para feedback de carregamento -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/divider_header"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

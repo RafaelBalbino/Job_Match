@@ -37,6 +37,13 @@ class TelaMeuPerfil : AppCompatActivity() {
         carregarDadosDoFirestore()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Recarrega os dados toda vez que a tela volta ao foco,
+        // garantindo que as edições feitas em outra tela sejam refletidas.
+        carregarDadosDoFirestore()
+    }
+
     private fun carregarDadosDoFirestore() {
         val userId = auth.currentUser?.uid
         if (userId == null) {
@@ -68,9 +75,6 @@ class TelaMeuPerfil : AppCompatActivity() {
     /**
      * Preenche a tela com os dados do objeto Usuario.
      */
-    /**
-     * Preenche a tela com os dados do objeto Usuario.
-     */
     private fun exibirDadosNaTela(usuario: Usuario) {
         // 1. Preenche o cabeçalho
         binding.imgFotoMeuPerfil.load(usuario.fotoUrl) {
@@ -82,26 +86,18 @@ class TelaMeuPerfil : AppCompatActivity() {
         binding.txtNomeMeuPerfil.text = usuario.nome
         binding.txtEmailMeuPerfil.text = usuario.email
 
-        // 2. Preenche as informações pessoais (SEÇÃO AJUSTADA)
-        // Popula o novo campo de email na seção de informações
+        // 2. Preenche as informações pessoais
         binding.txtEmailInfo.text = usuario.email ?: "E-mail não informado"
         binding.txtTelefoneMeuPerfil.text = formatarTelefone(usuario.numeroTelefone)
-
-        // --- ALTERAÇÃO AQUI ---
-        // Descomente a linha abaixo para exibir o endereço formatado
         binding.txtEnderecoInfo.text = formatarEndereco(usuario.endereco)
 
         // 3. Lógica para exibir o bloco de perfil correto
         if (usuario.autonomo != null) {
             // Se for Autônomo
             binding.blocoAutonomoContratante.visibility = View.VISIBLE
-            // Renomeei o ID no XML para 'lb_perfil_autonomo_contratante' para ser mais claro
             binding.lbPerfilAutonomoContratante.text = "Perfil Autônomo"
             binding.txtEspecializacao.visibility = View.VISIBLE
-            // Assumindo que você tenha um txtFormacao no XML
-            // binding.txtFormacao.visibility = View.VISIBLE
             binding.txtEspecializacao.text = usuario.autonomo.especializacao ?: "Não informado"
-            // binding.txtFormacao.text = usuario.autonomo.formacao ?: "Não informado"
 
             // Trata o caso de CNPJ
             if (usuario.autonomo.cnpj.isNullOrBlank()) {
@@ -116,7 +112,6 @@ class TelaMeuPerfil : AppCompatActivity() {
             binding.lbPerfilAutonomoContratante.text = "Perfil Contratante"
             // Esconde os campos específicos de autônomo
             binding.txtEspecializacao.visibility = View.GONE
-            // binding.txtFormacao.visibility = View.GONE
             binding.txtCnpj.visibility = View.GONE
         } else {
             // Se não tiver nenhum perfil específico
@@ -138,37 +133,30 @@ class TelaMeuPerfil : AppCompatActivity() {
             fazerLogout()
         }
 
-
         binding.btnEditarPerfil.setOnClickListener {
             navegarParaEdicaoDePerfil(usuario)
         }
-
     }
-
 
     /**
      * Adiciona uma máscara (##) #####-#### a um número de telefone.
-     * AGORA CORRIGIDO para lidar com o código do país (55).
+     * Corrigido para lidar com o código do país (55).
      */
     private fun formatarTelefone(numero: String?): String {
         if (numero.isNullOrBlank()) {
             return "Telefone não informado"
         }
 
-        // 1. Remove caracteres não numéricos para garantir que temos apenas dígitos.
         var digitos = numero.filter { it.isDigit() }
 
-        // 2. CORREÇÃO PRINCIPAL: Verifica e remove o código do país "55" se ele estiver no início
-        //    e se o número tiver mais de 11 dígitos (55 + DDD + Numero).
         if (digitos.startsWith("55") && digitos.length > 11) {
-            digitos = digitos.substring(2) // Pula os dois primeiros caracteres ("55")
+            digitos = digitos.substring(2)
         }
 
-        // 3. Aplica a máscara com base no tamanho do número restante (10 para fixo, 11 para celular).
         return when (digitos.length) {
-            10 -> "(${digitos.substring(0, 2)}) ${digitos.substring(2, 6)}-${digitos.substring(6)}" // Fixo: (DD) XXXX-XXXX
-            11 -> "(${digitos.substring(0, 2)}) ${digitos.substring(2, 7)}-${digitos.substring(7)}" // Celular: (DD) XXXXX-XXXX
-            else -> numero // Se, mesmo após a limpeza, o número tiver um formato inesperado, retorna o original.
+            10 -> "(${digitos.substring(0, 2)}) ${digitos.substring(2, 6)}-${digitos.substring(6)}" // Fixo
+            11 -> "(${digitos.substring(0, 2)}) ${digitos.substring(2, 7)}-${digitos.substring(7)}" // Celular
+            else -> numero // Formato inesperado, retorna o original.
         }
     }
 
@@ -179,11 +167,12 @@ class TelaMeuPerfil : AppCompatActivity() {
         if (endereco == null) {
             return "Endereço não informado"
         }
+        // Junta apenas os campos não nulos/vazios com uma vírgula
         return listOfNotNull(
-            endereco.rua,
-            endereco.cidade,
-            endereco.estado,
-            endereco.cep
+            endereco.rua?.takeIf { it.isNotBlank() },
+            endereco.cidade?.takeIf { it.isNotBlank() },
+            endereco.estado?.takeIf { it.isNotBlank() },
+            endereco.cep?.takeIf { it.isNotBlank() }
         ).joinToString(separator = ", ")
     }
 
