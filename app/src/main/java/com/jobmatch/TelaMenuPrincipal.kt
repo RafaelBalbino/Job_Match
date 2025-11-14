@@ -102,4 +102,5 @@ class TelaMenuPrincipal : AppCompatActivity() {
                 Toast.makeText(this, "Erro ao buscar perfil: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
 }

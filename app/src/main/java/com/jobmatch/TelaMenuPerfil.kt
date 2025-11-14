@@ -14,6 +14,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaMenuPerfilBinding
 
+
+
 class TelaMenuPerfil : AppCompatActivity() {
 
     // A variável 'binding' acessa os componentes do XML com os nomes corretos
