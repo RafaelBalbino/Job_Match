@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.semantics.dismiss
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import coil.load
@@ -22,6 +25,7 @@ class TelaMenuPerfil : AppCompatActivity() {
     private lateinit var binding: ActivityTelaMenuPerfilBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+    private var currentUser: Usuario? = null // Variável para guardar os dados do usuário
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +60,8 @@ class TelaMenuPerfil : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
                     val usuario = document.toObject(Usuario::class.java)
+                    this.currentUser = usuario // Salva o usuário atual para uso posterior
+
                     if (usuario != null) {
                         // Usa os IDs corretos para nome, email e imagem
                         binding.txtNomeUsuario.text = usuario.nome
@@ -69,7 +75,11 @@ class TelaMenuPerfil : AppCompatActivity() {
                             error(R.drawable.ic_profile_placeholder)
                         }
 
-                        binding.btnProjetos.visibility = View.GONE
+                        if (usuario.autonomo != null) {
+                            binding.btnProjetos.visibility = View.VISIBLE
+                        } else {
+                            binding.btnProjetos.visibility = View.GONE
+                        }
 
                     } else {
                         Log.e("TelaMenuPerfil", "Falha ao converter o documento para objeto Usuario.")
@@ -97,9 +107,21 @@ class TelaMenuPerfil : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // --- LÓGICA ATUALIZADA PARA 'MEUS PEDIDOS' ---
         binding.btnMeusPedidos.setOnClickListener {
-            val intent = Intent(this, TelaRealizarPedidos::class.java)
-            startActivity(intent)
+            if (currentUser != null) {
+                // Se o campo 'autonomo' for nulo, o usuário é um contratante
+                if (currentUser?.autonomo == null) {
+                    val intent = Intent(this, TelaRealizarPedidos::class.java)
+                    startActivity(intent)
+                } else {
+                    // Se for um autônomo, exibe uma mensagem
+                    showToast("Esta seção é para contratantes. Veja seus projetos em 'Meus Projetos'.")
+                }
+            } else {
+                // Caso os dados ainda não tenham sido carregados
+                showToast("Aguarde, carregando dados do usuário.")
+            }
         }
 
         binding.btnProjetos.setOnClickListener {
@@ -108,6 +130,16 @@ class TelaMenuPerfil : AppCompatActivity() {
 
         binding.btnPagamentos.setOnClickListener {
             showToast("Será implementado no futuro")
+        }
+
+        // Botão Sobre Nós
+        binding.btnSobreNos.setOnClickListener {
+            Toast.makeText(this, "Em Andamento", Toast.LENGTH_SHORT).show()
+        }
+
+        // Botão Termos e Condições
+        binding.btnTermos.setOnClickListener {
+            mostrarPopupTermos()
         }
 
         binding.btnConfiguracoes.setOnClickListener {
@@ -119,6 +151,21 @@ class TelaMenuPerfil : AppCompatActivity() {
             fazerLogout()
         }
     }
+
+    /**
+     * Exibe um AlertDialog com o texto dos termos e condições.
+     */
+    private fun mostrarPopupTermos() {
+        // Usa o AlertDialog do sistema de Views (appcompat), que é o correto para esta tela
+        AlertDialog.Builder(this)
+            .setTitle("Termos e Condições")
+            .setMessage("Nossa política de privacidade segue as diretrizes da LGPD, garantindo a proteção e o uso consciente dos seus dados. Ao se cadastrar, você concorda com a coleta e o tratamento de suas informações para os fins descritos em nossos termos.")
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss() // Fecha o pop-up
+            }
+            .show()
+    }
+
 
     // Função para fazer o logout do usuário e levá-lo à tela de login
     private fun fazerLogout() {

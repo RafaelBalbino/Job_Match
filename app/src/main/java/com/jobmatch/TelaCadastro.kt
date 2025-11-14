@@ -72,13 +72,9 @@ class TelaCadastro : AppCompatActivity() {
             private var isUpdating = false
             private var old = ""
 
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                // Não é necessário
-            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // Não é necessário
-            }
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable) {
                 val str = s.toString().replace(Regex("\\D"), "")
@@ -211,6 +207,28 @@ class TelaCadastro : AppCompatActivity() {
         }
     }
 
+    private fun validarSenha(senha: String): String? {
+        val erros = mutableListOf<String>()
+
+        if (senha.length < 8) {
+            erros.add("mínimo 8 caracteres")
+        }
+        if (!senha.any { it.isUpperCase() }) {
+            erros.add("uma letra maiúscula")
+        }
+        if (!senha.any { it.isLowerCase() }) {
+            erros.add("uma letra minúscula")
+        }
+        if (!senha.any { it.isDigit() }) {
+            erros.add("um número")
+        }
+        if (!senha.any { !it.isLetterOrDigit() }) {
+            erros.add("um caractere especial")
+        }
+
+        return if (erros.isEmpty()) null else "A senha deve conter: ${erros.joinToString(", ")}."
+    }
+
     private fun cadastrarUsuario() {
         // Validação dos campos...
         binding.tilNome.error = null
@@ -232,6 +250,13 @@ class TelaCadastro : AppCompatActivity() {
             Toast.makeText(this, "Por favor, preencha todos os campos básicos.", Toast.LENGTH_SHORT).show()
             return
         }
+
+        val erroSenha = validarSenha(senha)
+        if (erroSenha != null) {
+            binding.tilSenha.error = erroSenha
+            return
+        }
+
         if (senha != confirmarSenha) {
             binding.tilConfirmarSenha.error = "As senhas não coincidem"
             return
@@ -265,7 +290,7 @@ class TelaCadastro : AppCompatActivity() {
                     val exception = task.exception
                     val errorMessage = when (exception) {
                         is FirebaseAuthUserCollisionException -> "Este e-mail já está em uso por outra conta."
-                        is FirebaseAuthWeakPasswordException -> "A senha é muito fraca. A senha deve ter no mínimo 8 caracteres."
+                        is FirebaseAuthWeakPasswordException -> "A senha não atende aos critérios de segurança do Firebase."
                         else -> "Falha no cadastro: ${exception?.message}"
                     }
                     if (exception is FirebaseAuthUserCollisionException) {

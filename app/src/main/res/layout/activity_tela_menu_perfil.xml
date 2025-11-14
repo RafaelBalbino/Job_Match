@@ -8,61 +8,57 @@
     android:background="@android:color/white"
     tools:context=".TelaMenuPerfil">
 
-    <!-- Botão de fechar (X) -->
+    <!-- Cabeçalho -->
     <ImageView
         android:id="@+id/btn_fechar_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="Botão para fechar o menu"
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
-        app:tint="#18B49D"
-        android:contentDescription="Botão para fechar o menu" />
+        app:tint="#18B49D" />
 
-    <!-- Imagem de perfil -->
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_perfil_usuario"
         android:layout_width="76dp"
         android:layout_height="79dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
+        android:contentDescription="Foto de perfil do usuário"
+        app:civ_border_color="#E0E0E0"
+        app:civ_border_width="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="Foto de perfil do usuário"
-        app:civ_border_width="2dp"
-        app:civ_border_color="#E0E0E0"
         tools:src="@tools:sample/avatars" />
 
-    <!-- Nome do Usuário -->
     <TextView
         android:id="@+id/txt_nome_usuario"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="Fulano de Tal"
         android:textColor="@color/preto"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/btn_fechar_menu"
         app:layout_constraintStart_toEndOf="@+id/img_perfil_usuario"
-        app:layout_constraintTop_toTopOf="@+id/img_perfil_usuario" />
+        app:layout_constraintTop_toTopOf="@+id/img_perfil_usuario"
+        tools:text="Fulano de Tal" />
 
-    <!-- Email do Usuário -->
     <TextView
         android:id="@+id/txt_email_usuario"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
-        android:text="fulano.tal@gmail.com"
         android:textColor="@color/preto"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/btn_fechar_menu"
         app:layout_constraintStart_toEndOf="@+id/img_perfil_usuario"
-        app:layout_constraintTop_toBottomOf="@+id/txt_nome_usuario" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_nome_usuario"
+        tools:text="fulano.tal@gmail.com" />
 
-    <!-- Divisor do Cabeçalho -->
     <View
         android:id="@+id/divider_header_menu"
         android:layout_width="0dp"
@@ -73,176 +69,240 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img_perfil_usuario" />
 
-    <!-- Container vertical para os itens do menu -->
-    <LinearLayout
-        android:id="@+id/container_opcoes_menu"
+    <!-- Área de Rolagem para todos os itens do menu -->
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider_header_menu">
 
-        <!-- Item 1: Meu Perfil -->
-        <FrameLayout
-            android:id="@+id/btn_meu_perfil"
+        <LinearLayout
+            android:id="@+id/container_opcoes_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
+            android:orientation="vertical">
 
-            <TextView
+            <!-- Item 1: Meu Perfil -->
+            <FrameLayout
+                android:id="@+id/btn_meu_perfil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingTop="20dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="20dp"
-                android:text="Meu Perfil"
-                android:textColor="@color/preto"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="bottom"
-                android:background="#E0E0E0" />
-        </FrameLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="20dp"
+                    android:text="Meu Perfil"
+                    android:textColor="@color/preto"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-        <!-- Item 2: Meus Pedidos -->
-        <FrameLayout
-            android:id="@+id/btn_meus_pedidos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="bottom"
+                    android:background="#E0E0E0" />
+            </FrameLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingTop="20dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="20dp"
-                android:text="Meus Pedidos"
-                android:textColor="@color/preto"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="bottom"
-                android:background="#E0E0E0" />
-        </FrameLayout>
-
-        <!-- Item 3: Projetos -->
-        <FrameLayout
-            android:id="@+id/btn_projetos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <TextView
+            <!-- Item 2: Meus Pedidos -->
+            <FrameLayout
+                android:id="@+id/btn_meus_pedidos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingTop="20dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="20dp"
-                android:text="Projetos"
-                android:textColor="@color/preto"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="bottom"
-                android:background="#E0E0E0" />
-        </FrameLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="20dp"
+                    android:text="Meus Pedidos"
+                    android:textColor="@color/preto"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-        <!-- Item 4: Pagamentos -->
-        <FrameLayout
-            android:id="@+id/btn_pagamentos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="bottom"
+                    android:background="#E0E0E0" />
+            </FrameLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingTop="20dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="20dp"
-                android:text="Pagamentos"
-                android:textColor="@color/preto"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="bottom"
-                android:background="#E0E0E0" />
-        </FrameLayout>
-
-        <!-- Item 5: Configurações -->
-        <FrameLayout
-            android:id="@+id/btn_configuracoes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <TextView
+            <!-- Item 3: Projetos -->
+            <FrameLayout
+                android:id="@+id/btn_projetos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingTop="20dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="20dp"
-                android:text="Configurações"
-                android:textColor="@color/preto"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="bottom"
-                android:background="#E0E0E0" />
-        </FrameLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="20dp"
+                    android:text="Projetos"
+                    android:textColor="@color/preto"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-        <!-- Último Item: Encerrar Sessão (sem linha) -->
-        <FrameLayout
-            android:id="@+id/btn_encerrar_sessao"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="bottom"
+                    android:background="#E0E0E0" />
+            </FrameLayout>
 
-            <TextView
+            <!-- Item 4: Pagamentos -->
+            <FrameLayout
+                android:id="@+id/btn_pagamentos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingTop="20dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="20dp"
-                android:text="Encerrar Sessão"
-                android:textColor="#C62828"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </FrameLayout>
-    </LinearLayout>
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="20dp"
+                    android:text="Pagamentos"
+                    android:textColor="@color/preto"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="bottom"
+                    android:background="#E0E0E0" />
+            </FrameLayout>
+
+            <!-- Item 5: Sobre Nós -->
+            <FrameLayout
+                android:id="@+id/btn_sobre_nos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="20dp"
+                    android:text="Sobre Nós"
+                    android:textColor="@color/preto"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="bottom"
+                    android:background="#E0E0E0" />
+            </FrameLayout>
+
+            <!-- Item 6: Termos e Condições -->
+            <FrameLayout
+                android:id="@+id/btn_termos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="20dp"
+                    android:text="Termos e Condições"
+                    android:textColor="@color/preto"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="bottom"
+                    android:background="#E0E0E0" />
+            </FrameLayout>
+
+            <!-- Item 7: Configurações -->
+            <FrameLayout
+                android:id="@+id/btn_configuracoes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="20dp"
+                    android:text="Configurações"
+                    android:textColor="@color/preto"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="bottom"
+                    android:background="#E0E0E0" />
+            </FrameLayout>
+
+            <!-- ÚLTIMO ITEM: Encerrar Sessão (sem linha divisória) -->
+            <FrameLayout
+                android:id="@+id/btn_encerrar_sessao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="20dp"
+                    android:text="Encerrar Sessão"
+                    android:textColor="#C62828"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -60,8 +60,16 @@
         <activity
             android:name=".TelaMenuPrincipal"
             android:exported="false" />
+        <activity android:name=".TelaMeuPerfil"
+            android:exported="false" />
         <activity
             android:name=".TelaMenuPerfil"
+            android:exported="false" />
+        <activity
+            android:name=".TelaEdicaoPerfilAutonomo"
+            android:exported="false" />
+        <activity
+            android:name=".TelaEdicaoPerfilContratante"
             android:exported="false" />
         <activity
             android:name=".TelaPesquisa"
