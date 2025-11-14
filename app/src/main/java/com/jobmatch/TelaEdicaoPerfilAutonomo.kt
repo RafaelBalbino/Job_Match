@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.jobmatch.databinding.ActivityTelaEdicaoPerfilAutonomoBinding
+import kotlin.math.min
 
 class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
 
@@ -61,6 +62,7 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
         binding.btnVoltarPerfilAutonomo.setOnClickListener { finish() }
         binding.btnSalvarAutonomo.setOnClickListener { salvarDados() }
         binding.btnAnexoAutonomo.setOnClickListener { pickImageLauncher.launch("image/*") }
+        // Aplica a nova máscara
         binding.txtTelefoneAutonomo.addTextChangedListener(PhoneMaskWatcher())
     }
 
@@ -77,12 +79,8 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
                     val usuario = document.toObject(Usuario::class.java)
                     usuario?.let {
                         binding.txtNomeAutonomo.setText(it.nome)
-
-                        val numeroLimpo = limparNumeroTelefone(it.numeroTelefone)
-                        binding.txtTelefoneAutonomo.setText(numeroLimpo)
-
-                        // --- CORREÇÃO APLICADA AQUI ---
-                        // Preenche o campo de endereço com os dados do Firestore
+                        // A máscara será aplicada automaticamente pelo TextWatcher
+                        binding.txtTelefoneAutonomo.setText(it.numeroTelefone)
                         binding.txtEnderecoAutonomo.setText(formatarEnderecoParaEdicao(it.endereco))
 
                         it.autonomo?.let { autonomo ->
@@ -102,25 +100,15 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
             }
     }
 
-    /**
-     * Formata o objeto Endereco em uma única String para exibição no EditText.
-     */
     private fun formatarEnderecoParaEdicao(endereco: Endereco?): String {
         if (endereco == null) return ""
-        // Concatena os campos do endereço que não são nulos para formar uma string única
         return listOfNotNull(endereco.rua, endereco.cidade, endereco.estado, endereco.cep)
             .joinToString(separator = ", ")
     }
 
+    // Função ajustada para limpar QUALQUER máscara, retornando apenas os dígitos.
     private fun limparNumeroTelefone(numero: String?): String {
-        if (numero.isNullOrBlank()) {
-            return ""
-        }
-        var digitos = numero.filter { it.isDigit() }
-        if (digitos.startsWith("55") && digitos.length > 11) {
-            digitos = digitos.substring(2)
-        }
-        return digitos
+        return numero?.replace(Regex("[^0-9]"), "") ?: ""
     }
 
     private fun salvarDados() {
@@ -148,8 +136,9 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
 
     private fun atualizarDadosFirestore(novaFotoUrl: String?) {
         val nome = binding.txtNomeAutonomo.text.toString().trim()
+        // Limpa o número antes de salvar
         val telefone = limparNumeroTelefone(binding.txtTelefoneAutonomo.text.toString())
-        val enderecoStr = binding.txtEnderecoAutonomo.text.toString().trim() // Pega a string do EditText
+        val enderecoStr = binding.txtEnderecoAutonomo.text.toString().trim()
         val especializacao = binding.txtEspecializacaoAutonomo.text.toString().trim()
         val cnpj = binding.txtCnpjAutonomo.text.toString().trim()
 
@@ -160,13 +149,11 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
 
         val atualizacoes = mutableMapOf<String, Any>()
         atualizacoes["nome"] = nome
+        // Garante que o número de telefone completo (com DDI) seja salvo, se presente
         if (telefone.isNotEmpty()) atualizacoes["numeroTelefone"] = telefone
 
-        // --- CORREÇÃO APLICADA AQUI ---
-        // Assume-se, por simplicidade, que o texto completo vai para o campo "rua".
-        // O ideal seria ter campos separados para cada parte do endereço.
         if (enderecoStr.isNotEmpty()) {
-            val enderecoObj = Endereco(rua = enderecoStr, cidade = null, estado = null, cep = null, pais = null)
+            val enderecoObj = Endereco(rua = enderecoStr)
             atualizacoes["endereco"] = enderecoObj
         }
 
@@ -190,39 +177,39 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
             }
     }
 
-    // Máscara para o campo de telefone
+    // NOVA MÁSCARA DE TELEFONE COMPLETA
     inner class PhoneMaskWatcher : TextWatcher {
         private var isUpdating = false
-        private var oldText = ""
+        private var old = ""
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            val str = s.toString().filter { it.isDigit() }
-            if (isUpdating || str == oldText) {
+        override fun afterTextChanged(s: Editable) {
+            val str = limparNumeroTelefone(s.toString())
+            if (isUpdating || str == old) {
                 return
             }
 
-            val mask = if (str.length > 10) "(##) #####-####" else "(##) ####-####"
-            var formatted = ""
-            var i = 0
-            for (m in mask.toCharArray()) {
-                if (i >= str.length) break
-                if (m == '#') {
-                    formatted += str[i]
-                    i++
-                } else {
-                    formatted += m
-                }
+            isUpdating = true
+            var formatted = "+55"
+            if (str.length > 2) {
+                formatted += " (${str.substring(2, min(4, str.length))}"
+            }
+            if (str.length >= 5) {
+                formatted += ") ${str.substring(4, min(9, str.length))}"
+            }
+            if (str.length >= 10) {
+                formatted += "-${str.substring(9, min(13, str.length))}"
             }
 
-            isUpdating = true
-            oldText = str
-            binding.txtTelefoneAutonomo.setText(formatted)
-            binding.txtTelefoneAutonomo.setSelection(formatted.length)
-            isUpdating = false
-        }
+            s.replace(0, s.length, formatted)
 
-        override fun afterTextChanged(s: Editable) {}
+            old = str
+            isUpdating = false
+
+            // Garante que o cursor fique no final do texto
+            binding.txtTelefoneAutonomo.setSelection(s.length)
+        }
     }
 }

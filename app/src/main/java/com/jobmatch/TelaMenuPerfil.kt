@@ -8,16 +8,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.semantics.dismiss
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import coil.load
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaMenuPerfilBinding
-
-
 
 class TelaMenuPerfil : AppCompatActivity() {
 
@@ -75,6 +71,7 @@ class TelaMenuPerfil : AppCompatActivity() {
                             error(R.drawable.ic_profile_placeholder)
                         }
 
+                        // Mostra o botão "Projetos" apenas se o usuário for autônomo
                         if (usuario.autonomo != null) {
                             binding.btnProjetos.visibility = View.VISIBLE
                         } else {
@@ -107,25 +104,12 @@ class TelaMenuPerfil : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // --- LÓGICA ATUALIZADA PARA 'MEUS PEDIDOS' ---
         binding.btnMeusPedidos.setOnClickListener {
-            if (currentUser != null) {
-                // Se o campo 'autonomo' for nulo, o usuário é um contratante
-                if (currentUser?.autonomo == null) {
-                    val intent = Intent(this, TelaRealizarPedidos::class.java)
-                    startActivity(intent)
-                } else {
-                    // Se for um autônomo, exibe uma mensagem
-                    showToast("Esta seção é para contratantes. Veja seus projetos em 'Meus Projetos'.")
-                }
-            } else {
-                // Caso os dados ainda não tenham sido carregados
-                showToast("Aguarde, carregando dados do usuário.")
-            }
+            abrirListaDePedidos("CONTRATANTE")
         }
 
         binding.btnProjetos.setOnClickListener {
-            showToast("Será implementado no futuro")
+            abrirListaDePedidos("AUTONOMO")
         }
 
         binding.btnPagamentos.setOnClickListener {
@@ -134,7 +118,7 @@ class TelaMenuPerfil : AppCompatActivity() {
 
         // Botão Sobre Nós
         binding.btnSobreNos.setOnClickListener {
-            Toast.makeText(this, "Em Andamento", Toast.LENGTH_SHORT).show()
+            showToast("Projeto feito pelo grupo 3 do ADS VA6 - Fatec SCS")
         }
 
         // Botão Termos e Condições
@@ -151,6 +135,13 @@ class TelaMenuPerfil : AppCompatActivity() {
             fazerLogout()
         }
     }
+    
+    private fun abrirListaDePedidos(tipo: String) {
+        val intent = Intent(this, FragmentContainerActivity::class.java).apply {
+            putExtra("FRAGMENT_TYPE", tipo)
+        }
+        startActivity(intent)
+    }
 
     /**
      * Exibe um AlertDialog com o texto dos termos e condições.
@@ -158,7 +149,7 @@ class TelaMenuPerfil : AppCompatActivity() {
     private fun mostrarPopupTermos() {
         // Usa o AlertDialog do sistema de Views (appcompat), que é o correto para esta tela
         AlertDialog.Builder(this)
-            .setTitle("Termos e Condições")
+            .setTitle("Políticas de Privacidade")
             .setMessage("Nossa política de privacidade segue as diretrizes da LGPD, garantindo a proteção e o uso consciente dos seus dados. Ao se cadastrar, você concorda com a coleta e o tratamento de suas informações para os fins descritos em nossos termos.")
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss() // Fecha o pop-up

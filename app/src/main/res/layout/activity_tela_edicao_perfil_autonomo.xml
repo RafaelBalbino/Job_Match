@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="26dp"
             android:contentDescription="@string/voltar_icone_descricao"
             app:icon="@drawable/ic_voltar_24"
             app:iconSize="28dp"

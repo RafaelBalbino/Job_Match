@@ -6,9 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.compose.ui.semantics.text
 import androidx.fragment.app.Fragment
-import androidx.glance.visibility
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -48,15 +46,22 @@ class fragmentListaPedidosContratante : Fragment() {
         setupRecyclerView()
 
         // Pega o tipo de lista que foi passado pela Activity
-        val tipoLista = arguments?.getString("TIPO_LISTA")
+        val tipoLista = arguments?.getString("FRAGMENT_TYPE")
 
-        // Decide qual lista carregar com base no tipo de usuário
-        if (tipoLista == "AUTONOMO") {
-            binding.tvTituloPedidos.text = "Pedidos Disponíveis"
-            buscarPedidosParaAutonomo()
-        } else { // tipoLista == "CONTRATANTE"
-            binding.tvTituloPedidos.text = "Meus Pedidos Realizados"
-            buscarPedidosDoContratante()
+        // Decide qual lista carregar com base no tipo
+        when (tipoLista) {
+            "AUTONOMO" -> {
+                binding.tvTituloPedidos.text = "Pedidos Disponíveis"
+                buscarPedidosParaAutonomo()
+            }
+            "AUTONOMO_ACEITOS" -> {
+                binding.tvTituloPedidos.text = "Meus Projetos Aceitos"
+                buscarPedidosDoAutonomo()
+            }
+            else -> { // "CONTRATANTE"
+                binding.tvTituloPedidos.text = "Meus Pedidos Realizados"
+                buscarPedidosDoContratante()
+            }
         }
 
         binding.btnVoltarListaPedi.setOnClickListener {
@@ -67,9 +72,7 @@ class fragmentListaPedidosContratante : Fragment() {
 
     private fun setupRecyclerView() {
         // Inicializa o Adapter. Ele começa com uma lista vazia.
-        // O segundo parâmetro informa ao adapter o tipo de usuário,
-        // para que ele saiba como renderizar cada item.
-        val tipoLista = arguments?.getString("TIPO_LISTA") ?: "CONTRATANTE"
+        val tipoLista = arguments?.getString("FRAGMENT_TYPE") ?: "CONTRATANTE"
         pedidoAdapter = PedidoAdapter(mutableListOf(), tipoLista)
 
         binding.rvListaPedidos.apply {
@@ -90,7 +93,7 @@ class fragmentListaPedidosContratante : Fragment() {
                     binding.tvNoPedidos.text = "Nenhum pedido de serviço disponível no momento."
                     binding.tvNoPedidos.visibility = View.VISIBLE
                 } else {
-                    val listaPedidos = documents.toObjects(Pedido::class.java)
+                    val listaPedidos = documents.toObjects(Pedidos::class.java)
                     pedidoAdapter.updateData(listaPedidos)
                     binding.tvNoPedidos.visibility = View.GONE
                 }
@@ -99,6 +102,38 @@ class fragmentListaPedidosContratante : Fragment() {
                 binding.progressBar.visibility = View.GONE
                 Log.e("ListaPedidos", "Erro ao buscar pedidos para autônomo", e)
                 Toast.makeText(context, "Falha ao carregar pedidos.", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    // NOVA FUNÇÃO
+    private fun buscarPedidosDoAutonomo() {
+        val autonomoId = auth.currentUser?.uid
+        if (autonomoId == null) {
+            Toast.makeText(context, "Usuário não autenticado.", Toast.LENGTH_SHORT).show()
+            binding.progressBar.visibility = View.GONE
+            return
+        }
+
+        binding.progressBar.visibility = View.VISIBLE
+        db.collection("pedidos")
+            .whereEqualTo("autonomo", autonomoId)
+            .orderBy("dataHora", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                binding.progressBar.visibility = View.GONE
+                if (documents.isEmpty) {
+                    binding.tvNoPedidos.text = "Você ainda não aceitou nenhum projeto."
+                    binding.tvNoPedidos.visibility = View.VISIBLE
+                } else {
+                    val listaPedidos = documents.toObjects(Pedidos::class.java)
+                    pedidoAdapter.updateData(listaPedidos)
+                    binding.tvNoPedidos.visibility = View.GONE
+                }
+            }
+            .addOnFailureListener { e ->
+                binding.progressBar.visibility = View.GONE
+                Log.e("ListaPedidos", "Erro ao buscar projetos aceitos", e)
+                Toast.makeText(context, "Falha ao carregar seus projetos.", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -121,7 +156,7 @@ class fragmentListaPedidosContratante : Fragment() {
                     binding.tvNoPedidos.text = "Você ainda não realizou nenhum pedido de serviço."
                     binding.tvNoPedidos.visibility = View.VISIBLE
                 } else {
-                    val listaPedidos = documents.toObjects(Pedido::class.java)
+                    val listaPedidos = documents.toObjects(Pedidos::class.java)
                     pedidoAdapter.updateData(listaPedidos)
                     binding.tvNoPedidos.visibility = View.GONE
                 }
