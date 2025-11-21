@@ -91,22 +91,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_descricao_servico" />
 
+        <Button
+            android:id="@+id/btn_editar_servico"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:text="Editar Serviço"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_ver_avaliacoes" />
 
         <Button
             android:id="@+id/btn_fazer_pedido"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
             android:text="Fazer Pedido"
             android:paddingVertical="12dp"
             android:textSize="18sp"
             android:textColor="@android:color/white"
             android:textStyle="bold"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_ver_avaliacoes" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_editar_servico" />
 
         <ImageButton
             android:id="@+id/btn_voltar"

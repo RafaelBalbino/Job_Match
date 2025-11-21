@@ -1,56 +1,40 @@
 package com.jobmatch
 
-
-
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.jobmatch.databinding.ItemServicoButtonBinding
 import coil.load
+import com.jobmatch.databinding.ItemServicoButtonBinding
 
-// Assumindo que você tem uma classe de dados 'Servico'
-
+// Adaptador para a lista de serviços no perfil do autônomo
 class ServicosAdapter(
-    // 1. A lista de dados que será exibida
-    private val listaServicos: List<Servico>,
-    // 2. Um listener opcional para lidar com cliques nos itens
-    private val onServiceClick: (Servico) -> Unit
+    // 1. A lista de dados que será exibida (mutável para permitir atualizações)
+    private var listaServicos: MutableList<Servico>,
+    // 2. Listeners para os três tipos de clique possíveis
+    private val onServiceClick: (Servico) -> Unit,
+    private val onEditClick: (Servico) -> Unit,
+    private val onDeleteClick: (Servico) -> Unit
 ) : RecyclerView.Adapter<ServicosAdapter.ServicoViewHolder>() {
 
     // --- ViewHolder ---
     // Classe responsável por segurar e vincular as Views de cada item
-    inner class ServicoViewHolder(
-        private val binding: ItemServicoButtonBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
+    inner class ServicoViewHolder(private val binding: ItemServicoButtonBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(servico: Servico) {
-            // 🎯 Aqui você vincula os dados do objeto 'Servico' às Views do CardView
-            binding.txtNameCardServico.text = servico.nomeServico ?: "Serviço Desconhecido"
+            // 🎯 Vincula os dados do objeto 'Servico' às Views do CardView
+            binding.txtNameCardServico.text = servico.nomeServico
 
-            // Configura o clique no item inteiro
-            binding.cardServicoRoot.setOnClickListener {
-                onServiceClick(servico)
-            }
-            // Lógica de Coil/Glide:
-            if (!servico.fotoServico.isNullOrBlank()) {
-                // Certifique-se de que o import 'coil.load' está no topo
-                binding.imageServicoFundo.load(servico.fotoServico) {
-                    // crossfade(true) // Descomente se estiver usando Coil/Glide
-                    placeholder(R.drawable.ic_alerta_24)
-                }
-            } else {
-                binding.imageServicoFundo.setImageResource(R.drawable.ic_alerta_24)
-            }
-            binding.iconEditar.setOnClickListener {
-                // Adicione a lógica de edição aqui
-                Toast.makeText(it.context, "Editar: ${servico.nomeServico}", Toast.LENGTH_SHORT).show()
+            // Lógica de carregamento de imagem com Coil
+            binding.imageServicoFundo.load(servico.fotoServico) {
+                crossfade(true)
+                placeholder(R.drawable.ic_image_placeholder) // Imagem padrão enquanto carrega
+                error(R.drawable.ic_image_placeholder)       // Imagem para caso de erro
             }
 
-            binding.iconExcluir.setOnClickListener {
-                // Adicione a lógica de exclusão aqui
-                Toast.makeText(it.context, "Excluir: ${servico.nomeServico}", Toast.LENGTH_SHORT).show()
-            }
+            // --- Configura os cliques para chamar as funções recebidas ---
+            binding.cardServicoRoot.setOnClickListener { onServiceClick(servico) }
+            binding.iconEditar.setOnClickListener { onEditClick(servico) }
+            binding.iconExcluir.setOnClickListener { onDeleteClick(servico) }
         }
     }
 
@@ -71,4 +55,11 @@ class ServicosAdapter(
 
     // Retorna o número total de itens na lista
     override fun getItemCount(): Int = listaServicos.size
+
+    // Função pública para permitir que a Activity atualize a lista de serviços
+    fun updateData(newServicos: List<Servico>) {
+        listaServicos.clear()
+        listaServicos.addAll(newServicos)
+        notifyDataSetChanged()
+    }
 }

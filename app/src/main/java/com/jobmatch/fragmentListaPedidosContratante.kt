@@ -83,7 +83,7 @@ class fragmentListaPedidosContratante : Fragment() {
 
     private fun buscarPedidosParaAutonomo() {
         binding.progressBar.visibility = View.VISIBLE
-        db.collection("pedidos")
+        db.collection("pedido")
             .whereEqualTo("status", "disponivel")
             .orderBy("dataHora", Query.Direction.DESCENDING)
             .get()
@@ -115,7 +115,7 @@ class fragmentListaPedidosContratante : Fragment() {
         }
 
         binding.progressBar.visibility = View.VISIBLE
-        db.collection("pedidos")
+        db.collection("pedido")
             .whereEqualTo("autonomo", autonomoId)
             .orderBy("dataHora", Query.Direction.DESCENDING)
             .get()
@@ -146,7 +146,7 @@ class fragmentListaPedidosContratante : Fragment() {
         }
 
         binding.progressBar.visibility = View.VISIBLE
-        db.collection("pedidos")
+        db.collection("pedido")
             .whereEqualTo("contratanteId", contratanteId)
             .orderBy("dataHora", Query.Direction.DESCENDING)
             .get()

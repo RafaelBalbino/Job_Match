@@ -1,20 +1,17 @@
 package com.jobmatch
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
-import coil.load
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaPerfilAutonomoBinding
-import com.jobmatch.databinding.ItemServicoButtonBinding
-import androidx.recyclerview.widget.GridLayoutManager
 
 class TelaPerfilAutonomo : AppCompatActivity() {
     private val binding by lazy {
@@ -55,6 +52,9 @@ class TelaPerfilAutonomo : AppCompatActivity() {
     }
 
     private fun carregarDadosAutonomo(id: String) {
+        // Adicionado para feedback visual
+        binding.progressBar.visibility = View.VISIBLE
+        
         // Carrega os dados do usuário (nome, foto, etc.)
         db.collection("users").document(id).get()
             .addOnSuccessListener { document ->
@@ -68,10 +68,15 @@ class TelaPerfilAutonomo : AppCompatActivity() {
             }
 
         // Carrega os serviços daquele autônomo
-        db.collection("servicos").whereEqualTo("uidUsuario", id).get()
+        db.collection("servico").whereEqualTo("uidUsuario", id).get()
             .addOnSuccessListener { documents ->
+                binding.progressBar.visibility = View.GONE // Esconde o progresso
                 val servicos = documents.toObjects(Servico::class.java)
                 servicosAdapter.updateData(servicos)
+            }
+            .addOnFailureListener { 
+                binding.progressBar.visibility = View.GONE // Esconde o progresso em caso de falha
+                Toast.makeText(this, "Erro ao carregar os serviços.", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -90,27 +95,69 @@ class TelaPerfilAutonomo : AppCompatActivity() {
         }
 
         binding.btnCadastrarServico.setOnClickListener {
-            cadastrarServicoLauncher.launch(Intent(this, CadastrarServico::class.java))
+             activityResultLauncher.launch(Intent(this, CadastrarServico::class.java))
         }
     }
-
-    private val cadastrarServicoLauncher = registerForActivityResult(
+    
+    // Launcher para aguardar o resultado da tela de cadastro/edição
+    private val activityResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            // Simplesmente recarrega os dados do usuário logado para mostrar o novo serviço
+        if (result.resultCode == Activity.RESULT_OK) {
+            // Se um serviço foi criado ou editado, recarrega a lista para mostrar as mudanças
             auth.currentUser?.uid?.let { carregarDadosAutonomo(it) }
         }
     }
 
     private fun setupRecyclerView() {
-        servicosAdapter = ServicosAdapter(listaServicos) { servicoClicado ->
-            Toast.makeText(this, "Detalhes de: ${servicoClicado.nomeServico}", Toast.LENGTH_SHORT).show()
-        }
+        servicosAdapter = ServicosAdapter(
+            listaServicos,
+            onServiceClick = { servico -> verDetalhesServico(servico) },
+            onEditClick = { servico -> editarServico(servico) },
+            onDeleteClick = { servico -> excluirServico(servico) }
+        )
         binding.containerServicos.apply {
             layoutManager = GridLayoutManager(context, 2)
             adapter = servicosAdapter
             isNestedScrollingEnabled = false
         }
+    }
+
+    // --- FUNÇÕES DE AÇÃO PARA OS SERVIÇOS ---
+
+    private fun verDetalhesServico(servico: Servico) {
+        val intent = Intent(this, telaServicoAmpliado::class.java).apply {
+            putExtra("SERVICO", servico)
+        }
+        startActivity(intent)
+    }
+
+    private fun editarServico(servico: Servico) {
+        val intent = Intent(this, CadastrarServico::class.java).apply {
+            putExtra("SERVICO_PARA_EDITAR", servico)
+        }
+        activityResultLauncher.launch(intent)
+    }
+
+    private fun excluirServico(servico: Servico) {
+        AlertDialog.Builder(this)
+            .setTitle("Excluir Serviço")
+            .setMessage("Tem certeza de que deseja excluir o serviço '${servico.nomeServico}'? Esta ação não pode ser desfeita.")
+            .setPositiveButton("Sim, excluir") { _, _ ->
+                binding.progressBar.visibility = View.VISIBLE
+                db.collection("servico").document(servico.id).delete()
+                    .addOnSuccessListener {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(this, "Serviço excluído com sucesso.", Toast.LENGTH_SHORT).show()
+                        // Recarrega a lista para refletir a exclusão
+                        auth.currentUser?.uid?.let { carregarDadosAutonomo(it) }
+                    }
+                    .addOnFailureListener { e ->
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(this, "Erro ao excluir o serviço: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .setNegativeButton("Não", null)
+            .show()
     }
 }

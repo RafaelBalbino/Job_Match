@@ -22,10 +22,13 @@ class telaNegocioFechado : AppCompatActivity() {
             insets
         }
 
-        // Handler para fechar a tela e navegar para a lista de pedidos aceitos
+        // Pega o destino de retorno do Intent, com um valor padrão para segurança
+        val targetFragment = intent.getStringExtra("TARGET_FRAGMENT") ?: "AUTONOMO_ACEITOS"
+
+        // Handler para fechar a tela e navegar para o destino correto
         Handler(Looper.getMainLooper()).postDelayed({
             val intent = Intent(this, FragmentContainerActivity::class.java).apply {
-                putExtra("FRAGMENT_TYPE", "AUTONOMO_ACEITOS")
+                putExtra("FRAGMENT_TYPE", targetFragment) // Usa o destino recebido
                 // Limpa a pilha de telas para que o usuário não volte para a tela de "Negócio Fechado"
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
