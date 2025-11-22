@@ -111,6 +111,7 @@ class PedidoAdapter(
         holder.binding.tvNomeContratante.text = pedido.nomeSolicitacao
         holder.binding.tvTelefone.text = pedido.telefoneSolicitante
         holder.binding.tvEmailContratante.text = pedido.emailSolicitante
+        // CORRIGIDO: Formata a localização como "Cidade - UF"
         holder.binding.tvEnderecoContratante.text = "${pedido.cidade} - ${pedido.estado}"
 
         // Preenchendo os detalhes do serviço

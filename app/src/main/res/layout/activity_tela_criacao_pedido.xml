@@ -15,10 +15,11 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
+            style="@style/Widget.App.Toolbar.Centered"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_voltar_24"
-            app:title="@string/creation_pedido_title" />
+            app:title="@string/creation_pedido_title"
+            app:navigationIcon="@drawable/ic_voltar_24" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -34,7 +35,6 @@
             android:layout_height="wrap_content"
             android:padding="16dp">
 
-            <!-- Seção de Dados de Contato -->
             <TextView
                 android:id="@+id/header_contact_details"
                 style="@style/TextAppearance.Material3.TitleMedium"
@@ -72,7 +72,7 @@
                 android:hint="@string/creation_pedido_phone_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/til_nome">
+                app:layout_constraintTop_toBottomOf="@+id/til_nome">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txt_telefone"
@@ -90,7 +90,7 @@
                 android:hint="@string/creation_pedido_email_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/til_telefone">
+                app:layout_constraintTop_toBottomOf="@+id/til_telefone">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txt_email"
@@ -99,7 +99,6 @@
                     android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Seção de Serviço Solicitado -->
             <TextView
                 android:id="@+id/header_service_details"
                 style="@style/TextAppearance.Material3.TitleMedium"
@@ -109,7 +108,7 @@
                 android:text="@string/creation_pedido_service_details_title"
                 android:textColor="?attr/colorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/til_email" />
+                app:layout_constraintTop_toBottomOf="@+id/til_email" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_tipoServico"
@@ -126,8 +125,7 @@
                     android:id="@+id/actv_tipoServico"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
-                    tools:ignore="SpeakableTextPresentCheck" />
+                    android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -152,41 +150,49 @@
                     android:minLines="5" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_endereco"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <LinearLayout
+                android:id="@+id/ll_location_pedido"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="@string/creation_pedido_address_hint"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/til_descricaoServico">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txt_endereco"
-                    android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_cidade"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="2"
+                    android:hint="@string/creation_pedido_city_hint">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_cidade"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="@string/creation_pedido_city_hint"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/til_endereco">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/txt_cidade"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/txt_cidade"
-                    android:layout_width="match_parent"
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_estado"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_weight="1"
+                    android:hint="@string/creation_pedido_state_hint">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/actv_estado"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_tempoServico"
@@ -197,14 +203,13 @@
                 android:hint="@string/creation_pedido_service_time_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/til_cidade">
+                app:layout_constraintTop_toBottomOf="@id/ll_location_pedido">
 
                 <AutoCompleteTextView
                     android:id="@+id/actv_tempoServico"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none"
-                    tools:ignore="SpeakableTextPresentCheck" />
+                    android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button

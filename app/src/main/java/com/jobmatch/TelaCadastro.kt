@@ -15,6 +15,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -60,6 +61,7 @@ class TelaCadastro : AppCompatActivity() {
         setupUserTypeSelection()
         setupPrivacyPolicyClick()
         setupPhoneMask()
+        setupStateDropdown()
 
         binding.btnEnviaCadastro.setOnClickListener {
             cadastrarUsuario()
@@ -146,6 +148,13 @@ class TelaCadastro : AppCompatActivity() {
         val visibility = if (show) View.VISIBLE else View.GONE
         binding.tilCnpj.visibility = visibility
         binding.tilSpecialization.visibility = visibility
+        // A visibilidade do ll_location não é mais controlada pelo RadioButton
+    }
+
+    private fun setupStateDropdown() {
+        val states = resources.getStringArray(R.array.brazilian_states)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, states)
+        binding.actvEstado.setAdapter(adapter)
     }
 
     private fun setupClickableText() {
@@ -234,6 +243,7 @@ class TelaCadastro : AppCompatActivity() {
         binding.tilNome.error = null
         binding.tilEmail.error = null
         binding.tilTelefone.error = null
+        binding.tilCidade.error = null
         binding.tilSenha.error = null
         binding.tilConfirmarSenha.error = null
         binding.tilSpecialization.error = null
@@ -241,13 +251,16 @@ class TelaCadastro : AppCompatActivity() {
         val nome = binding.txtNome.text.toString().trim()
         val email = binding.txtEmail.text.toString().trim()
         val telefone = binding.txtTelefone.text.toString().replace(Regex("[^\\d]"), "")
+        val cidade = binding.txtCidade.text.toString().trim()
+        val estado = binding.actvEstado.text.toString().trim()
         val senha = binding.txtSenha.text.toString()
         val confirmarSenha = binding.txtConfirmarSenha.text.toString()
         val politicasAceitas = binding.radioButton.isChecked
         val isFreelancer = binding.rbFreelancer.isChecked
 
-        if (nome.isEmpty() || email.isEmpty() || telefone.length < 13 || senha.isEmpty() || confirmarSenha.isEmpty()) {
-            Toast.makeText(this, "Por favor, preencha todos os campos básicos.", Toast.LENGTH_SHORT).show()
+        if (nome.isEmpty() || email.isEmpty() || telefone.length < 13 || cidade.isEmpty() || estado.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty()) {
+            Toast.makeText(this, "Por favor, preencha todos os campos obrigatórios.", Toast.LENGTH_SHORT).show()
+            if (cidade.isEmpty()) binding.tilCidade.error = "Obrigatório"
             return
         }
 
@@ -284,7 +297,7 @@ class TelaCadastro : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val contratante = Contratante()
-                    salvarDadosUsuario(nome, email, telefone, contratante, autonomo)
+                    salvarDadosUsuario(nome, email, telefone, cidade, estado, contratante, autonomo)
                 } else {
                     showLoading(false)
                     val exception = task.exception
@@ -304,7 +317,7 @@ class TelaCadastro : AppCompatActivity() {
             }
     }
 
-    private fun salvarDadosUsuario(nome: String, email: String, telefone: String, contratante: Contratante, autonomo: Autonomo?) {
+    private fun salvarDadosUsuario(nome: String, email: String, telefone: String, cidade: String, estado: String, contratante: Contratante, autonomo: Autonomo?) {
         val userId = auth.currentUser?.uid
         if (userId == null) {
             showLoading(false)
@@ -312,13 +325,15 @@ class TelaCadastro : AppCompatActivity() {
             return
         }
 
-        // Monta o objeto Usuario, incluindo a URL da imagem padrão
+        // Monta o objeto Usuario, incluindo cidade e estado no nível principal
         val novoUsuario = Usuario(
             uid = userId,
             nome = nome,
             email = email,
             numeroTelefone = telefone,
-            fotoUrl = DEFAULT_PROFILE_IMAGE_URL, // <-- USANDO A URL DO FIREBASE STORAGE
+            cidade = cidade,
+            estado = estado,
+            fotoUrl = DEFAULT_PROFILE_IMAGE_URL,
             contratante = contratante,
             autonomo = autonomo
         )

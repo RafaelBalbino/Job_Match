@@ -19,14 +19,14 @@ class TelaCriacaoPedido : AppCompatActivity() {
 
     private lateinit var binding: ActivityTelaCriacaoPedidoBinding
     private lateinit var db: FirebaseFirestore
-    private lateinit var auth: FirebaseAuth // Adicionado
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTelaCriacaoPedidoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         db = FirebaseFirestore.getInstance()
-        auth = FirebaseAuth.getInstance() // Adicionado
+        auth = FirebaseAuth.getInstance()
 
         // Ajusta o padding para as barras do sistema (comum a ambos os modos)
         ViewCompat.setOnApplyWindowInsetsListener(binding.Main) { v, insets ->
@@ -36,6 +36,7 @@ class TelaCriacaoPedido : AppCompatActivity() {
         }
 
         setupToolbar()
+        setupDropdownMenus()
 
         // Verifica o modo de operação (Criação vs. Visualização)
         val mode = intent.getStringExtra("MODE")
@@ -65,9 +66,8 @@ class TelaCriacaoPedido : AppCompatActivity() {
 
     // Configura a tela para o modo de CRIAÇÃO de pedido
     private fun setupCreateMode() {
-        setupDropdownMenus()
         setupClickListeners()
-        // A função abaixo foi renomeada para maior clareza
+        preencherDadosUsuarioLogado()
         preencherCamposComIntentAnterior()
     }
 
@@ -79,10 +79,14 @@ class TelaCriacaoPedido : AppCompatActivity() {
         binding.btnAnexarFotos.visibility = View.GONE
 
         // Desabilita todos os campos de entrada
+        binding.txtNome.isEnabled = false
+        binding.txtTelefone.isEnabled = false
+        binding.txtEmail.isEnabled = false
         binding.actvTipoServico.isEnabled = false
-        binding.actvTempoServico.isEnabled = false
         binding.txtDescricaoServico.isEnabled = false
-        // Adicionar outros campos aqui se existirem no layout (ex: data, hora, etc.)
+        binding.txtCidade.isEnabled = false
+        binding.actvEstado.isEnabled = false
+        binding.actvTempoServico.isEnabled = false
 
         // 2. Carrega e exibe os dados do pedido
         binding.progressBar.visibility = View.VISIBLE
@@ -94,28 +98,41 @@ class TelaCriacaoPedido : AppCompatActivity() {
                     if (pedido != null) {
                         populateUiWithPedidoData(pedido)
                     } else {
-                        Toast.makeText(this, "Erro ao ler os dados do pedido.", Toast.LENGTH_SHORT).show()
-                        finish()
+                        showErrorAndFinish("Erro ao ler os dados do pedido.")
                     }
                 } else {
-                    Toast.makeText(this, "Pedido não encontrado.", Toast.LENGTH_SHORT).show()
-                    finish()
+                    showErrorAndFinish("Pedido não encontrado.")
                 }
             }
             .addOnFailureListener { e ->
                 binding.progressBar.visibility = View.GONE
-                Toast.makeText(this, "Falha ao carregar o pedido: ${e.message}", Toast.LENGTH_SHORT).show()
-                finish()
+                showErrorAndFinish("Falha ao carregar o pedido: ${e.message}")
             }
+    }
+    
+    // Preenche a UI com os dados do usuário para conveniência
+    private fun preencherDadosUsuarioLogado(){
+        val userId = auth.currentUser?.uid ?: return
+        db.collection("users").document(userId).get().addOnSuccessListener { userDoc ->
+            val user = userDoc.toObject(Usuario::class.java)
+            binding.txtNome.setText(user?.nome)
+            binding.txtTelefone.setText(user?.numeroTelefone)
+            binding.txtEmail.setText(user?.email)
+            binding.txtCidade.setText(user?.cidade ?: "")
+            binding.actvEstado.setText(user?.estado ?: "", false)
+        }
     }
 
     // Preenche a UI com os dados de um pedido existente
     private fun populateUiWithPedidoData(pedido: Pedidos) {
+        binding.txtNome.setText(pedido.nomeSolicitacao)
+        binding.txtTelefone.setText(pedido.telefoneSolicitante)
+        binding.txtEmail.setText(pedido.emailSolicitante)
         binding.actvTipoServico.setText(pedido.tipoServico, false)
-        binding.actvTempoServico.setText(pedido.tempoServico, false)
         binding.txtDescricaoServico.setText(pedido.descricaoServico)
-        // Preencher outros campos como data e hora, se os IDs correspondentes existirem no layout
-        // Ex: binding.etData.setText(pedido.data)
+        binding.txtCidade.setText(pedido.cidade)
+        binding.actvEstado.setText(pedido.estado, false)
+        binding.actvTempoServico.setText(pedido.tempoServico, false)
     }
 
     private fun setupDropdownMenus() {
@@ -126,6 +143,10 @@ class TelaCriacaoPedido : AppCompatActivity() {
         val serviceTimes = resources.getStringArray(R.array.service_time_options)
         val serviceTimeAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, serviceTimes)
         binding.actvTempoServico.setAdapter(serviceTimeAdapter)
+        
+        val states = resources.getStringArray(R.array.brazilian_states)
+        val stateAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, states)
+        binding.actvEstado.setAdapter(stateAdapter)
     }
 
     // Preenche os campos se vierem de uma tela anterior (apenas no modo de criação)
@@ -143,14 +164,8 @@ class TelaCriacaoPedido : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        binding.btnAnexarFotos.setOnClickListener {
-            openFileSelector()
-        }
-
-        binding.btnEnviarPedido.setOnClickListener {
-            // A lógica de envio agora está em uma função separada
-            enviarPedido()
-        }
+        binding.btnAnexarFotos.setOnClickListener { openFileSelector() }
+        binding.btnEnviarPedido.setOnClickListener { enviarPedido() }
     }
     
     // NOVA FUNÇÃO para lidar com o envio do pedido
@@ -162,65 +177,59 @@ class TelaCriacaoPedido : AppCompatActivity() {
         }
 
         // 1. Validação dos campos do formulário
+        val nome = binding.txtNome.text.toString().trim()
+        val telefone = binding.txtTelefone.text.toString().trim()
+        val email = binding.txtEmail.text.toString().trim()
         val tipoServico = binding.actvTipoServico.text.toString().trim()
         val descricao = binding.txtDescricaoServico.text.toString().trim()
         val tempoServico = binding.actvTempoServico.text.toString().trim()
+        val cidade = binding.txtCidade.text.toString().trim()
+        val estado = binding.actvEstado.text.toString().trim()
 
-        if (tipoServico.isEmpty() || descricao.isEmpty() || tempoServico.isEmpty()) {
-            Toast.makeText(this, "Por favor, preencha todos os campos de serviço.", Toast.LENGTH_SHORT).show()
+        if (nome.isEmpty() || telefone.isEmpty() || email.isEmpty() || tipoServico.isEmpty() || descricao.isEmpty() || tempoServico.isEmpty() || cidade.isEmpty() || estado.isEmpty()) {
+            Toast.makeText(this, "Por favor, preencha todos os campos.", Toast.LENGTH_SHORT).show()
             return
         }
         
         binding.progressBar.visibility = View.VISIBLE
 
-        // 2. Busca os dados do usuário para complementar o pedido
-        db.collection("users").document(currentUser.uid).get()
-            .addOnSuccessListener { userDocument ->
-                if (userDocument == null || !userDocument.exists()) {
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(this, "Dados do usuário não encontrados.", Toast.LENGTH_SHORT).show()
-                    return@addOnSuccessListener
+        // 2. Cria o objeto Pedido
+        val novoPedido = Pedidos(
+            nomeSolicitacao = nome,
+            telefoneSolicitante = telefone,
+            emailSolicitante = email,
+            tipoServico = tipoServico,
+            descricaoServico = descricao,
+            tempoServico = tempoServico,
+            cidade = cidade, // Usa a cidade do formulário
+            estado = estado, // Usa o estado do formulário
+            status = "pendente", // Status inicial
+            contratanteId = currentUser.uid,
+            autonomo = "" // Autônomo ainda não foi definido
+        )
+
+        // 3. Salva o pedido no Firestore
+        db.collection("pedido").add(novoPedido)
+            .addOnSuccessListener {
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(this, "Pedido criado com sucesso!", Toast.LENGTH_SHORT).show()
+
+                // 4. Navega para a lista de pedidos, como você sugeriu
+                val intent = Intent(this, FragmentContainerActivity::class.java).apply {
+                    putExtra("FRAGMENT_TYPE", "CONTRATANTE")
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
-
-                val user = userDocument.toObject(Usuario::class.java)
-
-                // 3. Cria o objeto Pedido
-                val novoPedido = Pedidos(
-                    nomeSolicitacao = user?.nome ?: "",
-                    telefoneSolicitante = user?.numeroTelefone ?: "",
-                    emailSolicitante = user?.email ?: "",
-                    tipoServico = tipoServico,
-                    descricaoServico = descricao,
-                    tempoServico = tempoServico,
-                    cidade = user?.cidade ?: "",
-                    estado = user?.estado ?: "", // O campo estado pode ser adicionado ao formulário no futuro
-                    status = "pendente", // Status inicial
-                    contratanteId = currentUser.uid,
-                    autonomo = "" // Autônomo ainda não foi definido
-                )
-
-                // 4. Salva o pedido no Firestore
-                db.collection("pedido").add(novoPedido)
-                    .addOnSuccessListener {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this, "Pedido criado com sucesso!", Toast.LENGTH_SHORT).show()
-
-                        // 5. Navega para a lista de pedidos, como você sugeriu
-                        val intent = Intent(this, FragmentContainerActivity::class.java).apply {
-                            putExtra("FRAGMENT_TYPE", "CONTRATANTE")
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        }
-                        startActivity(intent)
-                    }
-                    .addOnFailureListener { e ->
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this, "Erro ao criar o pedido: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
+                startActivity(intent)
             }
             .addOnFailureListener { e ->
                 binding.progressBar.visibility = View.GONE
-                Toast.makeText(this, "Erro ao buscar dados do usuário: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Erro ao criar o pedido: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun showErrorAndFinish(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        finish()
     }
 
     private fun openFileSelector() {

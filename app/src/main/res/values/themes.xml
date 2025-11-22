@@ -41,4 +41,17 @@
         <item name="cornerSize">16dp</item>
     </style>
 
+    <!-- Estilo para a Toolbar com título centralizado -->
+    <style name="Widget.App.Toolbar.Centered" parent="Widget.MaterialComponents.Toolbar">
+        <item name="titleGravity">center</item>
+        <item name="titleTextColor">@color/preto</item>
+    </style>
+
+    <!-- Novo Estilo para a Aparência do Título da Toolbar -->
+    <style name="TextAppearance.App.Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/primaria_variante</item>
+    </style>
+
 </resources>
