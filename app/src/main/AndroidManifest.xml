@@ -11,9 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.JobMatch">
-        <!--<activity
-            android:name=".ServicosAdapter"
-            android:exported="false" />-->
+        
         <activity
             android:name=".telaEntrada"
             android:exported="true">
@@ -37,7 +35,7 @@
             android:name=".TelaAvaliacao"
             android:exported="false" />
         <activity
-            android:name=".telaCriacaoPedido"
+            android:name=".TelaCriacaoPedido"
             android:exported="false" />
         <activity
             android:name=".telaServicoAmpliado"
@@ -88,9 +86,6 @@
             android:exported="false"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".TelaEdicaoPerfilAutonomo"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
