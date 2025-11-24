@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -54,18 +55,21 @@ class fragmentListaPedidosContratante : Fragment() {
         val tipoLista = arguments?.getString("FRAGMENT_TYPE")
 
         // Decide qual query do Firestore usar com base no tipo de lista
-        val query = when (tipoLista) {
+        val query: Query
+        when (tipoLista) {
             "AUTONOMO" -> {
                 binding.tvTituloPedidos.text = "Pedidos Disponíveis"
-                buscarPedidosParaAutonomo()
+                query = buscarPedidosParaAutonomo()
             }
             "AUTONOMO_ACEITOS" -> {
-                binding.tvTituloPedidos.text = "Meus Projetos Aceitos"
-                buscarPedidosDoAutonomo()
+                binding.tvTituloPedidos.text = "Meus Projetos" // Título corrigido
+                query = buscarPedidosDoAutonomo()
+                ajustarLayoutParaStatus() // Adiciona margem
             }
             else -> { // "CONTRATANTE"
                 binding.tvTituloPedidos.text = "Meus Pedidos Realizados"
-                buscarPedidosDoContratante()
+                query = buscarPedidosDoContratante()
+                ajustarLayoutParaStatus() // Adiciona margem
             }
         }
 
@@ -78,6 +82,17 @@ class fragmentListaPedidosContratante : Fragment() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
+    }
+
+    // Adiciona margem ao topo para não sobrepor a status bar
+    private fun ajustarLayoutParaStatus() {
+        val params = binding.btnVoltarListaPedi.layoutParams as ConstraintLayout.LayoutParams
+        params.topMargin = (25 * resources.displayMetrics.density).toInt()
+        binding.btnVoltarListaPedi.layoutParams = params
+
+        val titleParams = binding.tvTituloPedidos.layoutParams as ConstraintLayout.LayoutParams
+        titleParams.topMargin = (25 * resources.displayMetrics.density).toInt()
+        binding.tvTituloPedidos.layoutParams = titleParams
     }
 
     private fun setupRecyclerView() {
@@ -102,7 +117,7 @@ class fragmentListaPedidosContratante : Fragment() {
     private fun buscarPedidosDoAutonomo(): Query {
         val autonomoId = auth.currentUser?.uid ?: return db.collection("__non_existent__") // Retorna uma query vazia se o usuário não estiver logado
         return db.collection("pedido")
-            .whereEqualTo("autonomo", autonomoId)
+            .whereEqualTo("autonomo", autonomoId) // CORREÇÃO: O campo no Firestore é "autonomo"
             .orderBy("dataHora", Query.Direction.DESCENDING)
     }
 
@@ -135,7 +150,7 @@ class fragmentListaPedidosContratante : Fragment() {
                 pedidoAdapter.updateData(listaPedidos)
                 binding.tvNoPedidos.visibility = View.GONE
             } else {
-                pedidoAdapter.updateData(emptyList()) // Limpa a lista
+                pedidoAdapter.updateData(emptyList()) 
                 binding.tvNoPedidos.text = getEmptyListMessage()
                 binding.tvNoPedidos.visibility = View.VISIBLE
             }
