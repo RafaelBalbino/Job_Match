@@ -60,6 +60,16 @@ class TelaMenuPrincipal : AppCompatActivity() {
             navegarParaMenuPerfil()
         }
 
+        binding.scViewPesquisa.setOnClickListener {
+            val intent = Intent(this, TelaPesquisa::class.java)
+            startActivity(intent)
+        }
+
+        binding.imgFiltro.setOnClickListener {
+            val intent = Intent(this, TelaPesquisa::class.java)
+            startActivity(intent)
+        }
+
         binding.categoryChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
             val categoriaSelecionada = if (checkedIds.isNotEmpty()) {
                 group.findViewById<Chip>(checkedIds.first()).text.toString()

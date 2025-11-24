@@ -17,6 +17,10 @@ data class Servico(
     val uidUsuario: String = "",
     val nomeServico: String = "",
     val descricaoServico: String = "",
+    val valorServico: Double = 0.0,
+    val uidAutonomo: String = "",
+    val nomeAutonomo: String = "",
+    val uidServico: String = "",
     val categoria: String = "",
     val modeloCobranca: String = "",
 

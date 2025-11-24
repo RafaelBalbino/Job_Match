@@ -166,5 +166,11 @@ e termos e condições</string>
         <item>SE</item>
         <item>TO</item>
     </string-array>
-
+    <!-- Tela de Pesquisa -->
+    <string name="pesquisa_hint">O que você está procurando?</string>
+    <string name="item_nao_encontrado_image_description">Ícone de item não encontrado</string>
+    <string name="item_nao_encontrado">Nenhum item foi encontrado.</string>
+    <string name="voltar">Voltar</string>
+    <string name="pesquisa_title">Pesquisa</string>
+    <string name="filtro">Filtro</string>
 </resources>
