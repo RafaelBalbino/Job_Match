@@ -53,7 +53,7 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
 
     //Dependência Firebase
-    implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
 
     //Firebase Analytics
     implementation("com.google.firebase:firebase-analytics")
@@ -67,11 +67,8 @@ dependencies {
     //Armazenamento
     implementation("com.google.firebase:firebase-storage")
 
-    implementation("com.google.android.material:material:1.12.0")
-
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.activity:activity-compose:1.11.0")
-    implementation("androidx.cardview:cardview:1.0.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

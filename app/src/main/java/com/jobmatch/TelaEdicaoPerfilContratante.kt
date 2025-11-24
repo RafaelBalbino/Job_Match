@@ -65,6 +65,15 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
         binding.btnSalvar.setOnClickListener { salvarDados() }
         binding.btnAnexarImagem.setOnClickListener { pickImageLauncher.launch("image/*") }
         binding.txtTelefoneContratante.addTextChangedListener(PhoneMaskWatcher())
+
+        // Adiciona o listener de foco para o campo de endereço
+        binding.txtEnderecoContratante.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.tilEnderecoContratante.helperText = "Use o formato: Cidade - Estado ou Cidade, Estado"
+            } else {
+                binding.tilEnderecoContratante.helperText = null
+            }
+        }
     }
 
     private fun carregarDadosUsuario() {
@@ -136,6 +145,12 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
             return
         }
 
+        // Validação estrita do endereço
+        if (enderecoStr.isNotEmpty() && !enderecoStr.contains("-") && !enderecoStr.contains(",")) {
+            Toast.makeText(this, "Formato de endereço inválido. Use 'Cidade - Estado' ou 'Cidade, Estado'.", Toast.LENGTH_LONG).show()
+            return
+        }
+
         val atualizacoes = mutableMapOf<String, Any>()
         atualizacoes["nome"] = nome
         atualizacoes["email"] = email
@@ -144,9 +159,9 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
             atualizacoes["numeroTelefone"] = telefone
         }
 
-        val enderecoParts = enderecoStr.split(" - ").map { it.trim() }
-        atualizacoes["cidade"] = enderecoParts.getOrNull(0) ?: ""
-        atualizacoes["estado"] = enderecoParts.getOrNull(1) ?: ""
+        val (cidade, estado) = parseEndereco(enderecoStr)
+        atualizacoes["cidade"] = cidade
+        atualizacoes["estado"] = estado
 
         novaFotoUrl?.let {
             atualizacoes["fotoUrl"] = it
@@ -163,6 +178,20 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Erro ao atualizar o perfil: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun parseEndereco(enderecoStr: String): Pair<String, String> {
+        val parts = enderecoStr.split("-").map { it.trim() }
+        return if (parts.size > 1) {
+            Pair(parts[0], parts.drop(1).joinToString("-").trim())
+        } else {
+            val commaParts = enderecoStr.split(",").map { it.trim() }
+            if (commaParts.size > 1) {
+                Pair(commaParts[0], commaParts.drop(1).joinToString(",").trim())
+            } else {
+                Pair(enderecoStr, "")
+            }
+        }
     }
 
     // Máscara para o campo de telefone
