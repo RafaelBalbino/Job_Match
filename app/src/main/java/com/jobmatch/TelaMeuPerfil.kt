@@ -89,7 +89,9 @@ class TelaMeuPerfil : AppCompatActivity() {
         // 2. Preenche as informações pessoais
         binding.txtEmailInfo.text = usuario.email ?: "E-mail não informado"
         binding.txtTelefoneMeuPerfil.text = formatarTelefone(usuario.numeroTelefone)
-        binding.txtEnderecoInfo.text = formatarEndereco(usuario.endereco)
+        val enderecoFmt = listOfNotNull(usuario.cidade, usuario.estado).filter { it.isNotBlank() }.joinToString(" - ")
+        binding.txtEnderecoInfo.text = if (enderecoFmt.isNotBlank()) enderecoFmt else "Endereço não informado"
+
 
         // 3. Lógica para exibir o bloco de perfil correto
         if (usuario.autonomo != null) {
@@ -158,22 +160,6 @@ class TelaMeuPerfil : AppCompatActivity() {
             11 -> "(${digitos.substring(0, 2)}) ${digitos.substring(2, 7)}-${digitos.substring(7)}" // Celular
             else -> numero // Formato inesperado, retorna o original.
         }
-    }
-
-    /**
-     * Formata o objeto Endereco em uma única String legível.
-     */
-    private fun formatarEndereco(endereco: Endereco?): String {
-        if (endereco == null) {
-            return "Endereço não informado"
-        }
-        // Junta apenas os campos não nulos/vazios com uma vírgula
-        return listOfNotNull(
-            endereco.rua?.takeIf { it.isNotBlank() },
-            endereco.cidade?.takeIf { it.isNotBlank() },
-            endereco.estado?.takeIf { it.isNotBlank() },
-            endereco.cep?.takeIf { it.isNotBlank() }
-        ).joinToString(separator = ", ")
     }
 
     private fun navegarParaEdicaoDePerfil(usuario: Usuario) {

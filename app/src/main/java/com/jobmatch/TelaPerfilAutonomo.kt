@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import coil.load
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaPerfilAutonomoBinding
@@ -54,15 +55,24 @@ class TelaPerfilAutonomo : AppCompatActivity() {
     private fun carregarDadosAutonomo(id: String) {
         // Adicionado para feedback visual
         binding.progressBar.visibility = View.VISIBLE
-        
+
         // Carrega os dados do usuário (nome, foto, etc.)
         db.collection("users").document(id).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
                     val usuario = document.toObject(Usuario::class.java)
                     usuario?.let {
-                        binding.textView.text = it.nome // Ex: Nome do autônomo
-                        // binding.ivProfile.load(it.fotoUrl) // Ex: Foto do autônomo
+                        binding.txtViewNomeAutonomo.text = it.nome // Ex: Nome do autônomo
+                        binding.txtViewTelefone.text = formatarTelefone(it.numeroTelefone)
+                        
+                        if (!it.fotoUrl.isNullOrEmpty()) {
+                            binding.imgViewBGPerfil.load(it.fotoUrl) { 
+                                crossfade(true)
+                            }
+                            binding.imgViewPerfilIcon.visibility = View.GONE
+                        } else {
+                            binding.imgViewPerfilIcon.visibility = View.VISIBLE
+                        }
                     }
                 }
             }
@@ -159,5 +169,23 @@ class TelaPerfilAutonomo : AppCompatActivity() {
             }
             .setNegativeButton("Não", null)
             .show()
+    }
+
+    private fun formatarTelefone(numero: String?): String {
+        if (numero.isNullOrBlank()) {
+            return "Telefone não informado"
+        }
+
+        var digitos = numero.filter { it.isDigit() }
+
+        if (digitos.startsWith("55") && digitos.length > 11) {
+            digitos = digitos.substring(2)
+        }
+
+        return when (digitos.length) {
+            10 -> "(${digitos.substring(0, 2)}) ${digitos.substring(2, 6)}-${digitos.substring(6)}" // Fixo
+            11 -> "(${digitos.substring(0, 2)}) ${digitos.substring(2, 7)}-${digitos.substring(7)}" // Celular
+            else -> numero // Formato inesperado, retorna o original.
+        }
     }
 }

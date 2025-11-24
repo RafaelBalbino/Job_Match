@@ -71,10 +71,11 @@ class CadastrarServico : AppCompatActivity() {
         binding.txtCategoriaServico.setText(servico.categoria, false) // false para não filtrar
 
         // Seleciona o item correto no Spinner
-        val cobrancaAdapter = binding.ModeloCobranca.adapter as ArrayAdapter<String>
-        val position = cobrancaAdapter.getPosition(servico.modeloCobranca)
-        if (position >= 0) {
-            binding.ModeloCobranca.setSelection(position)
+        (binding.ModeloCobranca.adapter as? ArrayAdapter<String>)?.let { cobrancaAdapter ->
+            val position = cobrancaAdapter.getPosition(servico.modeloCobranca)
+            if (position >= 0) {
+                binding.ModeloCobranca.setSelection(position)
+            }
         }
 
         // Carrega a imagem existente

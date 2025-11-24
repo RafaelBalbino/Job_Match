@@ -81,7 +81,8 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
                         binding.txtNomeAutonomo.setText(it.nome)
                         // A máscara será aplicada automaticamente pelo TextWatcher
                         binding.txtTelefoneAutonomo.setText(it.numeroTelefone)
-                        binding.txtEnderecoAutonomo.setText(formatarEnderecoParaEdicao(it.endereco))
+                        val enderecoFmt = listOfNotNull(it.cidade, it.estado).filter { it.isNotBlank() }.joinToString(" - ")
+                        binding.txtEnderecoAutonomo.setText(enderecoFmt)
 
                         it.autonomo?.let { autonomo ->
                             binding.txtEspecializacaoAutonomo.setText(autonomo.especializacao)
@@ -98,12 +99,6 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
             }.addOnFailureListener { e ->
                 Toast.makeText(this, "Falha ao carregar dados: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-    }
-
-    private fun formatarEnderecoParaEdicao(endereco: Endereco?): String {
-        if (endereco == null) return ""
-        return listOfNotNull(endereco.rua, endereco.cidade, endereco.estado, endereco.cep)
-            .joinToString(separator = ", ")
     }
 
     // Função ajustada para limpar QUALQUER máscara, retornando apenas os dígitos.
@@ -152,10 +147,9 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
         // Garante que o número de telefone completo (com DDI) seja salvo, se presente
         if (telefone.isNotEmpty()) atualizacoes["numeroTelefone"] = telefone
 
-        if (enderecoStr.isNotEmpty()) {
-            val enderecoObj = Endereco(rua = enderecoStr)
-            atualizacoes["endereco"] = enderecoObj
-        }
+        val enderecoParts = enderecoStr.split(" - ").map { it.trim() }
+        atualizacoes["cidade"] = enderecoParts.getOrNull(0) ?: ""
+        atualizacoes["estado"] = enderecoParts.getOrNull(1) ?: ""
 
         if (especializacao.isNotEmpty()) atualizacoes["autonomo.especializacao"] = especializacao
         if (cnpj.isNotEmpty()) atualizacoes["autonomo.cnpj"] = cnpj

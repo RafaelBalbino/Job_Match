@@ -16,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.jobmatch.databinding.ActivityTelaEdicaoPerfilContratanteBinding
+import kotlin.math.min
 
 class TelaEdicaoPerfilContratante : AppCompatActivity() {
 
@@ -80,13 +81,10 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
                     usuario?.let {
                         binding.txtNomeContratante.setText(it.nome)
                         binding.txtEmailContratante.setText(it.email)
+                        binding.txtTelefoneContratante.setText(it.numeroTelefone)
 
-                        val numeroLimpo = limparNumeroTelefone(it.numeroTelefone)
-                        binding.txtTelefoneContratante.setText(numeroLimpo)
-
-                        // --- CORREÇÃO APLICADA AQUI ---
-                        // Preenche o campo de endereço com os dados do Firestore
-                        binding.txtEnderecoContratante.setText(formatarEnderecoParaEdicao(it.endereco))
+                        val enderecoFmt = listOfNotNull(it.cidade, it.estado).filter { it.isNotBlank() }.joinToString(" - ")
+                        binding.txtEnderecoContratante.setText(enderecoFmt)
 
                         val fotoUrl = it.fotoUrl
                         if (!fotoUrl.isNullOrEmpty()) {
@@ -100,30 +98,8 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
             }
     }
 
-    /**
-     * Formata o objeto Endereco em uma única String para exibição no EditText.
-     */
-    private fun formatarEnderecoParaEdicao(endereco: Endereco?): String {
-        if (endereco == null) return ""
-        // Concatena os campos do endereço que não são nulos para formar uma string única
-        return listOfNotNull(endereco.rua, endereco.cidade, endereco.estado, endereco.cep)
-            .joinToString(separator = ", ")
-    }
-
-    /**
-     * Limpa o número de telefone, removendo o "+55" e outras máscaras.
-     */
     private fun limparNumeroTelefone(numero: String?): String {
-        if (numero.isNullOrBlank()) {
-            return ""
-        }
-        // Remove tudo que não for dígito
-        var digitos = numero.filter { it.isDigit() }
-        // Se começar com "55" e tiver mais de 11 dígitos, remove o "55"
-        if (digitos.startsWith("55") && digitos.length > 11) {
-            digitos = digitos.substring(2)
-        }
-        return digitos
+        return numero?.replace(Regex("[^0-9]"), "") ?: ""
     }
 
     private fun salvarDados() {
@@ -168,13 +144,9 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
             atualizacoes["numeroTelefone"] = telefone
         }
 
-        // --- CORREÇÃO APLICADA AQUI ---
-        // Cria um objeto Endereco e o adiciona ao mapa de atualizações
-        if (enderecoStr.isNotEmpty()) {
-            val enderecoObj = Endereco(rua = enderecoStr) // Salva tudo no campo 'rua'
-            atualizacoes["endereco"] = enderecoObj
-        }
-
+        val enderecoParts = enderecoStr.split(" - ").map { it.trim() }
+        atualizacoes["cidade"] = enderecoParts.getOrNull(0) ?: ""
+        atualizacoes["estado"] = enderecoParts.getOrNull(1) ?: ""
 
         novaFotoUrl?.let {
             atualizacoes["fotoUrl"] = it
@@ -196,36 +168,36 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
     // Máscara para o campo de telefone
     inner class PhoneMaskWatcher : TextWatcher {
         private var isUpdating = false
-        private var oldText = ""
+        private var old = ""
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            val str = s.toString().filter { it.isDigit() }
-            if (isUpdating || str == oldText) {
+        override fun afterTextChanged(s: Editable) {
+            val str = limparNumeroTelefone(s.toString())
+            if (isUpdating || str == old) {
                 return
             }
 
-            val mask = if (str.length > 10) "(##) #####-####" else "(##) ####-####"
-            var formatted = ""
-            var i = 0
-            for (m in mask.toCharArray()) {
-                if (i >= str.length) break
-                if (m == '#') {
-                    formatted += str[i]
-                    i++
-                } else {
-                    formatted += m
-                }
+            isUpdating = true
+            var formatted = "+55"
+            if (str.length > 2) {
+                formatted += " (${str.substring(2, min(4, str.length))}"
+            }
+            if (str.length >= 5) {
+                formatted += ") ${str.substring(4, min(9, str.length))}"
+            }
+            if (str.length >= 10) {
+                formatted += "-${str.substring(9, min(13, str.length))}"
             }
 
-            isUpdating = true
-            oldText = str
-            binding.txtTelefoneContratante.setText(formatted)
-            binding.txtTelefoneContratante.setSelection(formatted.length)
-            isUpdating = false
-        }
+            s.replace(0, s.length, formatted)
 
-        override fun afterTextChanged(s: Editable) {}
+            old = str
+            isUpdating = false
+
+            // Garante que o cursor fique no final do texto
+            binding.txtTelefoneContratante.setSelection(s.length)
+        }
     }
 }

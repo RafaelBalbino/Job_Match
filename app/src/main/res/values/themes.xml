@@ -43,7 +43,7 @@
 
     <!-- Estilo para a Toolbar com título centralizado -->
     <style name="Widget.App.Toolbar.Centered" parent="Widget.MaterialComponents.Toolbar">
-        <item name="titleGravity">center</item>
+        <item name="titleCentered">true</item>
         <item name="titleTextColor">@color/preto</item>
     </style>
 
