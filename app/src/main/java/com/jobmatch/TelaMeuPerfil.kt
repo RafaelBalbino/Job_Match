@@ -28,6 +28,10 @@ class TelaMeuPerfil : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
+        // Configura o botão Voltar e o placeholder da imagem imediatamente
+        binding.btnVoltar.setOnClickListener { finish() }
+        binding.imgFotoMeuPerfil.setImageResource(R.drawable.ic_profile_placeholder)
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -120,11 +124,7 @@ class TelaMeuPerfil : AppCompatActivity() {
             binding.blocoAutonomoContratante.visibility = View.GONE
         }
 
-        // 4. Configura os cliques dos botões
-        binding.btnVoltar.setOnClickListener {
-            finish()
-        }
-
+        // 4. Configura os cliques dos outros botões
         binding.itemAlterarSenha.setOnClickListener {
             usuario.email?.let { email ->
                 enviarEmailRedefinicaoSenha(email)

@@ -31,6 +31,10 @@ class TelaPerfilAutonomo : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
+        // Configura ações iniciais e placeholders
+        binding.imgViewVoltar.setOnClickListener { finish() }
+        binding.imgViewPerfilIcon.visibility = View.VISIBLE // Garante que o ícone placeholder esteja visível
+
         setupRecyclerView()
 
         // Lógica para determinar qual perfil carregar
@@ -71,6 +75,7 @@ class TelaPerfilAutonomo : AppCompatActivity() {
                             }
                             binding.imgViewPerfilIcon.visibility = View.GONE
                         } else {
+                            binding.imgViewBGPerfil.setImageDrawable(null) // Limpa imagem de fundo se não houver foto
                             binding.imgViewPerfilIcon.visibility = View.VISIBLE
                         }
                     }

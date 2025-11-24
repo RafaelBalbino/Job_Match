@@ -30,6 +30,13 @@ class TelaMenuPrincipal : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         userId = auth.currentUser?.uid
 
+        // Define os placeholders imediatamente
+        binding.imgPerfil.setImageResource(R.drawable.circle_white)
+        binding.imgViewAutonomo1.setImageResource(R.drawable.rounded_edittext_background)
+        binding.imgViewAutonomo2.setImageResource(R.drawable.rounded_edittext_background)
+        binding.imgViewAutonomo3.setImageResource(R.drawable.rounded_edittext_background)
+        binding.imgViewAutonomo4.setImageResource(R.drawable.rounded_edittext_background)
+
         // Ajusta o padding para as barras do sistema
         ViewCompat.setOnApplyWindowInsetsListener(binding.Main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -77,17 +84,16 @@ class TelaMenuPrincipal : AppCompatActivity() {
                     if (!servico.fotoServico.isNullOrEmpty()) {
                         imageView.load(servico.fotoServico) {
                             crossfade(true)
+                            placeholder(R.drawable.rounded_edittext_background)
                             error(R.drawable.rounded_edittext_background) // Imagem de fallback
                         }
+                    } else {
+                         imageView.setImageResource(R.drawable.rounded_edittext_background)
                     }
 
                     // Configura o clique para cada card usando os dados corretos
                     imageView.setOnClickListener {
-                        abrirDetalhesDoServico(
-                            servico.nomeServico ?: "Serviço sem nome",
-                            servico.descricaoServico ?: "Sem descrição disponível",
-                            servico.fotoServico ?: ""
-                        )
+                        abrirDetalhesDoServico(servico)
                     }
                 }
             }
@@ -97,11 +103,9 @@ class TelaMenuPrincipal : AppCompatActivity() {
             }
     }
 
-    private fun abrirDetalhesDoServico(nomeDoServico: String, descricaoDoServico: String, urlDaImagem: String) {
+    private fun abrirDetalhesDoServico(servico: Servico) {
         val intent = Intent(this, telaServicoAmpliado::class.java).apply {
-            putExtra("SERVICE_NAME", nomeDoServico)
-            putExtra("SERVICE_DESCRIPTION", descricaoDoServico)
-            putExtra("SERVICE_IMAGE_URL", urlDaImagem)
+            putExtra("SERVICO", servico)
         }
         startActivity(intent)
     }
@@ -123,8 +127,11 @@ class TelaMenuPrincipal : AppCompatActivity() {
                         if (!fotoUrl.isNullOrEmpty()) {
                             binding.imgPerfil.load(fotoUrl) {
                                 crossfade(true)
+                                placeholder(R.drawable.circle_white)
                                 error(R.drawable.circle_white) // Imagem de fallback
                             }
+                        } else {
+                            binding.imgPerfil.setImageResource(R.drawable.circle_white)
                         }
                     }
                 }

@@ -33,6 +33,9 @@ class TelaMenuPerfil : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
+        // Define o placeholder imediatamente
+        binding.imgPerfilUsuario.setImageResource(R.drawable.ic_profile_placeholder)
+
         // Usa o ID do layout raiz: 'layout_root_menu'
         ViewCompat.setOnApplyWindowInsetsListener(binding.layoutRootMenu) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -63,9 +66,8 @@ class TelaMenuPerfil : AppCompatActivity() {
                         binding.txtNomeUsuario.text = usuario.nome
                         binding.txtEmailUsuario.text = usuario.email
 
-                        // CORREÇÃO: Carregando a imagem de forma explícita com Coil
-                        val imageView = binding.imgPerfilUsuario
-                        imageView.load(usuario.fotoUrl) {
+                        // Carrega a imagem do usuário, mantendo o placeholder como fallback
+                        binding.imgPerfilUsuario.load(usuario.fotoUrl) {
                             crossfade(true) // Adiciona uma transição suave
                             placeholder(R.drawable.ic_profile_placeholder)
                             error(R.drawable.ic_profile_placeholder)

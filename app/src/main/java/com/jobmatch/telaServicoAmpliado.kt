@@ -25,6 +25,10 @@ class telaServicoAmpliado : AppCompatActivity() {
         setContentView(binding.root)
         auth = FirebaseAuth.getInstance() // Inicializa o Firebase Auth
 
+        // Define o placeholder e o botão de voltar imediatamente
+        binding.ivServicoImagem.setImageResource(R.drawable.ic_image_placeholder)
+        binding.btnVoltar.setOnClickListener { finish() }
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.Main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -80,11 +84,6 @@ class telaServicoAmpliado : AppCompatActivity() {
                 }
                 startActivity(intent)
             }
-        }
-
-        // 4. Configurar o botão de voltar (ação comum a ambos os cenários)
-        binding.btnVoltar.setOnClickListener {
-            finish() // Fecha a tela atual e volta
         }
     }
 }
