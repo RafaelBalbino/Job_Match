@@ -67,7 +67,7 @@ class TelaMenuPrincipal : AppCompatActivity() {
             binding.imgViewAutonomo4
         )
 
-        db.collection("servicos").limit(4).get()
+        db.collection("servico").limit(4).get() // CORREÇÃO: "servicos" -> "servico"
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
                     Log.d("Firestore", "Nenhum serviço encontrado.")
@@ -93,7 +93,7 @@ class TelaMenuPrincipal : AppCompatActivity() {
 
                     // Configura o clique para cada card usando os dados corretos
                     imageView.setOnClickListener {
-                        abrirDetalhesDoServico(servico)
+                        abrirDetalhesDoServico(servico) // CORREÇÃO: Passando o objeto inteiro
                     }
                 }
             }
@@ -105,7 +105,7 @@ class TelaMenuPrincipal : AppCompatActivity() {
 
     private fun abrirDetalhesDoServico(servico: Servico) {
         val intent = Intent(this, telaServicoAmpliado::class.java).apply {
-            putExtra("SERVICO", servico)
+            putExtra("SERVICO", servico) // A tela de detalhes espera o objeto "SERVICO"
         }
         startActivity(intent)
     }

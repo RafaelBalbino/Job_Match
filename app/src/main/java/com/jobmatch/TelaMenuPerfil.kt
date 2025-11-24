@@ -152,7 +152,7 @@ class TelaMenuPerfil : AppCompatActivity() {
         // Usa o AlertDialog do sistema de Views (appcompat), que é o correto para esta tela
         AlertDialog.Builder(this)
             .setTitle("Políticas de Privacidade")
-            .setMessage("Nossa política de privacidade segue as diretrizes da LGPD, garantindo a proteção e o uso consciente dos seus dados. Ao se cadastrar, você concorda com a coleta e o tratamento de suas informações para os fins descritos em nossos termos.")
+            .setMessage("Nossa política de privacidade segue as diretrizes da LGPD, como o Princípio da Finalidade e o Princípio da Necessidade, garantindo a proteção e o uso consciente dos seus dados. Esses são alguns dos termos que você concordou.")
             .setPositiveButton("OK") { dialog, _ ->
                 dialog.dismiss() // Fecha o pop-up
             }

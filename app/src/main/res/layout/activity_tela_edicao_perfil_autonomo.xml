@@ -94,6 +94,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
             android:hint="@string/edit_profile_hint_phone"
+            app:prefixText="+55 "
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/til_nome_autonomo">

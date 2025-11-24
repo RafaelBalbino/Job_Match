@@ -27,7 +27,6 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaCadastroBinding
-import kotlin.math.min
 
 class TelaCadastro : AppCompatActivity() {
 
@@ -60,51 +59,17 @@ class TelaCadastro : AppCompatActivity() {
         setupPasswordFocusListener()
         setupUserTypeSelection()
         setupPrivacyPolicyClick()
-        setupPhoneMask()
+        binding.txtTelefone.addTextChangedListener(PhoneMaskWatcher())
         setupStateDropdown()
 
         binding.btnEnviaCadastro.setOnClickListener {
             cadastrarUsuario()
         }
     }
-
-    private fun setupPhoneMask() {
-        binding.txtTelefone.setText("+55")
-        binding.txtTelefone.addTextChangedListener(object : TextWatcher {
-            private var isUpdating = false
-            private var old = ""
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable) {
-                val str = s.toString().replace(Regex("\\D"), "")
-                if (isUpdating || str == old) {
-                    return
-                }
-
-                isUpdating = true
-                var formatted = "+55"
-
-                if (str.length > 2) {
-                    formatted += " (${str.substring(2, min(4, str.length))}"
-                }
-                if (str.length >= 5) {
-                    formatted += ") ${str.substring(4, min(9, str.length))}"
-                }
-                if (str.length >= 10) {
-                    formatted += "-${str.substring(9, min(13, str.length))}"
-                }
-
-                s.replace(0, s.length, formatted)
-
-                old = str
-                isUpdating = false
-            }
-        })
+    
+    private fun limparNumeroTelefone(numero: String?): String {
+        return numero?.replace(Regex("[^0-9]"), "") ?: ""
     }
-
 
     private fun setupPrivacyPolicyClick() {
         val radioButton = binding.radioButton
@@ -250,7 +215,7 @@ class TelaCadastro : AppCompatActivity() {
 
         val nome = binding.txtNome.text.toString().trim()
         val email = binding.txtEmail.text.toString().trim()
-        val telefone = binding.txtTelefone.text.toString().replace(Regex("[^\\d]"), "")
+        val telefoneLimpo = limparNumeroTelefone(binding.txtTelefone.text.toString())
         val cidade = binding.txtCidade.text.toString().trim()
         val estado = binding.actvEstado.text.toString().trim()
         val senha = binding.txtSenha.text.toString()
@@ -258,7 +223,7 @@ class TelaCadastro : AppCompatActivity() {
         val politicasAceitas = binding.radioButton.isChecked
         val isFreelancer = binding.rbFreelancer.isChecked
 
-        if (nome.isEmpty() || email.isEmpty() || telefone.length < 13 || cidade.isEmpty() || estado.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty()) {
+        if (nome.isEmpty() || email.isEmpty() || telefoneLimpo.length < 10 || cidade.isEmpty() || estado.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty()) {
             Toast.makeText(this, "Por favor, preencha todos os campos obrigatórios.", Toast.LENGTH_SHORT).show()
             if (cidade.isEmpty()) binding.tilCidade.error = "Obrigatório"
             return
@@ -297,7 +262,8 @@ class TelaCadastro : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val contratante = Contratante()
-                    salvarDadosUsuario(nome, email, telefone, cidade, estado, contratante, autonomo)
+                    val telefoneFormatado = "+55$telefoneLimpo"
+                    salvarDadosUsuario(nome, email, telefoneFormatado, cidade, estado, contratante, autonomo)
                 } else {
                     showLoading(false)
                     val exception = task.exception
@@ -353,5 +319,42 @@ class TelaCadastro : AppCompatActivity() {
                 auth.currentUser?.delete()
                 Toast.makeText(baseContext, "Falha ao salvar dados do perfil.", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    inner class PhoneMaskWatcher : TextWatcher {
+        private var isUpdating = false
+        private var old = ""
+
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+
+        override fun afterTextChanged(s: Editable) {
+            val str = limparNumeroTelefone(s.toString())
+            if (isUpdating || str == old) {
+                return
+            }
+
+            isUpdating = true
+            
+            val mask = if (str.length > 10) "(##) #####-####" else "(##) ####-####"
+            var formatted = ""
+            var i = 0
+            for (m in mask.toCharArray()) {
+                if (i >= str.length) break
+                if (m == '#') {
+                    formatted += str[i]
+                    i++
+                } else {
+                    formatted += m
+                }
+            }
+
+            s.replace(0, s.length, formatted)
+
+            old = str
+            isUpdating = false
+
+            binding.txtTelefone.setSelection(s.length)
+        }
     }
 }

@@ -90,7 +90,7 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
                     usuario?.let {
                         binding.txtNomeContratante.setText(it.nome)
                         binding.txtEmailContratante.setText(it.email)
-                        binding.txtTelefoneContratante.setText(it.numeroTelefone)
+                        binding.txtTelefoneContratante.setText(limparNumeroTelefone(it.numeroTelefone, true))
 
                         val enderecoFmt = listOfNotNull(it.cidade, it.estado).filter { it.isNotBlank() }.joinToString(" - ")
                         binding.txtEnderecoContratante.setText(enderecoFmt)
@@ -107,8 +107,12 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
             }
     }
 
-    private fun limparNumeroTelefone(numero: String?): String {
-        return numero?.replace(Regex("[^0-9]"), "") ?: ""
+    private fun limparNumeroTelefone(numero: String?, removerPrefixo: Boolean = false): String {
+        var digitos = numero?.replace(Regex("[^0-9]"), "") ?: ""
+        if (removerPrefixo && digitos.startsWith("55")) {
+            digitos = digitos.substring(2)
+        }
+        return digitos
     }
 
     private fun salvarDados() {
@@ -156,7 +160,7 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
         atualizacoes["email"] = email
 
         if(telefone.isNotEmpty()) {
-            atualizacoes["numeroTelefone"] = telefone
+            atualizacoes["numeroTelefone"] = "+55$telefone"
         }
 
         val (cidade, estado) = parseEndereco(enderecoStr)
@@ -194,7 +198,6 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
         }
     }
 
-    // Máscara para o campo de telefone
     inner class PhoneMaskWatcher : TextWatcher {
         private var isUpdating = false
         private var old = ""
@@ -209,15 +212,18 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
             }
 
             isUpdating = true
-            var formatted = "+55"
-            if (str.length > 2) {
-                formatted += " (${str.substring(2, min(4, str.length))}"
-            }
-            if (str.length >= 5) {
-                formatted += ") ${str.substring(4, min(9, str.length))}"
-            }
-            if (str.length >= 10) {
-                formatted += "-${str.substring(9, min(13, str.length))}"
+            
+            val mask = if (str.length > 10) "(##) #####-####" else "(##) ####-####"
+            var formatted = ""
+            var i = 0
+            for (m in mask.toCharArray()) {
+                if (i >= str.length) break
+                if (m == '#') {
+                    formatted += str[i]
+                    i++
+                } else {
+                    formatted += m
+                }
             }
 
             s.replace(0, s.length, formatted)
@@ -225,7 +231,6 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
             old = str
             isUpdating = false
 
-            // Garante que o cursor fique no final do texto
             binding.txtTelefoneContratante.setSelection(s.length)
         }
     }
