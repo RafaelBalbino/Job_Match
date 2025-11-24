@@ -142,27 +142,23 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView31">
 
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/category_container"
+                    android:id="@+id/category_chip_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="16dp"
-                    app:singleLine="true">
+                    app:singleLine="true"
+                    app:singleSelection="true">
 
-                    <!-- Chip Popular com cor de fundo e texto personalizadas -->
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/txtViewPopular"
+                        android:id="@+id/chip_categoria1"
                         style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Categoria 1"
-                        android:textColor="@android:color/white"
-                        app:chipBackgroundColor="?attr/colorPrimary"
-                        android:textStyle="bold"
-                        android:checkable="true"
-                        android:checked="true"/>
+                        android:checkable="true" />
 
-                    <!-- Outros chips com estilo padrão preenchido -->
                     <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_categoria2"
                         style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -170,6 +166,7 @@
                         android:checkable="true" />
 
                     <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_categoria3"
                         style="@style/Widget.Material3.Chip.Suggestion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

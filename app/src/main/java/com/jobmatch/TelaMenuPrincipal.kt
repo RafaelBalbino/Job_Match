@@ -9,8 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import coil.load
+import com.google.android.material.chip.Chip
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.jobmatch.databinding.ActivityTelaMenuPrincipalBinding
 
 class TelaMenuPrincipal : AppCompatActivity() {
@@ -31,11 +33,11 @@ class TelaMenuPrincipal : AppCompatActivity() {
         userId = auth.currentUser?.uid
 
         // Define os placeholders imediatamente
-        binding.imgPerfil.setImageResource(R.drawable.circle_white)
-        binding.imgViewAutonomo1.setImageResource(R.drawable.rounded_edittext_background)
-        binding.imgViewAutonomo2.setImageResource(R.drawable.rounded_edittext_background)
-        binding.imgViewAutonomo3.setImageResource(R.drawable.rounded_edittext_background)
-        binding.imgViewAutonomo4.setImageResource(R.drawable.rounded_edittext_background)
+        binding.imgPerfil.setImageResource(R.drawable.ic_profile_placeholder)
+        binding.imgViewAutonomo1.setImageResource(R.drawable.ic_image_placeholder)
+        binding.imgViewAutonomo2.setImageResource(R.drawable.ic_image_placeholder)
+        binding.imgViewAutonomo3.setImageResource(R.drawable.ic_image_placeholder)
+        binding.imgViewAutonomo4.setImageResource(R.drawable.ic_image_placeholder)
 
         // Ajusta o padding para as barras do sistema
         ViewCompat.setOnApplyWindowInsetsListener(binding.Main) { v, insets ->
@@ -46,7 +48,7 @@ class TelaMenuPrincipal : AppCompatActivity() {
 
         configurarListeners()
         carregarDadosDoCabecalho()
-        carregarESetarServicos() // Carrega os serviços do Firestore
+        carregarESetarServicos(null) // Carrega todos os serviços inicialmente
     }
 
     private fun configurarListeners() {
@@ -57,9 +59,18 @@ class TelaMenuPrincipal : AppCompatActivity() {
         binding.imgNavegacaoMenu.setOnClickListener {
             navegarParaMenuPerfil()
         }
+
+        binding.categoryChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+            val categoriaSelecionada = if (checkedIds.isNotEmpty()) {
+                group.findViewById<Chip>(checkedIds.first()).text.toString()
+            } else {
+                null
+            }
+            carregarESetarServicos(categoriaSelecionada)
+        }
     }
 
-    private fun carregarESetarServicos() {
+    private fun carregarESetarServicos(categoriaFiltro: String?) {
         val imageViews: List<ImageView> = listOf(
             binding.imgViewAutonomo1,
             binding.imgViewAutonomo2,
@@ -67,10 +78,21 @@ class TelaMenuPrincipal : AppCompatActivity() {
             binding.imgViewAutonomo4
         )
 
-        db.collection("servico").limit(4).get() // CORREÇÃO: "servicos" -> "servico"
+        var query: Query = db.collection("servico")
+
+        if (categoriaFiltro != null) {
+            query = query.whereEqualTo("categoria", categoriaFiltro)
+        } else {
+            query = query.orderBy("nomeServico", Query.Direction.ASCENDING)
+        }
+
+        query.limit(4).get()
             .addOnSuccessListener { documents ->
+                // Limpa as imagens antes de carregar novas
+                imageViews.forEach { it.setImageResource(R.drawable.ic_image_placeholder) }
+
                 if (documents.isEmpty) {
-                    Log.d("Firestore", "Nenhum serviço encontrado.")
+                    Log.d("Firestore", "Nenhum serviço encontrado para o filtro: $categoriaFiltro")
                     return@addOnSuccessListener
                 }
 
@@ -80,32 +102,30 @@ class TelaMenuPrincipal : AppCompatActivity() {
                     val servico = document.toObject(Servico::class.java)
                     val imageView = imageViews[index]
 
-                    // Carrega a imagem usando Coil com a URL correta
                     if (!servico.fotoServico.isNullOrEmpty()) {
                         imageView.load(servico.fotoServico) {
                             crossfade(true)
-                            placeholder(R.drawable.rounded_edittext_background)
-                            error(R.drawable.rounded_edittext_background) // Imagem de fallback
+                            placeholder(R.drawable.ic_image_placeholder)
+                            error(R.drawable.ic_image_placeholder)
                         }
                     } else {
-                         imageView.setImageResource(R.drawable.rounded_edittext_background)
+                        imageView.setImageResource(R.drawable.ic_image_placeholder)
                     }
 
-                    // Configura o clique para cada card usando os dados corretos
                     imageView.setOnClickListener {
-                        abrirDetalhesDoServico(servico) // CORREÇÃO: Passando o objeto inteiro
+                        abrirDetalhesDoServico(servico)
                     }
                 }
             }
             .addOnFailureListener { exception ->
-                Log.w("Firestore", "Erro ao buscar serviços: ", exception)
+                Log.w("Firestore", "Erro ao buscar serviços com filtro $categoriaFiltro: ", exception)
                 Toast.makeText(this, "Erro ao carregar serviços.", Toast.LENGTH_SHORT).show()
             }
     }
 
     private fun abrirDetalhesDoServico(servico: Servico) {
         val intent = Intent(this, telaServicoAmpliado::class.java).apply {
-            putExtra("SERVICO", servico) // A tela de detalhes espera o objeto "SERVICO"
+            putExtra("SERVICO", servico)
         }
         startActivity(intent)
     }
@@ -127,17 +147,15 @@ class TelaMenuPrincipal : AppCompatActivity() {
                         if (!fotoUrl.isNullOrEmpty()) {
                             binding.imgPerfil.load(fotoUrl) {
                                 crossfade(true)
-                                placeholder(R.drawable.circle_white)
-                                error(R.drawable.circle_white) // Imagem de fallback
+                                placeholder(R.drawable.ic_profile_placeholder)
+                                error(R.drawable.ic_profile_placeholder)
                             }
                         } else {
-                            binding.imgPerfil.setImageResource(R.drawable.circle_white)
+                            binding.imgPerfil.setImageResource(R.drawable.ic_profile_placeholder)
                         }
                     }
                 }
             }
-
-            // Falha ao carregar a foto não é um erro crítico, então não mostramos Toast
     }
 
     private fun navegarParaEdicaoDePerfil() {

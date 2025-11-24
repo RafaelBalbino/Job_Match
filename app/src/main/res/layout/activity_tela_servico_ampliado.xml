@@ -26,7 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="(500 avaliações)"
+            android:visibility="gone" 
+            tools:text="(500 avaliações)"
             app:layout_constraintBottom_toBottomOf="@+id/rb_media_avaliacoes"
             app:layout_constraintStart_toEndOf="@+id/rb_media_avaliacoes"
             app:layout_constraintTop_toTopOf="@+id/rb_media_avaliacoes" />
@@ -88,6 +89,7 @@
             android:layout_marginTop="16dp"
             android:text="Ver todas as avaliações"
             android:textColor="@color/primaria"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_descricao_servico" />
 
