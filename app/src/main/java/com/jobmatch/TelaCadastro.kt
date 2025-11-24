@@ -18,6 +18,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -85,8 +86,11 @@ class TelaCadastro : AppCompatActivity() {
 
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                val privacyPolicyText = "Nossa política de privacidade segue as diretrizes da LGPD, garantindo a proteção e o uso consciente dos seus dados. Ao se cadastrar, você concorda com a coleta e o tratamento de suas informações para os fins descritos em nossos termos."
-                Toast.makeText(this@TelaCadastro, privacyPolicyText, Toast.LENGTH_LONG).show()
+                AlertDialog.Builder(this@TelaCadastro)
+                    .setTitle("Políticas de Privacidade")
+                    .setMessage("Nossa política de privacidade segue as diretrizes da LGPD, como o Princípio da Finalidade e o Princípio da Necessidade, garantindo a proteção e o uso consciente dos seus dados. Ao se cadastrar, você concorda com a coleta e o tratamento de suas informações para os fins descritos em nossos termos.")
+                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                    .show()
             }
 
             override fun updateDrawState(ds: TextPaint) {

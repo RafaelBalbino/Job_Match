@@ -210,16 +210,25 @@ class TelaCriacaoPedido : AppCompatActivity() {
 
         // 3. Salva o pedido no Firestore
         db.collection("pedido").add(novoPedido)
-            .addOnSuccessListener {
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(this, "Pedido criado com sucesso!", Toast.LENGTH_SHORT).show()
+            .addOnSuccessListener { documentReference ->
+                // Pega o ID do novo documento e salva de volta nele
+                val newId = documentReference.id
+                db.collection("pedido").document(newId).update("id", newId)
+                    .addOnSuccessListener {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(this, "Pedido criado com sucesso!", Toast.LENGTH_SHORT).show()
 
-                // 4. Navega para a lista de pedidos, como você sugeriu
-                val intent = Intent(this, FragmentContainerActivity::class.java).apply {
-                    putExtra("FRAGMENT_TYPE", "CONTRATANTE")
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                }
-                startActivity(intent)
+                        // 4. Navega para a lista de pedidos, como você sugeriu
+                        val intent = Intent(this, FragmentContainerActivity::class.java).apply {
+                            putExtra("FRAGMENT_TYPE", "CONTRATANTE")
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                        startActivity(intent)
+                    }
+                    .addOnFailureListener { e ->
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(this, "Erro ao atualizar o ID do pedido: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
             }
             .addOnFailureListener { e ->
                 binding.progressBar.visibility = View.GONE

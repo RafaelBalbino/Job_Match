@@ -96,33 +96,16 @@ class TelaMeuPerfil : AppCompatActivity() {
         val enderecoFmt = listOfNotNull(usuario.cidade, usuario.estado).filter { it.isNotBlank() }.joinToString(" - ")
         binding.txtEnderecoInfo.text = if (enderecoFmt.isNotBlank()) enderecoFmt else "Endereço não informado"
 
-
-        // 3. Lógica para exibir o bloco de perfil correto
-        if (usuario.autonomo != null) {
-            // Se for Autônomo
-            binding.blocoAutonomoContratante.visibility = View.VISIBLE
-            binding.lbPerfilAutonomoContratante.text = "Perfil Autônomo"
-            binding.txtEspecializacao.visibility = View.VISIBLE
-            binding.txtEspecializacao.text = usuario.autonomo.especializacao ?: "Não informado"
-
-            // Trata o caso de CNPJ
-            if (usuario.autonomo.cnpj.isNullOrBlank()) {
-                binding.txtCnpj.visibility = View.GONE
-            } else {
-                binding.txtCnpj.visibility = View.VISIBLE
-                binding.txtCnpj.text = "CNPJ: ${usuario.autonomo.cnpj}"
-            }
-        } else if (usuario.contratante != null) {
-            // Se for Contratante
+        // 3. Lógica para exibir o bloco de perfil (agora apenas para contratante)
+        if (usuario.contratante != null) {
             binding.blocoAutonomoContratante.visibility = View.VISIBLE
             binding.lbPerfilAutonomoContratante.text = "Perfil Contratante"
-            // Esconde os campos específicos de autônomo
-            binding.txtEspecializacao.visibility = View.GONE
-            binding.txtCnpj.visibility = View.GONE
         } else {
-            // Se não tiver nenhum perfil específico
             binding.blocoAutonomoContratante.visibility = View.GONE
         }
+        
+        // O bloco de ações do autônomo não é mais necessário aqui
+        binding.blocoAcoesAutonomo.visibility = View.GONE
 
         // 4. Configura os cliques dos outros botões
         binding.itemAlterarSenha.setOnClickListener {

@@ -102,8 +102,13 @@ class TelaMenuPerfil : AppCompatActivity() {
 
         // --- CLIQUES DOS ITENS DE MENU ---
         binding.btnMeuPerfil.setOnClickListener {
-            val intent = Intent(this, TelaMeuPerfil::class.java)
-            startActivity(intent)
+            if (currentUser?.autonomo != null) {
+                // Se for autônomo, vai para a vitrine de serviços
+                startActivity(Intent(this, TelaPerfilAutonomo::class.java))
+            } else {
+                // Se for contratante (ou não definido), vai para as informações da conta
+                startActivity(Intent(this, TelaMeuPerfil::class.java))
+            }
         }
 
         binding.btnMeusPedidos.setOnClickListener {
@@ -111,7 +116,8 @@ class TelaMenuPerfil : AppCompatActivity() {
         }
 
         binding.btnProjetos.setOnClickListener {
-            abrirListaDePedidos("AUTONOMO")
+            // CORREÇÃO: Leva para a lista de projetos aceitos pelo autônomo
+            abrirListaDePedidos("AUTONOMO_ACEITOS")
         }
 
         binding.btnPagamentos.setOnClickListener {
