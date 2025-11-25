@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaCriacaoPedidoBinding
 
@@ -193,42 +194,34 @@ class TelaCriacaoPedido : AppCompatActivity() {
         
         binding.progressBar.visibility = View.VISIBLE
 
-        // 2. Cria o objeto Pedido
-        val novoPedido = Pedidos(
-            nomeSolicitacao = nome,
-            telefoneSolicitante = telefone,
-            emailSolicitante = email,
-            tipoServico = tipoServico,
-            descricaoServico = descricao,
-            tempoServico = tempoServico,
-            cidade = cidade, // Usa a cidade do formulário
-            estado = estado, // Usa o estado do formulário
-            status = "pendente", // Status inicial
-            contratanteId = currentUser.uid,
-            autonomo = "" // Autônomo ainda não foi definido
+        // 2. Cria o objeto Pedido como um Mapa para usar o Timestamp do servidor
+        val novoPedido = hashMapOf(
+            "nomeSolicitacao" to nome,
+            "telefoneSolicitante" to telefone,
+            "emailSolicitante" to email,
+            "tipoServico" to tipoServico,
+            "descricaoServico" to descricao,
+            "tempoServico" to tempoServico,
+            "cidade" to cidade,
+            "estado" to estado,
+            "status" to "pendente",
+            "contratanteId" to currentUser.uid,
+            "autonomo" to "",
+            "dataHora" to FieldValue.serverTimestamp() // Usa o timestamp do servidor para ordenação
         )
 
-        // 3. Salva o pedido no Firestore
+        // 3. Salva o pedido no Firestore. O @DocumentId na classe Pedidos cuidará de obter o ID.
         db.collection("pedido").add(novoPedido)
-            .addOnSuccessListener { documentReference ->
-                // Pega o ID do novo documento e salva de volta nele
-                val newId = documentReference.id
-                db.collection("pedido").document(newId).update("id", newId)
-                    .addOnSuccessListener {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this, "Pedido criado com sucesso!", Toast.LENGTH_SHORT).show()
+            .addOnSuccessListener { 
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(this, "Pedido criado com sucesso!", Toast.LENGTH_SHORT).show()
 
-                        // 4. Navega para a lista de pedidos, como você sugeriu
-                        val intent = Intent(this, FragmentContainerActivity::class.java).apply {
-                            putExtra("FRAGMENT_TYPE", "CONTRATANTE")
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        }
-                        startActivity(intent)
-                    }
-                    .addOnFailureListener { e ->
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this, "Erro ao atualizar o ID do pedido: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
+                // 4. Navega para a lista de pedidos, como você sugeriu
+                val intent = Intent(this, FragmentContainerActivity::class.java).apply {
+                    putExtra("FRAGMENT_TYPE", "CONTRATANTE")
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                startActivity(intent)
             }
             .addOnFailureListener { e ->
                 binding.progressBar.visibility = View.GONE
