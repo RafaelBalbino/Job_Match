@@ -65,17 +65,17 @@ class CadastrarServico : AppCompatActivity() {
         servicoParaEditar?.let { preencherFormularioComServico(it) }
     }
     
+    @Suppress("UNCHECKED_CAST")
     private fun preencherFormularioComServico(servico: Servico) {
         binding.txtNomeServico.setText(servico.nomeServico)
         binding.txtDescricaoNegocio.setText(servico.descricaoServico)
         binding.txtCategoriaServico.setText(servico.categoria, false) // false para não filtrar
 
         // Seleciona o item correto no Spinner
-        (binding.ModeloCobranca.adapter as? ArrayAdapter<String>)?.let { cobrancaAdapter ->
-            val position = cobrancaAdapter.getPosition(servico.modeloCobranca)
-            if (position >= 0) {
-                binding.ModeloCobranca.setSelection(position)
-            }
+        val cobrancaAdapter = binding.ModeloCobranca.adapter as ArrayAdapter<String>
+        val position = cobrancaAdapter.getPosition(servico.modeloCobranca)
+        if (position >= 0) {
+            binding.ModeloCobranca.setSelection(position)
         }
 
         // Carrega a imagem existente
@@ -221,6 +221,7 @@ class CadastrarServico : AppCompatActivity() {
         Toast.makeText(this, "Operação cancelada.", Toast.LENGTH_SHORT).show()
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun prosseguirComSalvamento(
         userId: String,
         nomeServico: String,

@@ -214,8 +214,14 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/txt_especializacao"/>
 
-      </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/txt_cnpj" />
 
+      </androidx.constraintlayout.widget.ConstraintLayout>
+      
       <!-- NOVO BLOCO: Ações do Autônomo (INVISÍVEL POR PADRÃO) -->
       <LinearLayout
           android:id="@+id/bloco_acoes_autonomo"
@@ -240,11 +246,6 @@
             android:text="Cadastrar Serviço"
             android:textColor="@color/preto" />
         
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
-
       </LinearLayout>
 
       <!-- Seção de Segurança e Conta -->

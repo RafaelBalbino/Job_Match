@@ -48,11 +48,11 @@ class fragmentListaPedidosContratante : Fragment() {
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        // Configura o RecyclerView
-        setupRecyclerView()
-
         // Pega o tipo de lista que foi passado pela Activity
-        val tipoLista = arguments?.getString("FRAGMENT_TYPE")
+        val tipoLista = arguments?.getString("FRAGMENT_TYPE") ?: "CONTRATANTE"
+        
+        // Configura o RecyclerView
+        setupRecyclerView(tipoLista)
 
         // Decide qual query do Firestore usar com base no tipo de lista
         val query: Query
@@ -62,14 +62,14 @@ class fragmentListaPedidosContratante : Fragment() {
                 query = buscarPedidosParaAutonomo()
             }
             "AUTONOMO_ACEITOS" -> {
-                binding.tvTituloPedidos.text = "Meus Projetos" // Título corrigido
+                binding.tvTituloPedidos.text = "Meus Projetos"
                 query = buscarPedidosDoAutonomo()
-                ajustarLayoutParaStatus() // Adiciona margem
+                ajustarLayoutParaStatus()
             }
             else -> { // "CONTRATANTE"
                 binding.tvTituloPedidos.text = "Meus Pedidos Realizados"
                 query = buscarPedidosDoContratante()
-                ajustarLayoutParaStatus() // Adiciona margem
+                ajustarLayoutParaStatus()
             }
         }
 
@@ -83,7 +83,7 @@ class fragmentListaPedidosContratante : Fragment() {
             startActivity(intent)
         }
     }
-
+    
     // Adiciona margem ao topo para não sobrepor a status bar
     private fun ajustarLayoutParaStatus() {
         val params = binding.btnVoltarListaPedi.layoutParams as ConstraintLayout.LayoutParams
@@ -95,11 +95,9 @@ class fragmentListaPedidosContratante : Fragment() {
         binding.tvTituloPedidos.layoutParams = titleParams
     }
 
-    private fun setupRecyclerView() {
+    private fun setupRecyclerView(tipoLista: String) {
         // Inicializa o Adapter. Ele começa com uma lista vazia.
-        val tipoLista = arguments?.getString("FRAGMENT_TYPE") ?: "CONTRATANTE"
         pedidoAdapter = PedidoAdapter(mutableListOf(), tipoLista)
-
         binding.rvListaPedidos.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = pedidoAdapter
@@ -113,11 +111,11 @@ class fragmentListaPedidosContratante : Fragment() {
             .orderBy("dataHora", Query.Direction.DESCENDING)
     }
 
-    // Retorna a query para buscar projetos aceitos por um autônomo
+    // NOVA FUNÇÃO - Retorna a query para buscar projetos aceitos por um autônomo
     private fun buscarPedidosDoAutonomo(): Query {
         val autonomoId = auth.currentUser?.uid ?: return db.collection("__non_existent__") // Retorna uma query vazia se o usuário não estiver logado
         return db.collection("pedido")
-            .whereEqualTo("autonomo", autonomoId) // CORREÇÃO: O campo no Firestore é "autonomo"
+            .whereEqualTo("autonomo", autonomoId)
             .orderBy("dataHora", Query.Direction.DESCENDING)
     }
 
@@ -144,9 +142,9 @@ class fragmentListaPedidosContratante : Fragment() {
                 Toast.makeText(context, "Falha ao carregar lista. Verifique o índice do Firestore.", Toast.LENGTH_LONG).show()
                 return@addSnapshotListener
             }
-
-            if (snapshots != null && !snapshots.isEmpty) {
-                val listaPedidos = snapshots.toObjects(Pedidos::class.java)
+            
+            val listaPedidos = snapshots?.toObjects(Pedidos::class.java) ?: emptyList()
+            if (listaPedidos.isNotEmpty()) {
                 pedidoAdapter.updateData(listaPedidos)
                 binding.tvNoPedidos.visibility = View.GONE
             } else {
@@ -156,7 +154,7 @@ class fragmentListaPedidosContratante : Fragment() {
             }
         }
     }
-
+    
     // Retorna a mensagem apropriada para quando a lista de pedidos está vazia
     private fun getEmptyListMessage(): String {
         return when (arguments?.getString("FRAGMENT_TYPE")) {

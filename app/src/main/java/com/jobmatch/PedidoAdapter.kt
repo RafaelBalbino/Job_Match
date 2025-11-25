@@ -3,146 +3,126 @@ package com.jobmatch
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ItemPedidoAutonomoBinding
-import com.jobmatch.databinding.ItemPedidoContratanteBinding
 
 class PedidoAdapter(
     private var pedidos: MutableList<Pedidos>,
     private val userType: String
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<PedidoAdapter.PedidoViewHolder>() {
 
-    companion object {
-        private const val TYPE_CONTRATANTE = 0
-        private const val TYPE_AUTONOMO = 1
+    // Unificando em um único ViewHolder que usa o layout correto para listas de pedidos.
+    inner class PedidoViewHolder(val binding: ItemPedidoAutonomoBinding) : RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PedidoViewHolder {
+        // Sempre infla o item_pedido_autonomo, que é o layout correto e completo.
+        val binding = ItemPedidoAutonomoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return PedidoViewHolder(binding)
     }
 
-    // ViewHolder para a visão do Contratante
-    inner class ContratanteViewHolder(val binding: ItemPedidoContratanteBinding) : RecyclerView.ViewHolder(binding.root)
-
-    // ViewHolder para a visão do Autônomo
-    inner class AutonomoViewHolder(val binding: ItemPedidoAutonomoBinding) : RecyclerView.ViewHolder(binding.root)
-
-    override fun getItemViewType(position: Int): Int {
-        return when (userType) {
-            "CONTRATANTE", "AUTONOMO_ACEITOS" -> TYPE_CONTRATANTE
-            else -> TYPE_AUTONOMO
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == TYPE_CONTRATANTE) {
-            val binding = ItemPedidoContratanteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            ContratanteViewHolder(binding)
-        } else {
-            val binding = ItemPedidoAutonomoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            AutonomoViewHolder(binding)
-        }
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PedidoViewHolder, position: Int) {
         val pedido = pedidos[position]
-        if (holder.itemViewType == TYPE_CONTRATANTE) {
-            bindContratanteView(holder as ContratanteViewHolder, pedido)
-        } else {
-            bindAutonomoView(holder as AutonomoViewHolder, pedido)
-        }
+        bindPedidoView(holder, pedido)
     }
 
     override fun getItemCount() = pedidos.size
 
-    // Atualiza os dados do adapter
     fun updateData(newPedidos: List<Pedidos>) {
         pedidos.clear()
         pedidos.addAll(newPedidos)
         notifyDataSetChanged()
     }
 
-    // Preenche a view do Contratante
-    private fun bindContratanteView(holder: ContratanteViewHolder, pedido: Pedidos) {
+    /**
+     * Lógica centralizada e corrigida para preencher um item da lista.
+     * Ela adapta o layout item_pedido_autonomo para mostrar a informação correta
+     * dependendo se o usuário é CONTRATANTE ou AUTÔNOMO, e gerencia a visibilidade
+     * de todos os campos para evitar bugs de reciclagem.
+     */
+    private fun bindPedidoView(holder: PedidoViewHolder, pedido: Pedidos) {
         val db = FirebaseFirestore.getInstance()
-        // A coleção de usuários está correta, não precisa mexer aqui
-        val targetUserId = if (userType == "AUTONOMO_ACEITOS") pedido.contratanteId else pedido.autonomo
+        val context = holder.itemView.context
 
-        if (targetUserId.isNotEmpty()) {
-            db.collection("users").document(targetUserId).get()
-                .addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
-                        val user = document.toObject(Usuario::class.java)
-                        holder.binding.tvNomeAutonomo.text = user?.nome
-                        holder.binding.tvNumeroAutonomo.text = user?.numeroTelefone
-                        holder.binding.tvEmailAutonomo.text = user?.email
-                        holder.binding.imgAutonomoPerfil.load(user?.fotoUrl) {
-                            error(R.drawable.ic_profile_placeholder)
-                        }
-                    }
-                }
-        }
-
-        holder.binding.tvStatusPedido.text = pedido.status.uppercase()
-        if (pedido.anexos.isNotEmpty()) {
-            holder.binding.imgProblema.load(pedido.anexos[0]) { error(R.drawable.ic_image_placeholder) }
-        }
-
-        // Listener para abrir o perfil (lógica mantida)
-        holder.itemView.setOnClickListener {
-            val context = holder.itemView.context
-            val intent = if (userType == "AUTONOMO_ACEITOS") {
-                Intent(context, TelaMeuPerfil::class.java).apply { putExtra("USER_ID", pedido.contratanteId) }
-            } else {
-                Intent(context, TelaPerfilAutonomo::class.java).apply { putExtra("AUTONOMO_ID", pedido.autonomo) }
-            }
-            context.startActivity(intent)
-        }
-    }
-
-    // Preenche a view do Autônomo com a nova lógica
-    private fun bindAutonomoView(holder: AutonomoViewHolder, pedido: Pedidos) {
-        // Preenchendo os dados do contratante
-        holder.binding.tvNomeContratante.text = pedido.nomeSolicitacao
-        holder.binding.tvTelefone.text = pedido.telefoneSolicitante
-        holder.binding.tvEmailContratante.text = pedido.emailSolicitante
-        // CORRIGIDO: Formata a localização como "Cidade - UF"
-        holder.binding.tvEnderecoContratante.text = "${pedido.cidade} - ${pedido.estado}"
-
-        // Preenchendo os detalhes do serviço
+        // 1. Preenche os detalhes do SERVIÇO (comum para todas as visões)
         holder.binding.tvTipoServico.text = pedido.tipoServico
         holder.binding.tvDescricaoCurta.text = pedido.descricaoServico
+        holder.binding.tvEnderecoContratante.text = "${pedido.cidade} - ${pedido.estado}"
 
-        // Configurando o status e o clique
+        // 2. Preenche os dados da PESSOA (Contratante ou Autônomo) de forma explícita
+        when (userType) {
+            "CONTRATANTE" -> {
+                // Se sou contratante, quero ver os dados do autônomo (se houver)
+                holder.binding.tvNomeContratanteLabel.text = "Profissional"
+                if (pedido.autonomo.isNotEmpty()) {
+                    holder.binding.tvNomeContratante.visibility = View.VISIBLE
+                    holder.binding.tvTelefone.visibility = View.VISIBLE
+                    holder.binding.tvEmailContratante.visibility = View.VISIBLE
+                    db.collection("users").document(pedido.autonomo).get().addOnSuccessListener { doc ->
+                        holder.binding.tvNomeContratante.text = doc.getString("nome")
+                        holder.binding.tvTelefone.text = doc.getString("numeroTelefone")
+                        holder.binding.tvEmailContratante.text = doc.getString("email")
+                    }
+                } else {
+                    holder.binding.tvNomeContratante.visibility = View.VISIBLE
+                    holder.binding.tvNomeContratante.text = "Procurando profissional..."
+                    holder.binding.tvTelefone.visibility = View.GONE
+                    holder.binding.tvEmailContratante.visibility = View.GONE
+                }
+            }
+            "AUTONOMO_ACEITOS" -> {
+                // Se sou autônomo vendo meus projetos, quero ver os dados do contratante
+                holder.binding.tvNomeContratanteLabel.text = "Contratante"
+                holder.binding.tvNomeContratante.visibility = View.VISIBLE
+                holder.binding.tvTelefone.visibility = View.VISIBLE
+                holder.binding.tvEmailContratante.visibility = View.VISIBLE
+                holder.binding.tvNomeContratante.text = pedido.nomeSolicitacao
+                holder.binding.tvTelefone.text = pedido.telefoneSolicitante
+                holder.binding.tvEmailContratante.text = pedido.emailSolicitante
+            }
+            else -> { // AUTONOMO (pedidos disponíveis)
+                 holder.binding.tvNomeContratanteLabel.text = "Contratante"
+                 holder.binding.tvNomeContratante.visibility = View.VISIBLE
+                 holder.binding.tvTelefone.visibility = View.VISIBLE
+                 holder.binding.tvEmailContratante.visibility = View.VISIBLE
+                 holder.binding.tvNomeContratante.text = pedido.nomeSolicitacao
+                 holder.binding.tvTelefone.text = pedido.telefoneSolicitante
+                 holder.binding.tvEmailContratante.text = pedido.emailSolicitante
+            }
+        }
+
+        // 3. Lógica de Status e clique
         val statusUpper = pedido.status.uppercase()
         holder.binding.tvStatusPedido.text = statusUpper
-
-        // Muda a cor de fundo do status e controla o clique
-        val context = holder.itemView.context
         when (statusUpper) {
             "PENDENTE" -> {
                 holder.binding.tvStatusPedido.background.setTint(ContextCompat.getColor(context, R.color.atenção))
-                holder.binding.tvStatusPedido.isClickable = true
-                holder.binding.tvStatusPedido.setOnClickListener {
-                    showAcceptDialog(pedido, context)
+                // Apenas autônomos podem aceitar pedidos disponíveis
+                holder.binding.tvStatusPedido.isClickable = (userType == "AUTONOMO")
+                if (userType == "AUTONOMO") {
+                    holder.binding.tvStatusPedido.setOnClickListener { showAcceptDialog(pedido, context) }
+                } else {
+                    holder.binding.tvStatusPedido.isClickable = false
                 }
             }
             "ACEITO" -> {
                 holder.binding.tvStatusPedido.background.setTint(ContextCompat.getColor(context, R.color.sucesso))
-                holder.binding.tvStatusPedido.isClickable = false // Não pode aceitar de novo
+                holder.binding.tvStatusPedido.isClickable = false
             }
-            else -> { // Finalizado, Cancelado, etc.
+            else -> {
                 holder.binding.tvStatusPedido.background.setTint(ContextCompat.getColor(context, R.color.cinza_escuro))
                 holder.binding.tvStatusPedido.isClickable = false
             }
         }
 
-        // Listener para ver mais detalhes
+        // Listener para ver mais detalhes do pedido
         holder.binding.tvVerDetalhes.setOnClickListener {
             val intent = Intent(context, TelaCriacaoPedido::class.java).apply {
                 putExtra("PEDIDO_ID", pedido.id)
@@ -161,21 +141,19 @@ class PedidoAdapter(
                 aceitarPedido(pedido, context)
                 dialog.dismiss()
             }
-            .setNegativeButton("Não") { dialog, _ ->
-                dialog.dismiss()
-            }
+            .setNegativeButton("Não") { dialog, _ -> dialog.dismiss() }
             .create()
             .show()
     }
 
-    // Lógica para aceitar o pedido (reaproveitada e melhorada)
+    // Lógica para aceitar o pedido
     private fun aceitarPedido(pedido: Pedidos, context: Context) {
         val db = FirebaseFirestore.getInstance()
         val auth = FirebaseAuth.getInstance()
         val autonomoId = auth.currentUser?.uid
 
         if (autonomoId.isNullOrEmpty()) {
-            // Tratar caso onde o autônomo não está logado
+            Toast.makeText(context, "Erro: Usuário autônomo não autenticado.", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -185,13 +163,10 @@ class PedidoAdapter(
                 "autonomo" to autonomoId
             )
         ).addOnSuccessListener {
-            // Navega para a tela de sucesso, informando para onde voltar
-            val intent = Intent(context, telaNegocioFechado::class.java).apply {
-                putExtra("TARGET_FRAGMENT", "AUTONOMO_ACEITOS")
-            }
-            context.startActivity(intent)
+            // Sucesso - a lista será atualizada automaticamente pelo snapshot listener
+            Toast.makeText(context, "Pedido aceito!", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener {
-            // Tratar falha na atualização do banco de dados
+            Toast.makeText(context, "Falha ao aceitar o pedido.", Toast.LENGTH_SHORT).show()
         }
     }
 }
