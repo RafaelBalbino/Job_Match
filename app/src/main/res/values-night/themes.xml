@@ -10,9 +10,9 @@
         <item name="colorOnPrimary">@color/branco</item>
 
         <!-- Cores secundárias tema escuro -->
-        <item name="colorSecondary">@color/secundaria</item>
-        <item name="colorSecondaryVariant">@color/azul_escuro_oceano</item>
-        <item name="colorOnSecondary">@color/branco</item>
+        <item name="colorSecondary">@color/primaria</item>
+        <item name="colorSecondaryVariant">@color/primaria_variante</item>
+        <item name="colorOnSecondary">@color/preto</item>
 
         <!-- Cores de fundo -->
         <item name="android:colorBackground">@color/cinza_escuro</item>

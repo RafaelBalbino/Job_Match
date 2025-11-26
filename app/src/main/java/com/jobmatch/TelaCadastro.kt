@@ -23,6 +23,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.R as MaterialR
+import com.google.android.material.color.MaterialColors
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
@@ -77,7 +79,7 @@ class TelaCadastro : AppCompatActivity() {
         val fullText = radioButton.text.toString()
         val clickableText = "Políticas de Privacidade"
         val spannableString = SpannableString(fullText)
-        val verdeAgua = ContextCompat.getColor(this, R.color.verde_agua)
+        val linkColor = MaterialColors.getColor(this, MaterialR.attr.colorSecondary, Color.BLACK)
 
         val start = fullText.indexOf(clickableText)
         if (start == -1) return
@@ -96,7 +98,7 @@ class TelaCadastro : AppCompatActivity() {
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true
-                ds.color = verdeAgua
+                ds.color = linkColor
                 ds.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             }
         }
@@ -130,7 +132,7 @@ class TelaCadastro : AppCompatActivity() {
         val textView = binding.textView21
         val fullText = textView.text.toString()
         val spannableString = SpannableString(fullText)
-        val verdeAgua = ContextCompat.getColor(this, R.color.verde_agua)
+        val linkColor = MaterialColors.getColor(this, MaterialR.attr.colorSecondary, Color.BLACK)
 
         val start = fullText.indexOf("Inicie")
         if (start == -1) return
@@ -145,7 +147,7 @@ class TelaCadastro : AppCompatActivity() {
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true
-                ds.color = verdeAgua
+                ds.color = linkColor
                 ds.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             }
         }

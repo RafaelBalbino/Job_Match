@@ -177,32 +177,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btnEditarPerfil"/>
 
-        <TextView
-            android:id="@+id/txt_especializacao"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:drawablePadding="16dp"
-            android:gravity="center_vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lb_perfil_autonomo_contratante"
-            tools:text="Desenvolvedor Android" />
-
-        <TextView
-            android:id="@+id/txt_cnpj"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:drawablePadding="16dp"
-            android:gravity="center_vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_especializacao"
-            tools:text="12.345.678/0001-99" />
-
         <Button
             android:id="@+id/btnEditarPerfil"
             style="@style/Widget.Material3.Button.TextButton"
@@ -211,14 +185,14 @@
             android:layout_marginEnd="8dp"
             android:text="Editar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/txt_especializacao"/>
+            app:layout_constraintTop_toTopOf="@+id/lb_perfil_autonomo_contratante"
+            app:layout_constraintBottom_toBottomOf="@+id/lb_perfil_autonomo_contratante"/>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/txt_cnpj" />
+            app:layout_constraintTop_toBottomOf="@+id/lb_perfil_autonomo_contratante" />
 
       </androidx.constraintlayout.widget.ConstraintLayout>
       

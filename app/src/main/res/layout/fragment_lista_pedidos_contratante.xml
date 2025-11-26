@@ -4,75 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
     tools:context=".fragmentListaPedidosContratante">
 
-    <Button
+    <!-- Botão Voltar com margem adicionada -->
+    <ImageButton
         android:id="@+id/btn_voltar_lista_pedi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="25dp" 
-        android:background="#00FFFFFF"
-        android:contentDescription="Botão pra voltar"
-        app:icon="@drawable/ic_voltar_24"
-        app:iconSize="25dp"
-        app:iconTint="@color/secundaria_variante"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="25dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Voltar"
+        android:src="@drawable/ic_voltar_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Título com margem adicionada -->
     <TextView
         android:id="@+id/tv_titulo_pedidos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:text="Lista de Pedidos"
-        android:textSize="20sp"
+        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_voltar_lista_pedi"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_voltar_lista_pedi" />
-
-    <View
-        android:id="@+id/divider_header"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="16dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_voltar_lista_pedi" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Meus Pedidos" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_lista_pedidos"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider_header"
-        tools:listitem="@layout/item_pe" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_titulo_pedidos"
+        tools:listitem="@layout/item_pedido_contratante" />
 
-    <TextView
-        android:id="@+id/tv_no_pedidos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:text="Nenhum pedido de serviço encontrado."
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider_header"
-        tools:visibility="visible" />
-
-    <!-- ADIÇÃO: ProgressBar para feedback de carregamento -->
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
@@ -82,7 +52,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/divider_header"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_no_pedidos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nenhum pedido encontrado."
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -41,7 +41,7 @@
         android:textColor="@color/preto"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/btn_fechar_menu"
+        app:layout_constraintEnd_toStartOf="@id/btn_fechar_menu"
         app:layout_constraintStart_toEndOf="@+id/img_perfil_usuario"
         app:layout_constraintTop_toTopOf="@+id/img_perfil_usuario"
         tools:text="Fulano de Tal" />
@@ -54,7 +54,7 @@
         android:layout_marginTop="4dp"
         android:textColor="@color/preto"
         android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/btn_fechar_menu"
+        app:layout_constraintEnd_toStartOf="@id/btn_fechar_menu"
         app:layout_constraintStart_toEndOf="@+id/img_perfil_usuario"
         app:layout_constraintTop_toBottomOf="@+id/txt_nome_usuario"
         tools:text="fulano.tal@gmail.com" />
@@ -122,6 +122,7 @@
                 android:focusable="true">
 
                 <TextView
+                    android:id="@+id/tv_meus_pedidos" 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"

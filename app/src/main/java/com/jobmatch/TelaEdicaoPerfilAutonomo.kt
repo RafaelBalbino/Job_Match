@@ -59,7 +59,11 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
     }
 
     private fun configurarBotoesETextos() {
-        binding.btnVoltarPerfilAutonomo.setOnClickListener { finish() }
+        binding.btnVoltarPerfilAutonomo.setOnClickListener { 
+            val intent = Intent(this, TelaMeuPerfil::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+        }
         binding.btnSalvarAutonomo.setOnClickListener { salvarDados() }
         binding.btnAnexoAutonomo.setOnClickListener { pickImageLauncher.launch("image/*") }
         // Aplica a nova máscara
@@ -120,6 +124,7 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
 
     private fun salvarDados() {
         if (userId == null) return
+        binding.btnSalvarAutonomo.isEnabled = false // Desabilita o botão
 
         if (fotoSelecionadaUri != null) {
             uploadImagemEAtualizarPerfil(fotoSelecionadaUri!!)
@@ -134,10 +139,14 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
             .addOnSuccessListener {
                 storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
                     atualizarDadosFirestore(downloadUrl.toString())
+                }.addOnFailureListener { e ->
+                    Toast.makeText(this, "Falha ao obter URL da imagem: ${e.message}", Toast.LENGTH_LONG).show()
+                    binding.btnSalvarAutonomo.isEnabled = true // Reabilita em caso de falha
                 }
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Falha no upload da imagem: ${e.message}", Toast.LENGTH_LONG).show()
+                binding.btnSalvarAutonomo.isEnabled = true // Reabilita em caso de falha
             }
     }
 
@@ -150,12 +159,14 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
 
         if (nome.isEmpty()) {
             Toast.makeText(this, "O nome é obrigatório.", Toast.LENGTH_SHORT).show()
+            binding.btnSalvarAutonomo.isEnabled = true // Reabilita em caso de falha
             return
         }
 
         // Validação estrita do endereço
         if (enderecoStr.isNotEmpty() && !enderecoStr.contains("-") && !enderecoStr.contains(",")) {
             Toast.makeText(this, "Formato de endereço inválido. Use 'Cidade - Estado' ou 'Cidade, Estado'.", Toast.LENGTH_LONG).show()
+            binding.btnSalvarAutonomo.isEnabled = true // Reabilita em caso de falha
             return
         }
 
@@ -184,6 +195,7 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Erro ao atualizar o perfil: ${e.message}", Toast.LENGTH_SHORT).show()
+                binding.btnSalvarAutonomo.isEnabled = true // Reabilita em caso de falha
             }
     }
 

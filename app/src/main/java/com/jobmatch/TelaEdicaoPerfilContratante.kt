@@ -61,7 +61,10 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
     }
 
     private fun configurarBotoesETextos() {
-        binding.btnVoltar.setOnClickListener { finish() }
+        binding.btnVoltar.setOnClickListener {             val intent = Intent(this, TelaMeuPerfil::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent) 
+        }
         binding.btnSalvar.setOnClickListener { salvarDados() }
         binding.btnAnexarImagem.setOnClickListener { pickImageLauncher.launch("image/*") }
         binding.txtTelefoneContratante.addTextChangedListener(PhoneMaskWatcher())
@@ -117,6 +120,7 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
 
     private fun salvarDados() {
         if (userId == null) return
+        binding.btnSalvar.isEnabled = false // Desabilita o botão
 
         if (fotoSelecionadaUri != null) {
             uploadImagemEAtualizarPerfil(fotoSelecionadaUri!!)
@@ -131,10 +135,14 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
             .addOnSuccessListener {
                 storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
                     atualizarDadosFirestore(downloadUrl.toString())
+                }.addOnFailureListener { e ->
+                    Toast.makeText(this, "Falha ao obter URL da imagem: ${e.message}", Toast.LENGTH_LONG).show()
+                    binding.btnSalvar.isEnabled = true // Reabilita em caso de falha
                 }
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Falha no upload da imagem: ${e.message}", Toast.LENGTH_LONG).show()
+                binding.btnSalvar.isEnabled = true // Reabilita em caso de falha
             }
     }
 
@@ -146,12 +154,14 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
 
         if (nome.isEmpty() || email.isEmpty()) {
             Toast.makeText(this, "Nome e Email são obrigatórios.", Toast.LENGTH_SHORT).show()
+            binding.btnSalvar.isEnabled = true // Reabilita em caso de falha
             return
         }
 
         // Validação estrita do endereço
         if (enderecoStr.isNotEmpty() && !enderecoStr.contains("-") && !enderecoStr.contains(",")) {
             Toast.makeText(this, "Formato de endereço inválido. Use 'Cidade - Estado' ou 'Cidade, Estado'.", Toast.LENGTH_LONG).show()
+            binding.btnSalvar.isEnabled = true // Reabilita em caso de falha
             return
         }
 
@@ -181,6 +191,7 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Erro ao atualizar o perfil: ${e.message}", Toast.LENGTH_SHORT).show()
+                binding.btnSalvar.isEnabled = true // Reabilita em caso de falha
             }
     }
 
@@ -189,7 +200,8 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
         return if (parts.size > 1) {
             Pair(parts[0], parts.drop(1).joinToString("-").trim())
         } else {
-            val commaParts = enderecoStr.split(",").map { it.trim() }
+            val commaParts = enderecoStr.split(",
+").map { it.trim() }
             if (commaParts.size > 1) {
                 Pair(commaParts[0], commaParts.drop(1).joinToString(",").trim())
             } else {

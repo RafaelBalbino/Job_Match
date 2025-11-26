@@ -1,13 +1,11 @@
 package com.jobmatch
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -36,7 +34,6 @@ class fragmentListaPedidosContratante : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Infla o layout e configura o binding
         _binding = FragmentListaPedidosContratanteBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -48,51 +45,36 @@ class fragmentListaPedidosContratante : Fragment() {
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        // Pega o tipo de lista que foi passado pela Activity
+        // Pega o tipo de lista que foi passado pela Activity ("CONTRATANTE", "AUTONOMO", "AUTONOMO_ACEITOS")
         val tipoLista = arguments?.getString("FRAGMENT_TYPE") ?: "CONTRATANTE"
-        
+        Log.d("ListaPedidos", "Fragmento iniciado com tipo: $tipoLista")
+
         // Configura o RecyclerView
         setupRecyclerView(tipoLista)
 
         // Decide qual query do Firestore usar com base no tipo de lista
-        val query: Query
-        when (tipoLista) {
+        val query: Query = when (tipoLista) {
             "AUTONOMO" -> {
-                binding.tvTituloPedidos.text = "Pedidos Disponíveis"
-                query = buscarPedidosParaAutonomo()
+                binding.tvTituloPedidos.text = "Buscar Pedidos"
+                buscarPedidosParaAutonomo()
             }
             "AUTONOMO_ACEITOS" -> {
                 binding.tvTituloPedidos.text = "Meus Projetos"
-                query = buscarPedidosDoAutonomo()
-                ajustarLayoutParaStatus()
+                buscarPedidosDoAutonomo()
             }
             else -> { // "CONTRATANTE"
-                binding.tvTituloPedidos.text = "Meus Pedidos Realizados"
-                query = buscarPedidosDoContratante()
-                ajustarLayoutParaStatus()
+                binding.tvTituloPedidos.text = "Meus Pedidos"
+                buscarPedidosDoContratante()
             }
         }
 
         // Anexa o listener à query para receber atualizações em tempo real
         attachPedidosListener(query)
 
-        // Configura o botão de voltar para sempre levar ao menu principal
+        // O botão "Voltar" agora apenas finaliza a atividade atual.
         binding.btnVoltarListaPedi.setOnClickListener {
-            val intent = Intent(activity, TelaMenuPrincipal::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+            activity?.finish()
         }
-    }
-    
-    // Adiciona margem ao topo para não sobrepor a status bar
-    private fun ajustarLayoutParaStatus() {
-        val params = binding.btnVoltarListaPedi.layoutParams as ConstraintLayout.LayoutParams
-        params.topMargin = (25 * resources.displayMetrics.density).toInt()
-        binding.btnVoltarListaPedi.layoutParams = params
-
-        val titleParams = binding.tvTituloPedidos.layoutParams as ConstraintLayout.LayoutParams
-        titleParams.topMargin = (25 * resources.displayMetrics.density).toInt()
-        binding.tvTituloPedidos.layoutParams = titleParams
     }
 
     private fun setupRecyclerView(tipoLista: String) {
@@ -104,16 +86,16 @@ class fragmentListaPedidosContratante : Fragment() {
         }
     }
 
-    // Retorna a query para buscar pedidos disponíveis para autônomos
+    // Busca pedidos com status 'pendente'
     private fun buscarPedidosParaAutonomo(): Query {
         return db.collection("pedido")
-            .whereEqualTo("status", "disponivel")
+            .whereEqualTo("status", "pendente")
             .orderBy("dataHora", Query.Direction.DESCENDING)
     }
 
-    // NOVA FUNÇÃO - Retorna a query para buscar projetos aceitos por um autônomo
+    // Retorna a query para buscar projetos aceitos por um autônomo
     private fun buscarPedidosDoAutonomo(): Query {
-        val autonomoId = auth.currentUser?.uid ?: return db.collection("__non_existent__") // Retorna uma query vazia se o usuário não estiver logado
+        val autonomoId = auth.currentUser?.uid ?: return db.collection("__non_existent__")
         return db.collection("pedido")
             .whereEqualTo("autonomo", autonomoId)
             .orderBy("dataHora", Query.Direction.DESCENDING)
@@ -121,7 +103,7 @@ class fragmentListaPedidosContratante : Fragment() {
 
     // Retorna a query para buscar pedidos criados por um contratante
     private fun buscarPedidosDoContratante(): Query {
-        val contratanteId = auth.currentUser?.uid ?: return db.collection("__non_existent__") // Retorna uma query vazia se o usuário não estiver logado
+        val contratanteId = auth.currentUser?.uid ?: return db.collection("__non_existent__")
         return db.collection("pedido")
             .whereEqualTo("contratanteId", contratanteId)
             .orderBy("dataHora", Query.Direction.DESCENDING)
@@ -137,24 +119,35 @@ class fragmentListaPedidosContratante : Fragment() {
         firestoreListener = query.addSnapshotListener { snapshots, e ->
             binding.progressBar.visibility = View.GONE
 
+            // Se houver um erro (ex: falta de índice), loga o erro e mostra um Toast.
             if (e != null) {
-                Log.e("ListaPedidos", "Erro ao ouvir por atualizações", e)
-                Toast.makeText(context, "Falha ao carregar lista. Verifique o índice do Firestore.", Toast.LENGTH_LONG).show()
+                Log.e("ListaPedidos", "Erro ao ouvir por atualizações. VERIFIQUE O ÍNDICE NO FIREBASE", e)
+                Toast.makeText(context, "Falha ao carregar lista. Verifique o Logcat para o link do índice.", Toast.LENGTH_LONG).show()
                 return@addSnapshotListener
             }
-            
-            val listaPedidos = snapshots?.toObjects(Pedidos::class.java) ?: emptyList()
+
+            if (snapshots == null) {
+                Log.w("ListaPedidos", "Snapshot nulo, nada a fazer.")
+                return@addSnapshotListener
+            }
+
+            Log.d("ListaPedidos", "Snapshot recebido com ${snapshots.size()} documentos.")
+
+            val listaPedidos = snapshots.toObjects(Pedidos::class.java)
+            Log.d("ListaPedidos", "Convertido para ${listaPedidos.size} objetos.")
+
             if (listaPedidos.isNotEmpty()) {
-                pedidoAdapter.updateData(listaPedidos)
+                binding.rvListaPedidos.visibility = View.VISIBLE
                 binding.tvNoPedidos.visibility = View.GONE
+                pedidoAdapter.updateData(listaPedidos)
             } else {
-                pedidoAdapter.updateData(emptyList()) 
+                binding.rvListaPedidos.visibility = View.GONE
                 binding.tvNoPedidos.text = getEmptyListMessage()
                 binding.tvNoPedidos.visibility = View.VISIBLE
             }
         }
     }
-    
+
     // Retorna a mensagem apropriada para quando a lista de pedidos está vazia
     private fun getEmptyListMessage(): String {
         return when (arguments?.getString("FRAGMENT_TYPE")) {
@@ -167,7 +160,6 @@ class fragmentListaPedidosContratante : Fragment() {
     // Limpa o listener e o binding para evitar vazamentos de memória
     override fun onDestroyView() {
         super.onDestroyView()
-        // Remove o listener do Firestore para evitar cobranças e memory leaks
         firestoreListener?.remove()
         _binding = null
     }

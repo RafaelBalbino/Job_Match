@@ -96,16 +96,30 @@ class TelaMeuPerfil : AppCompatActivity() {
         val enderecoFmt = listOfNotNull(usuario.cidade, usuario.estado).filter { it.isNotBlank() }.joinToString(" - ")
         binding.txtEnderecoInfo.text = if (enderecoFmt.isNotBlank()) enderecoFmt else "Endereço não informado"
 
-        // 3. Lógica para exibir o bloco de perfil (agora apenas para contratante)
-        if (usuario.contratante != null) {
-            binding.blocoAutonomoContratante.visibility = View.VISIBLE
-            binding.lbPerfilAutonomoContratante.text = "Perfil Contratante"
-        } else {
+        // 3. Lógica para exibir os blocos de perfil com base no tipo de usuário
+        if (usuario.autonomo != null) {
+            // É autônomo
+            binding.blocoAcoesAutonomo.visibility = View.VISIBLE
             binding.blocoAutonomoContratante.visibility = View.GONE
+            
+            binding.itemBuscarPedidos.setOnClickListener {
+                val intent = Intent(this, FragmentContainerActivity::class.java)
+                intent.putExtra("FRAGMENT_NAME", "fragmentListaPedidosContratante")
+                intent.putExtra("FRAGMENT_TYPE", "AUTONOMO")
+                startActivity(intent)
+            }
+            binding.itemProjetos.setOnClickListener {
+                val intent = Intent(this, FragmentContainerActivity::class.java)
+                intent.putExtra("FRAGMENT_NAME", "fragmentListaPedidosContratante")
+                intent.putExtra("FRAGMENT_TYPE", "AUTONOMO_ACEITOS")
+                startActivity(intent)
+            }
+        } else {
+            // É contratante
+            binding.blocoAutonomoContratante.visibility = View.VISIBLE
+            binding.blocoAcoesAutonomo.visibility = View.GONE
+            binding.lbPerfilAutonomoContratante.text = "Perfil Contratante"
         }
-        
-        // O bloco de ações do autônomo não é mais necessário aqui
-        binding.blocoAcoesAutonomo.visibility = View.GONE
 
         // 4. Configura os cliques dos outros botões
         binding.itemAlterarSenha.setOnClickListener {

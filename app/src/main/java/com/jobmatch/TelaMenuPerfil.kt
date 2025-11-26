@@ -17,68 +17,76 @@ import com.jobmatch.databinding.ActivityTelaMenuPerfilBinding
 
 class TelaMenuPerfil : AppCompatActivity() {
 
-    // A variável 'binding' acessa os componentes do XML com os nomes corretos
+    // Binding para acessar as views do layout com segurança
     private lateinit var binding: ActivityTelaMenuPerfilBinding
+    // Instâncias do Firebase para autenticação e banco de dados
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
-    private var currentUser: Usuario? = null // Variável para guardar os dados do usuário
+    // Armazena os dados do usuário logado para evitar múltiplas leituras do banco
+    private var currentUser: Usuario? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // Habilita o modo de tela cheia
 
+        // Infla o layout e o define como o conteúdo da activity
         binding = ActivityTelaMenuPerfilBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Inicializa as instâncias do Firebase
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        // Define o placeholder imediatamente
+        // Define uma imagem de placeholder enquanto a foto do perfil carrega
         binding.imgPerfilUsuario.setImageResource(R.drawable.ic_profile_placeholder)
 
-        // Usa o ID do layout raiz: 'layout_root_menu'
+        // Ajusta o padding da tela para não sobrepor as barras do sistema (status bar, etc.)
         ViewCompat.setOnApplyWindowInsetsListener(binding.layoutRootMenu) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        // Inicia o carregamento dos dados do usuário
         carregarDadosUsuario()
-        configurarCliquesDoMenu()
+        // Configura os cliques dos botões que são iguais para todos os usuários
+        configurarCliquesGenericos()
     }
 
+    /**
+     * Carrega os dados do usuário logado do Firestore e os exibe na tela.
+     * Também chama a função para configurar os botões específicos do tipo de usuário.
+     */
     private fun carregarDadosUsuario() {
         val userId = auth.currentUser?.uid
         if (userId == null) {
             Log.e("TelaMenuPerfil", "Usuário não autenticado.")
-            fazerLogout()
+            fazerLogout() // Se não houver usuário, volta para a tela de login
             return
         }
 
+        // Busca o documento do usuário na coleção "users"
         db.collection("users").document(userId).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
+                    // Converte o documento em um objeto Usuario
                     val usuario = document.toObject(Usuario::class.java)
-                    this.currentUser = usuario // Salva o usuário atual para uso posterior
+                    this.currentUser = usuario // Salva o usuário para uso posterior
 
                     if (usuario != null) {
-                        // Usa os IDs corretos para nome, email e imagem
+                        // Preenche os dados do cabeçalho
                         binding.txtNomeUsuario.text = usuario.nome
                         binding.txtEmailUsuario.text = usuario.email
 
-                        // Carrega a imagem do usuário, mantendo o placeholder como fallback
+                        // Carrega a foto do perfil usando a biblioteca Coil
                         binding.imgPerfilUsuario.load(usuario.fotoUrl) {
-                            crossfade(true) // Adiciona uma transição suave
-                            placeholder(R.drawable.ic_profile_placeholder)
-                            error(R.drawable.ic_profile_placeholder)
+                            crossfade(true) // Efeito de transição suave
+                            placeholder(R.drawable.ic_profile_placeholder) // Imagem enquanto carrega
+                            error(R.drawable.ic_profile_placeholder) // Imagem em caso de erro
                         }
 
-                        // Mostra o botão "Projetos" apenas se o usuário for autônomo
-                        if (usuario.autonomo != null) {
-                            binding.btnProjetos.visibility = View.VISIBLE
-                        } else {
-                            binding.btnProjetos.visibility = View.GONE
-                        }
+                        // AGORA, configura os botões que dependem do tipo de usuário
+                        configurarBotoesDeAcao(usuario)
 
                     } else {
                         Log.e("TelaMenuPerfil", "Falha ao converter o documento para objeto Usuario.")
@@ -93,57 +101,58 @@ class TelaMenuPerfil : AppCompatActivity() {
             }
     }
 
-    // Função que centraliza todos os cliques do menu com a LÓGICA ATUALIZADA
-    private fun configurarCliquesDoMenu() {
-        // Botão de fechar (X) no canto superior direito
-        binding.btnFecharMenu.setOnClickListener {
-            finish() // Fecha a tela atual e volta para a anterior
+    /**
+     * Configura a visibilidade e a ação dos botões que mudam de acordo com o tipo de usuário.
+     * @param usuario O objeto Usuario com os dados da pessoa logada.
+     */
+    private fun configurarBotoesDeAcao(usuario: Usuario) {
+        if (usuario.autonomo != null) {
+            // LÓGICA PARA AUTÔNOMO
+            // O botão "Meus Pedidos" se torna "Buscar Pedidos"
+            binding.tvMeusPedidos.text = "Buscar Pedidos"
+            binding.btnMeusPedidos.setOnClickListener { abrirListaDePedidos("AUTONOMO") }
+
+            // O botão "Projetos" fica visível e leva para a lista de projetos aceitos
+            binding.btnProjetos.visibility = View.VISIBLE
+            binding.btnProjetos.setOnClickListener { abrirListaDePedidos("AUTONOMO_ACEITOS") }
+        } else {
+            // LÓGICA PARA CONTRATANTE
+            // O botão mantém o texto "Meus Pedidos"
+            binding.tvMeusPedidos.text = "Meus Pedidos"
+            binding.btnMeusPedidos.setOnClickListener { abrirListaDePedidos("CONTRATANTE") }
+
+            // O botão "Projetos" é escondido, pois não se aplica ao contratante
+            binding.btnProjetos.visibility = View.GONE
         }
 
-        // --- CLIQUES DOS ITENS DE MENU ---
+        // Lógica do botão "Meu Perfil"
         binding.btnMeuPerfil.setOnClickListener {
             if (currentUser?.autonomo != null) {
-                // Se for autônomo, vai para a vitrine de serviços
+                // Se for autônomo, leva para a vitrine de serviços
                 startActivity(Intent(this, TelaPerfilAutonomo::class.java))
             } else {
-                // Se for contratante (ou não definido), vai para as informações da conta
+                // Se for contratante, leva para a tela de informações da conta
                 startActivity(Intent(this, TelaMeuPerfil::class.java))
             }
         }
+    }
 
-        binding.btnMeusPedidos.setOnClickListener {
-            abrirListaDePedidos("CONTRATANTE")
-        }
-
-        binding.btnProjetos.setOnClickListener {
-            // CORREÇÃO: Leva para a lista de projetos aceitos pelo autônomo
-            abrirListaDePedidos("AUTONOMO_ACEITOS")
-        }
-
-        binding.btnPagamentos.setOnClickListener {
-            showToast("Será implementado no futuro")
-        }
-
-        // Botão Sobre Nós
-        binding.btnSobreNos.setOnClickListener {
-            showToast("Projeto feito pelo grupo 3 do ADS VA6 - Fatec SCS")
-        }
-
-        // Botão Termos e Condições
-        binding.btnTermos.setOnClickListener {
-            mostrarPopupTermos()
-        }
-
-        binding.btnConfiguracoes.setOnClickListener {
-            showToast("Será implementado no futuro")
-        }
-
-        // Botão para encerrar a sessão
-        binding.btnEncerrarSessao.setOnClickListener {
-            fazerLogout()
-        }
+    /**
+     * Configura os cliques de botões que têm a mesma ação para qualquer tipo de usuário.
+     */
+    private fun configurarCliquesGenericos() {
+        binding.btnFecharMenu.setOnClickListener { finish() } // Fecha a tela
+        binding.btnPagamentos.setOnClickListener { showToast("Será implementado no futuro") }
+        binding.btnSobreNos.setOnClickListener { showToast("Projeto feito pelo grupo 3 do ADS VA6 - Fatec SCS") }
+        binding.btnTermos.setOnClickListener { mostrarPopupTermos() }
+        binding.btnConfiguracoes.setOnClickListener { showToast("Será implementado no futuro") }
+        binding.btnEncerrarSessao.setOnClickListener { fazerLogout() } // Desloga o usuário
     }
     
+    /**
+     * Abre a tela que contém o fragmento da lista de pedidos.
+     * @param tipo O tipo de lista a ser exibida ("CONTRATANTE", "AUTONOMO", "AUTONOMO_ACEITOS").
+     */
     private fun abrirListaDePedidos(tipo: String) {
         val intent = Intent(this, FragmentContainerActivity::class.java).apply {
             putExtra("FRAGMENT_TYPE", tipo)
@@ -152,21 +161,19 @@ class TelaMenuPerfil : AppCompatActivity() {
     }
 
     /**
-     * Exibe um AlertDialog com o texto dos termos e condições.
+     * Exibe um AlertDialog com as políticas de privacidade.
      */
     private fun mostrarPopupTermos() {
-        // Usa o AlertDialog do sistema de Views (appcompat), que é o correto para esta tela
         AlertDialog.Builder(this)
             .setTitle("Políticas de Privacidade")
             .setMessage("Nossa política de privacidade segue as diretrizes da LGPD, como o Princípio da Finalidade e o Princípio da Necessidade, garantindo a proteção e o uso consciente dos seus dados. Esses são alguns dos termos que você concordou.")
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss() // Fecha o pop-up
-            }
+            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
             .show()
     }
 
-
-    // Função para fazer o logout do usuário e levá-lo à tela de login
+    /**
+     * Realiza o logout do usuário no Firebase e o redireciona para a tela de login.
+     */
     private fun fazerLogout() {
         auth.signOut()
         val intent = Intent(this, TelaLogin::class.java)
@@ -176,7 +183,9 @@ class TelaMenuPerfil : AppCompatActivity() {
         finish()
     }
 
-    // Função auxiliar para exibir mensagens rápidas
+    /**
+     * Função auxiliar para exibir uma mensagem rápida (Toast).
+     */
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }

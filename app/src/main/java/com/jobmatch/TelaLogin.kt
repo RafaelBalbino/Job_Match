@@ -13,7 +13,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import com.google.android.material.R as MaterialR
+import com.google.android.material.color.MaterialColors
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -111,7 +112,7 @@ class TelaLogin : AppCompatActivity() {
         val textViewToCadastro = binding.textView13
         val fullTextToCadastro = textViewToCadastro.text.toString()
         val spannableStringToCadastro = SpannableString(fullTextToCadastro)
-        val linkColorCadastro = ContextCompat.getColor(this, R.color.texto_secundario)
+        val linkColorCadastro = MaterialColors.getColor(this, MaterialR.attr.colorSecondary, Color.BLACK)
         val clickableTextCadastro = "Cadastre-se aqui"
         val startCadastro = fullTextToCadastro.indexOf(clickableTextCadastro)
 
@@ -145,6 +146,7 @@ class TelaLogin : AppCompatActivity() {
         val spannableStringRecuperarSenha = SpannableString(fullTextRecuperarSenha)
         val startRecuperarSenha = 0
         val endRecuperarSenha = fullTextRecuperarSenha.length
+        val linkColor = MaterialColors.getColor(this, MaterialR.attr.colorSecondary, Color.BLACK)
 
         val clickableSpanRecuperarSenha = object : ClickableSpan() {
             override fun onClick(widget: View) {
@@ -156,7 +158,7 @@ class TelaLogin : AppCompatActivity() {
             override fun updateDrawState(ds: TextPaint) {
                 super.updateDrawState(ds)
                 ds.isUnderlineText = true
-                ds.color = ContextCompat.getColor(this@TelaLogin, R.color.texto_secundario)
+                ds.color = linkColor
             }
         }
         spannableStringRecuperarSenha.setSpan(clickableSpanRecuperarSenha, startRecuperarSenha, endRecuperarSenha, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
