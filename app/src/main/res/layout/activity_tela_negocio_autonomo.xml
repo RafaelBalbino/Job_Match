@@ -14,14 +14,15 @@
         tools:context=".TelaNegocioAutonomo">
 
         <ImageView
-            android:id="@+id/btn_voltarPesquisa"
+            android:id="@+id/btn_VoltarPesquisa"
             android:layout_width="54dp"
             android:layout_height="35dp"
-            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.044"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.045"
             app:srcCompat="@drawable/ic_voltar_24"
             app:tint="#211C73" />
 
@@ -30,63 +31,10 @@
             android:layout_width="149dp"
             android:layout_height="100dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_voltarPesquisa"
+            app:layout_constraintTop_toBottomOf="@+id/btn_VoltarPesquisa"
             app:srcCompat="@drawable/spinner_background" />
-
-        <TextView
-            android:id="@+id/tv_titulo_servico2"
-            android:layout_width="212dp"
-            android:layout_height="24dp"
-            android:layout_marginTop="8dp"
-            android:text="Victor Hardlab"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.205"
-            app:layout_constraintStart_toEndOf="@+id/img_PerfilNegocioAutonomo"
-            app:layout_constraintTop_toTopOf="@+id/img_PerfilNegocioAutonomo" />
-
-        <RatingBar
-            android:id="@+id/rb_media_avaliacoes"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:isIndicator="true"
-            android:numStars="5"
-            android:stepSize="0.1"
-            app:layout_constraintStart_toEndOf="@+id/img_PerfilNegocioAutonomo"
-            app:layout_constraintTop_toBottomOf="@+id/tv_titulo_servico2"
-            tools:rating="4.5" />
-
-        <TextView
-            android:id="@+id/tv_numero_avaliacoes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="(500 avaliações)"
-            app:layout_constraintBottom_toBottomOf="@+id/rb_media_avaliacoes"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.153"
-            app:layout_constraintStart_toEndOf="@+id/rb_media_avaliacoes"
-            app:layout_constraintTop_toTopOf="@+id/rb_media_avaliacoes"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <Button
-            android:id="@+id/btn_ver_avaliacoes2"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="228dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="16dp"
-            android:text="Ver todas as avaliações"
-            android:textColor="@color/primaria"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/img_PerfilNegocioAutonomo"
-            app:layout_constraintTop_toBottomOf="@+id/rb_media_avaliacoes" />
 
         <TextView
             android:id="@+id/tv_titulo_servico4"
@@ -99,6 +47,42 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_ver_avaliacoes2" />
+
+        <TextView
+            android:id="@+id/tv_titulo_servico2"
+            android:layout_width="212dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="24dp"
+            android:text="Victor Hardlab"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/img_PerfilNegocioAutonomo" />
+
+        <RatingBar
+            android:id="@+id/rb_media_avaliacoes"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="13dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:stepSize="0.1"
+            app:layout_constraintStart_toEndOf="@+id/img_PerfilNegocioAutonomo"
+            app:layout_constraintTop_toBottomOf="@+id/tv_titulo_servico2"
+            tools:rating="4.5" />
+
+        <TextView
+            android:id="@+id/tv_numero_avaliacoes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="(500 avaliações)"
+            app:layout_constraintBottom_toBottomOf="@+id/rb_media_avaliacoes"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/rb_media_avaliacoes"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/textView58"
@@ -167,6 +151,7 @@
             android:paddingBottom="16dp"
             android:scrollbars="none"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/HscrViewCategorias">
 
@@ -239,6 +224,17 @@
 
             </LinearLayout>
         </HorizontalScrollView>
+
+        <Button
+            android:id="@+id/btn_ver_avaliacoes2"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="228dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:text="Ver todas as avaliações"
+            android:textColor="@color/primaria"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rb_media_avaliacoes" />
 
         <Button
             android:id="@+id/btn_fazer_pedido"

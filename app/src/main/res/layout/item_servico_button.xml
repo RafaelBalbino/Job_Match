@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <GridLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"> <androidx.cardview.widget.CardView
+    android:id="@+id/card_servico_root"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/top_view"
-    >
+    android:layout_margin="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="12dp">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_servico_root"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="15dp"
-        app:cardElevation="12dp"
-        >
+        android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/image_servico_fundo"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"  app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:scaleType="centerCrop"
+            android:background="@color/cinza_claro"
+            android:contentDescription="Imagem do Serviço"
+            app:srcCompat="@drawable/ic_alerta_24"
+            android:padding="0dp"/>
 
-            <ImageView
-                android:id="@+id/image_servico_fundo"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="1:1"  app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:scaleType="centerCrop"              android:background="@color/cinza_claro"
-                android:contentDescription="Imagem do Serviço"
-                app:srcCompat="@drawable/ic_alerta_24"
-                android:padding="0dp"/> <TextView
+        <TextView
             android:id="@+id/txtNameCardServico"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +44,9 @@
             app:layout_constraintTop_toBottomOf="@+id/image_servico_fundo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" /> <ImageView
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageView
             android:id="@+id/icon_excluir"
             android:layout_width="32dp"
             android:layout_height="32dp"
@@ -57,7 +59,9 @@
             app:layout_constraintStart_toStartOf="parent"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/rounded_background_translucent" /> <ImageView
+            android:background="@drawable/rounded_background_translucent" />
+
+        <ImageView
             android:id="@+id/icon_editar"
             android:layout_width="32dp"
             android:layout_height="32dp"
@@ -72,8 +76,8 @@
             android:focusable="true"
             android:background="@drawable/rounded_background_translucent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.cardview.widget.CardView>
+</androidx.cardview.widget.CardView>
 
 </GridLayout>

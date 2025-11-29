@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,7 +14,6 @@
         android:layout_height="wrap_content"
         android:paddingBottom="24dp">
 
-        <!-- BARRA SUPERIOR (TOOLBAR) -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/tbPerfilAutonomo"
             android:layout_width="0dp"
@@ -25,11 +23,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- ÍCONES DE NAVEGAÇÃO E AÇÃO DENTRO DA TOOLBAR -->
         <ImageView
             android:id="@+id/imgViewVoltar"
             android:layout_width="40dp"
-            android:layout_height="40dp"
+            android_height="40dp"
             android:layout_marginStart="16dp"
             android:contentDescription="Botão Voltar"
             android:padding="8dp"
@@ -52,7 +49,6 @@
             app:layout_constraintBottom_toBottomOf="@+id/tbPerfilAutonomo"
             app:srcCompat="@drawable/ic_compartilhar_24" />
 
-        <!-- GUIDELINE -->
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/LinhaGuiaCabecalho"
             android:layout_width="wrap_content"
@@ -60,12 +56,11 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.10" />
 
-        <!-- NOME DO PERFIL (HEADER) -->
         <TextView
             android:id="@+id/txtViewNomeAutonomo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:text="Nome Perfil Autonomo"
             android:textColor="#000000"
             android:textSize="22sp"
@@ -74,7 +69,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/LinhaGuiaCabecalho" />
 
-        <!-- NOVO: TELEFONE DO AUTÔNOMO (AGORA EM ITÁLICO) -->
         <TextView
             android:id="@+id/txtViewTelefone"
             android:layout_width="wrap_content"
@@ -87,41 +81,36 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtViewNomeAutonomo" />
 
-        <!-- CONTAINER DA IMAGEM DE PERFIL -->
         <FrameLayout
             android:id="@+id/frmLayoutPerfil"
-            android:layout_width="199dp"
-            android:layout_height="203dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtViewTelefone"> <!-- Constrangido abaixo do telefone -->
+            app:layout_constraintTop_toBottomOf="@+id/txtViewTelefone">
 
-            <!-- Imagem de Fundo (Círculo ou Placeholder) -->
-
-            <!-- Ícone de Perfil Padrão -->
             <ImageView
                 android:id="@+id/imgViewBG_Perfil"
                 android:layout_width="match_parent"
-                android:layout_height="203dp"
-                android:background="#CCCCCC"
+                android:layout_height="match_parent"
                 android:contentDescription="Imagem de Fundo do Perfil"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:background="#CCCCCC" />
 
             <ImageView
                 android:id="@+id/imgViewPerfil_Icon"
-                android:layout_width="155dp"
-                android:layout_height="143dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_gravity="center"
-                android:alpha="0.8"
                 android:contentDescription="Ícone de Perfil Padrão"
-                app:srcCompat="@drawable/ic_usuario_padrao_24"
-                app:tint="#333333" />
+                app:tint="#333333"
+                android:alpha="0.8"
+                app:srcCompat="@drawable/ic_usuario_padrao_24" />
 
         </FrameLayout>
 
-        <!-- BOTÕES DE AÇÃO -->
         <Button
             android:id="@+id/btnCadastrarServico"
             android:layout_width="0dp"
@@ -137,7 +126,7 @@
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frmLayoutPerfil"
-            app:layout_constraintWidth_max="250dp" /> <!-- LIMITE DE LARGURA ADICIONADO -->
+            app:layout_constraintWidth_max="250dp" />
 
         <Button
             android:id="@+id/btnEditarPerfil"
@@ -154,9 +143,8 @@
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/btnCadastrarServico"
             app:layout_constraintTop_toTopOf="@+id/btnCadastrarServico"
-            app:layout_constraintWidth_max="250dp" /> <!-- LIMITE DE LARGURA ADICIONADO -->
+            app:layout_constraintWidth_max="250dp" />
 
-        <!-- SEÇÃO DE CATEGORIAS (ROLA HORIZONTALMENTE) -->
         <HorizontalScrollView
             android:id="@+id/HscrViewCategorias"
             android:layout_width="0dp"
@@ -189,12 +177,9 @@
                     android:background="#009688"
                     android:textStyle="bold" />
 
-                <!-- Adicione mais categorias aqui, se necessário -->
-
             </LinearLayout>
         </HorizontalScrollView>
 
-        <!-- GALERIA/GRID DE IMAGENS ABAIXO -->
         <TextView
             android:id="@+id/txtViewServicos"
             android:layout_width="wrap_content"
@@ -216,10 +201,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtViewServicos"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="24dp"/>
 
-        <!-- Adicionado para feedback visual durante o carregamento -->
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="24dp"/>
+
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"

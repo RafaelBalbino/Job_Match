@@ -13,13 +13,14 @@ import coil.load
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaPerfilAutonomoBinding
-import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.FirebaseStorage // Import necessário
+
 class TelaPerfilAutonomo : AppCompatActivity() {
     private val binding by lazy {
         ActivityTelaPerfilAutonomoBinding.inflate(layoutInflater)
     }
 
-    private lateinit var storage: FirebaseStorage
+    private lateinit var storage: FirebaseStorage // Mantendo a declaração
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private lateinit var servicosAdapter: ServicosAdapter
@@ -31,22 +32,20 @@ class TelaPerfilAutonomo : AppCompatActivity() {
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
-        storage = FirebaseStorage.getInstance()
+        storage = FirebaseStorage.getInstance() // Mantendo a inicialização
 
         // Configura ações iniciais e placeholders
         binding.imgViewVoltar.setOnClickListener { finish() }
-        binding.imgViewPerfilIcon.visibility = View.VISIBLE // Garante que o ícone placeholder esteja visível
+        binding.imgViewPerfilIcon.visibility = View.VISIBLE
 
         setupRecyclerView()
 
         // Lógica para determinar qual perfil carregar
         val autonomoId = intent.getStringExtra("AUTONOMO_ID")
         if (!autonomoId.isNullOrBlank()) {
-            // Modo visitante: Carrega perfil do ID recebido
             carregarDadosAutonomo(autonomoId)
             configurarModoVisitante()
         } else {
-            // Modo proprietário: Carrega perfil do usuário logado
             val userId = auth.currentUser?.uid
             if (userId != null) {
                 carregarDadosAutonomo(userId)
@@ -59,7 +58,6 @@ class TelaPerfilAutonomo : AppCompatActivity() {
     }
 
     private fun carregarDadosAutonomo(id: String) {
-        // Adicionado para feedback visual
         binding.progressBar.visibility = View.VISIBLE
 
         // Carrega os dados do usuário (nome, foto, etc.)
@@ -68,16 +66,16 @@ class TelaPerfilAutonomo : AppCompatActivity() {
                 if (document != null && document.exists()) {
                     val usuario = document.toObject(Usuario::class.java)
                     usuario?.let {
-                        binding.txtViewNomeAutonomo.text = it.nome // Ex: Nome do autônomo
+                        binding.txtViewNomeAutonomo.text = it.nome
                         binding.txtViewTelefone.text = formatarTelefone(it.numeroTelefone)
-                        
+
                         if (!it.fotoUrl.isNullOrEmpty()) {
-                            binding.imgViewBGPerfil.load(it.fotoUrl) { 
+                            binding.imgViewBGPerfil.load(it.fotoUrl) {
                                 crossfade(true)
                             }
                             binding.imgViewPerfilIcon.visibility = View.GONE
                         } else {
-                            binding.imgViewBGPerfil.setImageDrawable(null) // Limpa imagem de fundo se não houver foto
+                            binding.imgViewBGPerfil.setImageDrawable(null)
                             binding.imgViewPerfilIcon.visibility = View.VISIBLE
                         }
                     }
@@ -87,12 +85,12 @@ class TelaPerfilAutonomo : AppCompatActivity() {
         // Carrega os serviços daquele autônomo
         db.collection("servico").whereEqualTo("uidUsuario", id).get()
             .addOnSuccessListener { documents ->
-                binding.progressBar.visibility = View.GONE // Esconde o progresso
+                binding.progressBar.visibility = View.GONE
                 val servicos = documents.toObjects(Servico::class.java)
                 servicosAdapter.updateData(servicos)
             }
-            .addOnFailureListener { 
-                binding.progressBar.visibility = View.GONE // Esconde o progresso em caso de falha
+            .addOnFailureListener {
+                binding.progressBar.visibility = View.GONE
                 Toast.makeText(this, "Erro ao carregar os serviços.", Toast.LENGTH_SHORT).show()
             }
     }
@@ -100,7 +98,6 @@ class TelaPerfilAutonomo : AppCompatActivity() {
     private fun configurarModoVisitante() {
         binding.btnEditarPerfil.visibility = View.GONE
         binding.btnCadastrarServico.visibility = View.GONE
-        // Adicionar botão de "Contratar" ou similar, se necessário
     }
 
     private fun configurarModoProprietario() {
@@ -112,16 +109,15 @@ class TelaPerfilAutonomo : AppCompatActivity() {
         }
 
         binding.btnCadastrarServico.setOnClickListener {
-             activityResultLauncher.launch(Intent(this, CadastrarServico::class.java))
+            activityResultLauncher.launch(Intent(this, CadastrarServico::class.java))
         }
     }
-    
+
     // Launcher para aguardar o resultado da tela de cadastro/edição
     private val activityResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            // Se um serviço foi criado ou editado, recarrega a lista para mostrar as mudanças
             auth.currentUser?.uid?.let { carregarDadosAutonomo(it) }
         }
     }
@@ -134,8 +130,11 @@ class TelaPerfilAutonomo : AppCompatActivity() {
             onDeleteClick = { servico -> excluirServico(servico) }
         )
         binding.containerServicos.apply {
-            layoutManager = NonScrollingGridLayoutManager(context,2)
+            // ✅ Usa o NonScrollingGridLayoutManager para resolver o bug de rolagem
+            layoutManager = NonScrollingGridLayoutManager(context, 2)
             adapter = servicosAdapter
+            // isNestedScrollingEnabled é desnecessário com NonScrollingGridLayoutManager, mas manter
+            // a linha é opcional se não houver conflito. Removida para clareza.
         }
     }
 
@@ -164,12 +163,10 @@ class TelaPerfilAutonomo : AppCompatActivity() {
 
                 val fotoUrl = servico.fotoServico
 
-                // 1. Tenta excluir a imagem do Storage (se existir)
+                // 1. Tenta excluir a imagem do Storage (se existir e a URL for válida)
                 if (!fotoUrl.isNullOrBlank()) {
                     try {
-
                         val fotoRef = storage.getReferenceFromUrl(fotoUrl)
-
 
                         fotoRef.delete()
                             .addOnSuccessListener {
@@ -177,7 +174,7 @@ class TelaPerfilAutonomo : AppCompatActivity() {
                                 excluirDocumentoFirestore(servico)
                             }
                             .addOnFailureListener { e ->
-                                // Falha no Storage (ex: arquivo não encontrado, permissão)
+                                // Trata a falha do Storage (a imagem pode não existir)
                                 Toast.makeText(this, "Aviso: Falha ao excluir imagem do Storage. Prosseguindo com documento.", Toast.LENGTH_LONG).show()
                                 excluirDocumentoFirestore(servico)
                             }
@@ -196,26 +193,7 @@ class TelaPerfilAutonomo : AppCompatActivity() {
             .show()
     }
 
-    private fun formatarTelefone(numero: String?): String {
-        if (numero.isNullOrBlank()) {
-            return "Telefone não informado"
-        }
-
-        var digitos = numero.filter { it.isDigit() }
-
-        if (digitos.startsWith("55") && digitos.length > 11) {
-            digitos = digitos.substring(2)
-        }
-
-        return when (digitos.length) {
-            10 -> "(${digitos.substring(0, 2)}) ${digitos.substring(2, 6)}-${digitos.substring(6)}" // Fixo
-            11 -> "(${digitos.substring(0, 2)}) ${digitos.substring(2, 7)}-${digitos.substring(7)}" // Celular
-            else -> numero // Formato inesperado, retorna o original.
-        }
-    }
-
     private fun excluirDocumentoFirestore(servico: Servico) {
-
         servico.id?.let { id ->
             db.collection("servico").document(id).delete()
                 .addOnSuccessListener {
@@ -231,6 +209,24 @@ class TelaPerfilAutonomo : AppCompatActivity() {
         } ?: run {
             binding.progressBar.visibility = View.GONE
             Toast.makeText(this, "Erro: ID do serviço não encontrado.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun formatarTelefone(numero: String?): String {
+        if (numero.isNullOrBlank()) {
+            return "Telefone não informado"
+        }
+
+        var digitos = numero.filter { it.isDigit() }
+
+        if (digitos.startsWith("55") && digitos.length > 11) {
+            digitos = digitos.substring(2)
+        }
+
+        return when (digitos.length) {
+            10 -> "(${digitos.substring(0, 2)}) ${digitos.substring(2, 6)}-${digitos.substring(6)}" // Fixo
+            11 -> "(${digitos.substring(0, 2)}) ${digitos.substring(2, 7)}-${digitos.substring(7)}" // Celular
+            else -> numero // Formato inesperado, retorna o original.
         }
     }
 }

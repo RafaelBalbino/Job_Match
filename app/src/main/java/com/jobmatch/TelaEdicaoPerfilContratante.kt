@@ -200,6 +200,7 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
         return if (parts.size > 1) {
             Pair(parts[0], parts.drop(1).joinToString("-").trim())
         } else {
+
             val commaParts = enderecoStr.split(",").map { it.trim() }
             if (commaParts.size > 1) {
                 Pair(commaParts[0], commaParts.drop(1).joinToString(",").trim())
