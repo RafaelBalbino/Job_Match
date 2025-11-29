@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/Main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="24dp">
+
+        <!-- BARRA SUPERIOR (TOOLBAR) -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/tbPerfilAutonomo"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#009688"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- ÍCONES DE NAVEGAÇÃO E AÇÃO DENTRO DA TOOLBAR -->
+        <ImageView
+            android:id="@+id/imgViewVoltar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:contentDescription="Botão Voltar"
+            android:padding="8dp"
+            app:tint="#FFFFFF"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tbPerfilAutonomo"
+            app:layout_constraintBottom_toBottomOf="@+id/tbPerfilAutonomo"
+            app:srcCompat="@drawable/ic_voltar_24" />
+
+        <ImageView
+            android:id="@+id/imgViewCompartilhar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="Botão Compartilhar Perfil"
+            android:padding="8dp"
+            app:tint="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tbPerfilAutonomo"
+            app:layout_constraintBottom_toBottomOf="@+id/tbPerfilAutonomo"
+            app:srcCompat="@drawable/ic_compartilhar_24" />
+
+        <!-- GUIDELINE -->
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/LinhaGuiaCabecalho"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.10" />
+
+        <!-- NOME DO PERFIL (HEADER) -->
+        <TextView
+            android:id="@+id/txtViewNomeAutonomo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Nome Perfil Autonomo"
+            android:textColor="#000000"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/LinhaGuiaCabecalho" />
+
+        <!-- NOVO: TELEFONE DO AUTÔNOMO (AGORA EM ITÁLICO) -->
+        <TextView
+            android:id="@+id/txtViewTelefone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(99) 99999-9999"
+            android:textColor="#555555"
+            android:textSize="16sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtViewNomeAutonomo" />
+
+        <!-- CONTAINER DA IMAGEM DE PERFIL -->
+        <FrameLayout
+            android:id="@+id/frmLayoutPerfil"
+            android:layout_width="199dp"
+            android:layout_height="203dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtViewTelefone"> <!-- Constrangido abaixo do telefone -->
+
+            <!-- Imagem de Fundo (Círculo ou Placeholder) -->
+
+            <!-- Ícone de Perfil Padrão -->
+            <ImageView
+                android:id="@+id/imgViewBG_Perfil"
+                android:layout_width="match_parent"
+                android:layout_height="203dp"
+                android:background="#CCCCCC"
+                android:contentDescription="Imagem de Fundo do Perfil"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/imgViewPerfil_Icon"
+                android:layout_width="155dp"
+                android:layout_height="143dp"
+                android:layout_gravity="center"
+                android:alpha="0.8"
+                android:contentDescription="Ícone de Perfil Padrão"
+                app:srcCompat="@drawable/ic_usuario_padrao_24"
+                app:tint="#333333" />
+
+        </FrameLayout>
+
+        <!-- BOTÕES DE AÇÃO -->
+        <Button
+            android:id="@+id/btnCadastrarServico"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="12dp"
+            android:text="Cadastrar Serviço"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/btnEditarPerfil"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frmLayoutPerfil"
+            app:layout_constraintWidth_max="250dp" /> <!-- LIMITE DE LARGURA ADICIONADO -->
+
+        <Button
+            android:id="@+id/btnEditarPerfil"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="24dp"
+            android:text="Editar Perfil"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/btnCadastrarServico"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/btnCadastrarServico"
+            app:layout_constraintTop_toTopOf="@+id/btnCadastrarServico"
+            app:layout_constraintWidth_max="250dp" /> <!-- LIMITE DE LARGURA ADICIONADO -->
+
+        <!-- SEÇÃO DE CATEGORIAS (ROLA HORIZONTALMENTE) -->
+        <HorizontalScrollView
+            android:id="@+id/HscrViewCategorias"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:scrollbars="none"
+            android:paddingVertical="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnCadastrarServico">
+
+            <LinearLayout
+                android:id="@+id/category_container"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="16dp">
+
+                <TextView
+                    android:id="@+id/txtViewPopular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="8dp"
+                    android:text="Popular"
+                    android:textSize="18sp"
+                    android:textColor="#FFFFFF"
+                    android:background="#009688"
+                    android:textStyle="bold" />
+
+                <!-- Adicione mais categorias aqui, se necessário -->
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- GALERIA/GRID DE IMAGENS ABAIXO -->
+        <TextView
+            android:id="@+id/txtViewServicos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Meus Serviços"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/HscrViewCategorias" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/containerServicos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtViewServicos"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Adicionado para feedback visual durante o carregamento -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:elevation="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

@@ -1,0 +1,176 @@
+<resources>
+    <string name="app_name">JobMatch</string>
+
+    <!-- Strings da Tela de Login -->
+    <string name="login_title">Login</string>
+    <string name="login_welcome">Bem-vindo(a)!</string>
+    <string name="login_instructions">Inicie sua sessão</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Senha</string>
+    <string name="login_forgot_password">Esqueceu sua senha?</string>
+    <string name="login_button_text">Iniciar Sessão</string>
+    <string name="login_no_account">Não tem cadastro? Cadastre-se aqui</string>
+
+    <!-- Strings da Tela de Cadastro -->
+    <string name="register_title">Cadastro</string>
+    <string name="register_welcome">Bem-vindo(a)!</string>
+    <string name="register_instructions">Favor, crie a sua conta</string>
+    <string name="register_name_hint">Nome</string>
+    <string name="register_email_hint">Email</string>
+    <string name="register_phone_hint">Telefone</string>
+    <string name="register_password_hint">Senha</string>
+    <string name="register_password_confirm_hint">Confirmar senha</string>
+    <string name="register_user_type_label">Eu quero:</string>
+    <string name="register_user_type_contractor">Quero contratar um serviço</string>
+    <string name="register_user_type_freelancer">Quero oferecer meus serviços</string>
+    <string name="register_cnpj_hint">CNPJ (Opcional)</string>
+    <string name="register_specialization_hint">Sua principal especialização</string>
+    <string name="register_button_text">Enviar</string>
+    <string name="register_has_account">Já possui uma conta? Inicie a sessão.</string>
+
+    <!-- Strings da Tela de Recuperação de Senha -->
+    <string name="recover_title">Esqueceu a sua senha?</string>
+    <string name="recover_instructions">Fique tranquilo! Insira seu e-mail ou telefone vinculado à sua conta e iremos te ajudar.</string>
+    <string name="recover_input_hint">Email ou Telefone</string>
+    <string name="recover_button_text">Enviar</string>
+
+    <!-- Strings da Tela de Código de Verificação -->
+    <string name="code_title">Recuperação de Senha</string>
+    <string name="code_instructions">Um código de seis dígitos foi enviado para o endereço abaixo:</string>
+    <string name="code_button_text">Verificar</string>
+
+    <!-- Strings da Tela de Mudança de Senha -->
+    <string name="change_password_title">APLIQUE A NOVA SENHA</string>
+    <string name="change_password_criteria_intro">Crie uma senha que siga esses critérios:</string>
+    <string name="change_password_new_hint">Nova Senha</string>
+    <string name="change_password_confirm_hint">Confirme a Nova Senha</string>
+    <string name="change_password_button_text">Confirmar</string>
+
+    <!-- Strings para a Tela CadastrarServico -->
+    <string name="cadastrar_servico_title">Cadastrar Serviço</string>
+    <string name="cadastrar_servico_section_general">Dados Gerais</string>
+    <string name="cadastrar_servico_hint_name">Nome do Serviço</string>
+    <string name="cadastrar_servico_hint_category">Categoria do Serviço</string>
+    <string name="cadastrar_servico_hint_description">Descrição de Serviço</string>
+    <string name="cadastrar_servico_button_photo">Escolha a Foto do Serviço</string>
+    <string name="cadastrar_servico_section_payment">Forma de Pagamento</string>
+    <string name="cadastrar_servico_hint_price">Preço (R$)</string>
+    <string name="cadastrar_servico_image_preview_description">Pré-visualização da imagem do serviço</string>
+    <string name="cadastrar_servico_back_button_description">Botão pra voltar</string>
+
+    <!-- Strings para as Telas de Edição de Perfil -->
+    <string name="edit_profile_title">Edição de Perfil</string>
+    <string name="edit_profile_section_personal">Dados Pessoais</string>
+    <string name="edit_profile_hint_name">Nome</string>
+    <string name="edit_profile_hint_address">Endereço</string>
+    <string name="edit_profile_hint_phone">Telefone</string>
+    <string name="edit_profile_hint_business_description">Descrição de Negócio</string>
+    <string name="edit_profile_section_photo">Imagem de Perfil</string>
+    <string name="edit_profile_button_attach_image">Escolha a Imagem de Perfil</string>
+
+    <!-- Strings para a Tela Menu Principal -->
+    <string name="menu_main_title_categories">Principais Categorias</string>
+    <string name="menu_main_view_all">ver todos</string>
+    <string name="menu_main_category_1">Categoria 1</string>
+    <string name="menu_main_category_2">Categoria 2</string>
+    <string name="menu_main_category_3">Categoria 3</string>
+    <string name="menu_main_cd_user_profile">Abrir perfil e configurações</string>
+    <string name="menu_main_cd_navigation">Abrir menu de navegação lateral</string>
+    <string name="menu_main_search_hint">Pesquisar serviços...</string>
+    <string name="menu_main_cd_filter">Opções de filtro</string>
+    <string name="menu_main_cd_featured_profile">Perfil de autônomo em destaque</string>
+
+    <!-- Strings Genéricas -->
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="voltar_icone_descricao">Botão Voltar para a tela anterior</string>
+
+    <string name="criterios_senha_lista">• Pelo menos 8 caracteres\n• Pelo menos uma letra maiúscula\n• Pelo menos um número\n• Pelo menos um símbolo (ex: !, #, ?)</string>
+
+    <string name="politicas_de_privacidade">Eu concordo com as políticas de privacidade
+e termos e condições</string>
+    <string name="botao_salvar">Salvar</string>
+    <string name="botao_anexo">Anexo</string>
+    <string name="title_activity_servicos">Servicos</string>
+
+    <!-- Strings restauradas para corrigir erros de compilação e preservar conteúdo legado -->
+    <string name="dica_preenchimento_negocio">Insira aqui como o seu negócio irá atuar, forma de trabalhar, seu tipo de serviço, etc.</string>
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="aplique_a_nova_senha">APLIQUE A NOVA SENHA</string>
+    <string name="criterios_senha"><![CDATA[
+    - Pelo menos 8 caracteres
+    - Pelo menos 1 letra maiúscula
+    - Pelo menos 1 número
+    - Pelo menos 1 caractere especial (ex: !, #, ?, etc)]]></string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a, ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae, molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor bibendum, vel congue leo egestas.Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel, molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula, in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque est.Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh. Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc, quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus convallis.Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper, libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.</string>
+
+    <!-- Novas strings para a Tela de Criação de Pedido -->
+    <string name="creation_pedido_title">Criação de Pedido</string>
+    <string name="creation_pedido_contact_details_title">Dados do Contato</string>
+    <string name="creation_pedido_name_hint">Nome Completo</string>
+    <string name="creation_pedido_phone_hint">Telefone de Contato</string>
+    <string name="creation_pedido_email_hint">E-mail de Contato</string>
+    <string name="creation_pedido_service_details_title">Serviço Solicitado</string>
+    <string name="creation_pedido_service_type_hint">Tipo de Serviço</string>
+    <string name="creation_pedido_service_description_hint">Descrição Detalhada do Serviço</string>
+    <string name="creation_pedido_address_hint">Endereço do Serviço</string>
+    <string name="creation_pedido_city_hint">Cidade</string>
+    <string name="creation_pedido_state_hint">UF</string>
+    <string name="creation_pedido_service_time_hint">Tempo de Serviço</string>
+    <string name="creation_pedido_attach_photos_button">Anexar Fotos</string>
+    <string name="creation_pedido_send_button">Enviar Pedido</string>
+    <string-array name="service_time_options">
+        <item>Até 1 hora</item>
+        <item>1-3 horas</item>
+        <item>3-5 horas</item>
+        <item>1 dia</item>
+        <item>Mais de 1 dia</item>
+    </string-array>
+    <string-array name="service_type_options">
+        <item>Elétrica</item>
+        <item>Hidráulica</item>
+        <item>Pintura</item>
+        <item>Montagem de Móveis</item>
+        <item>Outro</item>
+    </string-array>
+
+    <!-- Array com os estados brasileiros -->
+    <string-array name="brazilian_states">
+        <item>AC</item>
+        <item>AL</item>
+        <item>AP</item>
+        <item>AM</item>
+        <item>BA</item>
+        <item>CE</item>
+        <item>DF</item>
+        <item>ES</item>
+        <item>GO</item>
+        <item>MA</item>
+        <item>MT</item>
+        <item>MS</item>
+        <item>MG</item>
+        <item>PA</item>
+        <item>PB</item>
+        <item>PR</item>
+        <item>PE</item>
+        <item>PI</item>
+        <item>RJ</item>
+        <item>RN</item>
+        <item>RS</item>
+        <item>RO</item>
+        <item>RR</item>
+        <item>SC</item>
+        <item>SP</item>
+        <item>SE</item>
+        <item>TO</item>
+    </string-array>
+    <!-- Tela de Pesquisa -->
+    <string name="pesquisa_hint">O que você está procurando?</string>
+    <string name="item_nao_encontrado_image_description">Ícone de item não encontrado</string>
+    <string name="item_nao_encontrado">Nenhum item foi encontrado.</string>
+    <string name="voltar">Voltar</string>
+    <string name="pesquisa_title">Pesquisa</string>
+    <string name="filtro">Filtro</string>
+</resources>

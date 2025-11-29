@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="@color/superficie"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Informações do Contratante -->
+        <TextView
+            android:id="@+id/tv_nome_contratante_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contratante"
+            android:textColor="@color/texto_secundario"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_nome_contratante"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/texto_primario"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/tv_status_pedido"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_nome_contratante_label"
+            tools:text="Nome Completo do Contratante" />
+
+        <TextView
+            android:id="@+id/tv_telefone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:drawableStart="@drawable/ic_phone_24"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/texto_secundario"
+            android:textSize="14sp"
+            app:drawableTint="@color/texto_secundario"
+            app:layout_constraintEnd_toEndOf="@id/tv_nome_contratante"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_nome_contratante"
+            tools:text="(11) 98765-4321" />
+
+        <TextView
+            android:id="@+id/tv_email_contratante"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:drawableStart="@drawable/ic_email_24"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/texto_secundario"
+            android:textSize="14sp"
+            app:drawableTint="@color/texto_secundario"
+            app:layout_constraintEnd_toEndOf="@id/tv_nome_contratante"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_telefone"
+            tools:text="email.contratante@example.com" />
+
+        <TextView
+            android:id="@+id/tv_endereco_contratante"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:drawableStart="@drawable/ic_location_on_24"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/texto_secundario"
+            android:textSize="14sp"
+            app:drawableTint="@color/texto_secundario"
+            app:layout_constraintEnd_toEndOf="@id/tv_nome_contratante"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_email_contratante"
+            tools:text="São Paulo - SP" />
+
+        <!-- Status do Pedido -->
+        <TextView
+            android:id="@+id/tv_status_pedido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_status"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:textColor="@color/branco"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:backgroundTint="@color/primaria"
+            tools:text="PENDENTE" />
+
+        <!-- Divisor -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_endereco_contratante" />
+
+        <!-- Detalhes do Serviço -->
+        <TextView
+            android:id="@+id/tv_tipo_servico"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/texto_primario"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            tools:text="Tipo do Serviço" />
+
+        <TextView
+            android:id="@+id/tv_descricao_curta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="@color/texto_secundario"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tipo_servico"
+            tools:text="Descrição curta do problema a ser resolvido. Aqui vai um resumo do que o autônomo precisa saber para avaliar o serviço." />
+
+        <TextView
+            android:id="@+id/tv_ver_detalhes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Ver mais detalhes"
+            android:textColor="@color/primaria"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_descricao_curta" />
+
+        <!-- Botões de Ação do Autônomo -->
+        <LinearLayout
+            android:id="@+id/botoes_autonomo_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/tv_ver_detalhes"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <Button
+                android:id="@+id/btn_negar_pedido"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Negar" />
+
+            <Button
+                android:id="@+id/btn_aceitar_pedido"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Aceitar" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

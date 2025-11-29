@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Coluna da Esquerda: Imagem do Autônomo -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_autonomo_perfil"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_profile_placeholder"
+            app:civ_border_color="@color/cinza_claro"
+            app:civ_border_width="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Coluna da Direita: Informações do Autônomo -->
+        <TextView
+            android:id="@+id/tv_nome_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Nome do Autônomo"
+            android:textSize="12sp"
+            android:textColor="@color/texto_secundario"
+            app:layout_constraintStart_toEndOf="@id/img_autonomo_perfil"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_nome_autonomo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textColor="@color/texto_primario"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/img_autonomo_perfil"
+            app:layout_constraintTop_toBottomOf="@id/tv_nome_label"
+            tools:text="João da Silva" />
+
+        <TextView
+            android:id="@+id/tv_numero_autonomo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:drawableStart="@drawable/ic_phone_24"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/texto_secundario"
+            android:textSize="14sp"
+            app:drawableTint="@color/texto_secundario"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/img_autonomo_perfil"
+            app:layout_constraintTop_toBottomOf="@id/tv_nome_autonomo"
+            tools:text="(11) 98765-4321" />
+
+        <TextView
+            android:id="@+id/tv_email_autonomo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:drawableStart="@drawable/ic_email_24"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/texto_secundario"
+            android:textSize="14sp"
+            app:drawableTint="@color/texto_secundario"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/img_autonomo_perfil"
+            app:layout_constraintTop_toBottomOf="@id/tv_numero_autonomo"
+            tools:text="joao.silva@email.com" />
+
+        <!-- Linha Divisória -->
+        <View
+            android:id="@+id/divider_item"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_autonomo_perfil" />
+
+        <!-- Seção: Resumo do Pedido -->
+        <TextView
+            android:id="@+id/tv_resumo_descricao"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ellipsize="end"
+            android:maxLength="50"
+            android:maxLines="2"
+            android:text="Resumo do pedido..."
+            android:textColor="@color/texto_secundario"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_item" />
+
+        <TextView
+            android:id="@+id/tv_ver_mais_contratante"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Ver mais"
+            android:textColor="@color/primaria"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_resumo_descricao" />
+
+        <!-- Seção: Imagem do Problema -->
+        <TextView
+            android:id="@+id/tv_imagem_problema_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Imagem do Problema"
+            android:textColor="@color/texto_secundario"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_ver_mais_contratante" />
+
+        <ImageView
+            android:id="@+id/img_problema"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/cinza_claro"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_image_placeholder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_imagem_problema_label"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/tv_status_pedido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_status"
+            android:paddingStart="12dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="4dp"
+            android:textColor="@color/branco"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/img_problema"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="ACEITO" />
+
+        <!-- Botões de Ação do Contratante -->
+        <LinearLayout
+            android:id="@+id/botoes_contratante_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/img_problema"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible">
+
+            <Button
+                android:id="@+id/btn_cancelar_pedido"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Cancelar" />
+
+            <Button
+                android:id="@+id/btn_concluir_pedido"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Concluir" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

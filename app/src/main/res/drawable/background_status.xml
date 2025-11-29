@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Define a cor de fundo sólida. Esta cor serve como base e pode ser alterada dinamicamente no código usando `backgroundTint`. -->
+    <solid android:color="@color/cinza_claro" />
+
+    <!-- Define o arredondamento dos cantos. Um valor alto cria o formato de "pílula". -->
+    <corners android:radius="20dp" />
+
+</shape>
