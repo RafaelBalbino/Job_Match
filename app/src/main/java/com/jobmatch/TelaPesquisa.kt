@@ -3,10 +3,12 @@ package com.jobmatch
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.view.inputmethod.EditorInfo
 import android.widget.PopupWindow
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -36,7 +38,7 @@ class TelaPesquisa : AppCompatActivity() {
         firestore = FirebaseFirestore.getInstance()
 
         setupRecyclerView()
-        setupSearchView()
+        setupSearch()
 
         // Verifica se a tela foi aberta para mostrar todos os serviços
         if (intent.getBooleanExtra("SHOW_ALL", false)) {
@@ -60,28 +62,14 @@ class TelaPesquisa : AppCompatActivity() {
         firestoreListener?.remove()
     }
 
-    private fun setupSearchView() {
-        // Configura a barra de pesquisa para ser focável e clicável
-        headerBinding.searchView.isFocusable = true
-        headerBinding.searchView.isIconified = false
-        headerBinding.searchView.requestFocusFromTouch()
+    private fun setupSearch() {
+        // Listener para o texto digitado no novo TextInputEditText
+        headerBinding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-        // Encontra o ícone de busca dentro da SearchView
-        val searchIcon = headerBinding.searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_mag_icon)
-
-        headerBinding.searchView.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if (!query.isNullOrEmpty()) {
-                    search(query)
-                }
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                // Esconde o ícone de busca se houver texto
-                searchIcon.visibility = if (newText.isNullOrEmpty()) View.VISIBLE else View.GONE
-                
-                if (!newText.isNullOrEmpty()) {
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val newText = s.toString()
+                if (newText.isNotEmpty()) {
                     search(newText)
                 } else {
                     // Se o texto for limpo, volta ao estado inicial ou à lista completa
@@ -91,9 +79,20 @@ class TelaPesquisa : AppCompatActivity() {
                         showInitialState()
                     }
                 }
-                return true
             }
+
+            override fun afterTextChanged(s: Editable?) {}
         })
+
+        // Opcional: Executa a busca ao pressionar o botão de "pesquisar" no teclado
+        headerBinding.etSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                search(headerBinding.etSearch.text.toString())
+                true
+            } else {
+                false
+            }
+        }
     }
 
     private fun fetchAllServices() {
@@ -150,7 +149,7 @@ class TelaPesquisa : AppCompatActivity() {
                 else -> "nomeServico"
             }
             popupWindow.dismiss()
-            val currentQuery = headerBinding.searchView.query.toString()
+            val currentQuery = headerBinding.etSearch.text.toString()
             if (currentQuery.isNotEmpty()) {
                 search(currentQuery)
             }

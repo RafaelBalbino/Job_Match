@@ -1,55 +1,119 @@
 package com.jobmatch
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.jobmatch.databinding.FragmentListaAvaliacoesBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [fragmentListaAvaliacoes.newInstance] factory method to
- * create an instance of this fragment.
- */
 class fragmentListaAvaliacoes : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private var _binding: FragmentListaAvaliacoesBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var db: FirebaseFirestore
+    private lateinit var avaliacaoAdapter: AvaliacaoAdapter
+    private var autonomoId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            autonomoId = it.getString(ARG_AUTONOMO_ID)
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lista_avaliacoes, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentListaAvaliacoesBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        db = FirebaseFirestore.getInstance()
+
+        setupRecyclerView()
+
+        if (autonomoId == null) {
+            showErrorState("ID do autônomo não fornecido.")
+        } else {
+            buscarAvaliacoes()
+        }
+    }
+
+    private fun setupRecyclerView() {
+        avaliacaoAdapter = AvaliacaoAdapter(emptyList())
+        binding.rvAvaliacoes.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = avaliacaoAdapter
+        }
+    }
+
+    private fun buscarAvaliacoes() {
+        showLoadingState(true)
+        db.collection("avaliacoes")
+            .whereEqualTo("autonomoId", autonomoId)
+            .orderBy("dataHora", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                showLoadingState(false)
+                if (documents.isEmpty) {
+                    showEmptyState()
+                } else {
+                    val avaliacoes = documents.toObjects(Avaliacao::class.java)
+                    avaliacaoAdapter.updateData(avaliacoes)
+                    showResultsState()
+                }
+            }
+            .addOnFailureListener { e ->
+                showLoadingState(false)
+                showErrorState("Falha ao carregar avaliações: ${e.message}")
+            }
+    }
+
+    private fun showLoadingState(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.tvMensagem.visibility = View.GONE
+        binding.rvAvaliacoes.visibility = View.GONE
+    }
+
+    private fun showResultsState() {
+        binding.rvAvaliacoes.visibility = View.VISIBLE
+        binding.tvMensagem.visibility = View.GONE
+    }
+
+    private fun showEmptyState() {
+        binding.rvAvaliacoes.visibility = View.GONE
+        binding.tvMensagem.visibility = View.VISIBLE
+        binding.tvMensagem.text = "Este profissional ainda não possui avaliações."
+    }
+
+    private fun showErrorState(message: String) {
+        binding.rvAvaliacoes.visibility = View.GONE
+        binding.tvMensagem.visibility = View.VISIBLE
+        binding.tvMensagem.text = message
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment fragmentListaAvaliacoes.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic fun newInstance(param1: String, param2: String) =
-                fragmentListaAvaliacoes().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
-                    }
+        private const val ARG_AUTONOMO_ID = "autonomo_id"
+
+        @JvmStatic
+        fun newInstance(autonomoId: String) =
+            fragmentListaAvaliacoes().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_AUTONOMO_ID, autonomoId)
                 }
+            }
     }
 }

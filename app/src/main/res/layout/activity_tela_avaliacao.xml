@@ -11,22 +11,44 @@
         android:id="@+id/tv_titulo_avaliacao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Avalie o Serviço Prestado"
+        android:text="Avalie o Serviço Prestado por:"
         android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_autonomo_avaliado"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_titulo_avaliacao"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tv_nome_autonomo_avaliado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/img_autonomo_avaliado"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Nome do Autônomo" />
+
     <TextView
         android:id="@+id/tv_instrucao_avaliacao"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:text="Sua opinião é muito importante para a comunidade. Por favor, deixe uma nota e um comentário sobre sua experiência."
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-        app:layout_constraintTop_toBottomOf="@id/tv_titulo_avaliacao"
+        app:layout_constraintTop_toBottomOf="@id/tv_nome_autonomo_avaliado"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -34,7 +56,7 @@
         android:id="@+id/rating_bar_avaliacao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:numStars="5"
         android:stepSize="1.0"
         app:layout_constraintTop_toBottomOf="@id/tv_instrucao_avaliacao"
@@ -47,8 +69,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
         android:hint="Deixe seu comentário (opcional)"
-        app:layout_constraintHeight_min="120dp"
+        app:layout_constraintHeight_min="100dp"
         app:layout_constraintTop_toBottomOf="@id/rating_bar_avaliacao"
         app:layout_constraintBottom_toTopOf="@+id/btn_enviar_avaliacao"
         app:layout_constraintStart_toStartOf="parent"

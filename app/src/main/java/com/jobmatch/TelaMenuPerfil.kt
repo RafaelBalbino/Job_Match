@@ -108,20 +108,21 @@ class TelaMenuPerfil : AppCompatActivity() {
     private fun configurarBotoesDeAcao(usuario: Usuario) {
         if (usuario.autonomo != null) {
             // LÓGICA PARA AUTÔNOMO
-            // O botão "Meus Pedidos" se torna "Buscar Pedidos"
             binding.tvMeusPedidos.text = "Buscar Pedidos"
-            binding.btnMeusPedidos.setOnClickListener { abrirListaDePedidos("AUTONOMO") }
+            binding.btnMeusPedidos.setOnClickListener { 
+                abrirListaDePedidos("fragmentListaPedidosAutonomo", "BUSCA") 
+            }
 
-            // O botão "Projetos" fica visível e leva para a lista de projetos aceitos
             binding.btnProjetos.visibility = View.VISIBLE
-            binding.btnProjetos.setOnClickListener { abrirListaDePedidos("AUTONOMO_ACEITOS") }
+            binding.btnProjetos.setOnClickListener { 
+                abrirListaDePedidos("fragmentListaPedidosAutonomo", "PROJETOS") 
+            }
         } else {
             // LÓGICA PARA CONTRATANTE
-            // O botão mantém o texto "Meus Pedidos"
             binding.tvMeusPedidos.text = "Meus Pedidos"
-            binding.btnMeusPedidos.setOnClickListener { abrirListaDePedidos("CONTRATANTE") }
-
-            // O botão "Projetos" é escondido, pois não se aplica ao contratante
+            binding.btnMeusPedidos.setOnClickListener { 
+                abrirListaDePedidos("fragmentListaPedidosContratante", "CONTRATANTE") 
+            }
             binding.btnProjetos.visibility = View.GONE
         }
 
@@ -129,7 +130,9 @@ class TelaMenuPerfil : AppCompatActivity() {
         binding.btnMeuPerfil.setOnClickListener {
             if (currentUser?.autonomo != null) {
                 // Se for autônomo, leva para a vitrine de serviços
-                startActivity(Intent(this, TelaPerfilAutonomo::class.java))
+                val intent = Intent(this, TelaPerfilAutonomo::class.java)
+                intent.putExtra("AUTONOMO_ID", currentUser?.uid)
+                startActivity(intent)
             } else {
                 // Se for contratante, leva para a tela de informações da conta
                 startActivity(Intent(this, TelaMeuPerfil::class.java))
@@ -151,11 +154,13 @@ class TelaMenuPerfil : AppCompatActivity() {
     
     /**
      * Abre a tela que contém o fragmento da lista de pedidos.
-     * @param tipo O tipo de lista a ser exibida ("CONTRATANTE", "AUTONOMO", "AUTONOMO_ACEITOS").
+     * @param fragmentName O nome da classe do fragmento a ser carregado.
+     * @param tipoQuery O tipo de query a ser executada no fragmento.
      */
-    private fun abrirListaDePedidos(tipo: String) {
+    private fun abrirListaDePedidos(fragmentName: String, tipoQuery: String) {
         val intent = Intent(this, FragmentContainerActivity::class.java).apply {
-            putExtra("FRAGMENT_TYPE", tipo)
+            putExtra("FRAGMENT_NAME", fragmentName)
+            putExtra("TIPO_QUERY", tipoQuery)
         }
         startActivity(intent)
     }

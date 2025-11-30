@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#18B49D"
+    android:background="?attr/colorPrimary"
     android:paddingBottom="24dp">
 
     <ImageView
@@ -18,14 +18,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_voltar_24"
-        app:tint="@color/branco" />
+        app:tint="?attr/colorOnPrimary" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/pesquisa_title"
-        android:textColor="@color/branco"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/back_button"
@@ -33,7 +33,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/back_button" />
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/search_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -48,18 +48,30 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <SearchView
-                android:id="@+id/search_view"
+            <!-- Substituído SearchView por TextInputLayout para maior controle -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/search_input_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:queryHint="Search..."
-                app:iconifiedByDefault="false"
+                app:boxBackgroundMode="none" 
+                app:hintEnabled="false"
+                app:startIconDrawable="@drawable/ic_pesquisa_24"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/filter_button"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintEnd_toStartOf="@+id/filter_button">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Pesquisar..."
+                    android:imeOptions="actionSearch"
+                    android:inputType="text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <ImageButton
                 android:id="@+id/filter_button"
@@ -74,6 +86,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
