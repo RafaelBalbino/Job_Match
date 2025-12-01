@@ -18,20 +18,23 @@ import com.google.android.material.color.MaterialColors
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaLoginBinding // Importe a classe de binding
 
 class TelaLogin : AppCompatActivity() {
 
     // Declare a variável para o view binding
     private lateinit var binding: ActivityTelaLoginBinding
-    // Declare a variável do Firebase Auth
+    // Declare a variável do Firebase Auth e Firestore
     private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Inicializa o Firebase Auth
+        // Inicializa o Firebase
         auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         // Se não houver usuário logado, continua e infla o layout da tela de login
         binding = ActivityTelaLoginBinding.inflate(layoutInflater)
@@ -61,32 +64,19 @@ class TelaLogin : AppCompatActivity() {
             // 2. Lógica de login com Firebase
             auth.signInWithEmailAndPassword(email, senha)
                 .addOnCompleteListener(this) { task ->
-                    showLoading(false)
                     if (task.isSuccessful) {
-                        // Login bem-sucedido
-                        Toast.makeText(this, "Login bem-sucedido!", Toast.LENGTH_SHORT).show()
-
-                        // Navega para a tela principal
-                        val intent = Intent(this, TelaMenuPrincipal::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        finish() // Finaliza a TelaLogin
+                        // ETAPA DE VERIFICAÇÃO DE TIPO DE USUÁRIO
+                        // Verifica se é a conta de suporte
+                        if (email.equals("SuporteJobMatch@gmail.com", ignoreCase = true)) {
+                            navigateToSuporte()
+                        } else {
+                            // Se for um usuário normal, verifica o status da conta (bloqueado/ativo)
+                            checkUserStatus()
+                        }
                     } else {
                         // Trata os erros de login
-                        val exception = task.exception
-                        val errorMessage = when (exception) {
-                            is FirebaseAuthInvalidUserException -> "Nenhuma conta encontrada com este e-mail."
-                            is FirebaseAuthInvalidCredentialsException -> "Senha incorreta. Tente novamente."
-                            else -> "Falha na autenticação: Verifique sua conexão."
-                        }
-                        
-                        if (exception is FirebaseAuthInvalidUserException) {
-                            binding.tilEmailLogin.error = errorMessage
-                        } else if (exception is FirebaseAuthInvalidCredentialsException) {
-                            binding.tilSenhaLogin.error = errorMessage
-                        } else {
-                            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
-                        }
+                        showLoading(false)
+                        handleLoginFailure(task.exception)
                     }
                 }
         }
@@ -94,6 +84,79 @@ class TelaLogin : AppCompatActivity() {
         // --- LÓGICA EXISTENTE PARA LINKS (ADAPTADA PARA VIEW BINDING) ---
         setupClickableTextToCadastro()
         setupClickableTextToRecuperarSenha()
+    }
+
+    /**
+     * Verifica o documento do usuário no Firestore para checar o status de bloqueio.
+     */
+    private fun checkUserStatus() {
+        val userId = auth.currentUser?.uid ?: return // Sai se não houver ID
+
+        db.collection("users").document(userId).get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val userIsBlocked = document.getBoolean("isBlocked") ?: false
+                    if (userIsBlocked) {
+                        // Se o usuário estiver bloqueado, exibe a mensagem e desloga
+                        showLoading(false)
+                        Toast.makeText(this, "Esta conta foi bloqueada por um administrador.", Toast.LENGTH_LONG).show()
+                        auth.signOut()
+                    } else {
+                        // Se não estiver bloqueado, atualiza o campo isBlocked para false (para garantir que usuários antigos sejam atualizados)
+                        // e prossegue para a tela principal.
+                        document.reference.update("isBlocked", false)
+                        navigateToMain()
+                    }
+                } else {
+                    // Caso raro: usuário autenticado mas sem documento no Firestore. Prossegue para a tela principal.
+                    navigateToMain()
+                }
+            }
+            .addOnFailureListener { 
+                // Em caso de falha na leitura (ex: sem internet), permite o login por segurança, 
+                // mas não consegue verificar o status de bloqueio.
+                Log.e("TelaLogin", "Falha ao verificar o status do usuário.", it)
+                navigateToMain()
+            }
+    }
+    
+    /**
+     * Navega para a tela principal do aplicativo.
+     */
+    private fun navigateToMain() {
+        showLoading(false)
+        val intent = Intent(this, TelaMenuPrincipal::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+
+    /**
+     * Navega para o painel de suporte.
+     */
+    private fun navigateToSuporte() {
+        showLoading(false)
+        val intent = Intent(this, TelaSuporte::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    /**
+     * Mostra mensagens de erro apropriadas com base na exceção de login do Firebase.
+     */
+    private fun handleLoginFailure(exception: Exception?) {
+        val errorMessage = when (exception) {
+            is FirebaseAuthInvalidUserException -> "Nenhuma conta encontrada com este e-mail."
+            is FirebaseAuthInvalidCredentialsException -> "Senha incorreta. Tente novamente."
+            else -> "Falha na autenticação: Verifique sua conexão."
+        }
+        if (exception is FirebaseAuthInvalidUserException) {
+            binding.tilEmailLogin.error = errorMessage
+        } else if (exception is FirebaseAuthInvalidCredentialsException) {
+            binding.tilSenhaLogin.error = errorMessage
+        } else {
+            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun showLoading(isLoading: Boolean) {

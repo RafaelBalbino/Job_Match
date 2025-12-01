@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JobMatch">
         <activity
+            android:name=".TelaSuporte"
+            android:exported="false" />
+        <activity
             android:name=".TelaNegocioAutonomo"
             android:exported="false" />
         <activity

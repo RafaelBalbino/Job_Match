@@ -1,0 +1,108 @@
+package com.jobmatch
+
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.jobmatch.databinding.ActivityTelaSuporteBinding
+
+class TelaSuporte : AppCompatActivity(), SuporteUsuarioAdapter.OnUserActionListener {
+
+    private lateinit var binding: ActivityTelaSuporteBinding
+    private lateinit var db: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
+    private lateinit var adapter: SuporteUsuarioAdapter
+    private val userList = mutableListOf<Usuario>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityTelaSuporteBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        db = Firebase.firestore
+        auth = FirebaseAuth.getInstance()
+
+        setupRecyclerView()
+        loadUsers()
+    }
+
+    private fun setupRecyclerView() {
+        adapter = SuporteUsuarioAdapter(userList, this)
+        binding.rvUsuariosSuporte.layoutManager = LinearLayoutManager(this)
+        binding.rvUsuariosSuporte.adapter = adapter
+    }
+
+    private fun loadUsers() {
+        binding.progressBar.visibility = View.VISIBLE
+        db.collection("users")
+            .get()
+            .addOnSuccessListener { documents ->
+                binding.progressBar.visibility = View.GONE
+                if (!documents.isEmpty) {
+                    val allUsers = documents.toObjects(Usuario::class.java)
+                    // Filtra para não exibir a própria conta de suporte
+                    val filteredUsers = allUsers.filter { it.email != "SuporteJobMatch@gmail.com" }
+                    userList.clear()
+                    userList.addAll(filteredUsers)
+                    adapter.updateUsers(userList)
+                } else {
+                    Toast.makeText(this, "Nenhum usuário encontrado.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(this, "Erro ao carregar usuários: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    override fun onBlockUser(user: Usuario) {
+        val newBlockedStatus = !user.isBlocked
+        val actionText = if (newBlockedStatus) "bloquear" else "desbloquear"
+
+        AlertDialog.Builder(this)
+            .setTitle("${actionText.capitalize()} Usuário")
+            .setMessage("Tem certeza de que deseja $actionText o usuário ${user.nome}?")
+            .setPositiveButton("Sim") { _, _ ->
+                user.uid?.let {
+                    db.collection("users").document(it)
+                        .update("isBlocked", newBlockedStatus)
+                        .addOnSuccessListener { 
+                            Toast.makeText(this, "Usuário ${actionText}do com sucesso!", Toast.LENGTH_SHORT).show()
+                            loadUsers() // Recarrega a lista para refletir a mudança
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(this, "Falha ao ${actionText} usuário: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
+            .setNegativeButton("Não", null)
+            .show()
+    }
+
+    override fun onDeleteUser(user: Usuario) {
+        AlertDialog.Builder(this)
+            .setTitle("Deletar Usuário")
+            .setMessage("Esta ação é IRREVERSÍVEL. Tem certeza de que deseja deletar o usuário ${user.nome}? Todos os seus dados serão perdidos.")
+            .setPositiveButton("Sim, deletar") { _, _ ->
+                user.uid?.let {
+                    db.collection("users").document(it).delete()
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Usuário deletado com sucesso!", Toast.LENGTH_SHORT).show()
+                            loadUsers() // Recarrega a lista para remover o usuário
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(this, "Falha ao deletar usuário: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
+            .setNegativeButton("Não", null)
+            .show()
+    }
+}

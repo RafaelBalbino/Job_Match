@@ -130,7 +130,7 @@ class TelaCadastro : AppCompatActivity() {
         // Listener para quando um estado for selecionado
         binding.actvEstado.setOnItemClickListener { parent, view, position, id ->
             // Limpa o campo de cidade sempre que um novo estado for selecionado
-            binding.txtCidade.text = null
+            binding.txtCidade.setText("")
         }
     }
 
@@ -303,7 +303,7 @@ class TelaCadastro : AppCompatActivity() {
             return
         }
 
-        // Monta o objeto Usuario, incluindo cidade e estado no nível principal
+        // Monta o objeto Usuario, incluindo o status de bloqueio inicial
         val novoUsuario = Usuario(
             uid = userId,
             nome = nome,
@@ -313,7 +313,8 @@ class TelaCadastro : AppCompatActivity() {
             estado = estado,
             fotoUrl = DEFAULT_PROFILE_IMAGE_URL,
             contratante = contratante,
-            autonomo = autonomo
+            autonomo = autonomo,
+            isBlocked = false // Garante que o usuário seja criado como não bloqueado
         )
 
         db.collection("users").document(userId)

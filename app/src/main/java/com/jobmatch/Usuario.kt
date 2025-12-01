@@ -13,10 +13,12 @@ data class Usuario(
     val email: String? = null,
     val fotoUrl: String? = null,
     val numeroTelefone: String? = null,
-    //val cidade: String? = null,      // Adicionado aqui
-    //val estado: String? = null,        // Adicionado aqui
+    //val cidade: String? = null,
+    //val estado: String? = null,
     val contratante: Contratante? = null,
-    val autonomo: Autonomo? = null
+    val autonomo: Autonomo? = null,
+    val isBlocked: Boolean = false // Campo para controle de bloqueio
 ) {
-    constructor() : this(null, null, null, null, null, null, null)
+    // Construtor vazio para o Firebase (sem cidade e estado)
+    constructor() : this(null, null, null, null, null, null, null, false)
 }
