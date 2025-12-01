@@ -1,6 +1,7 @@
 package com.jobmatch
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -14,19 +15,22 @@ import java.util.Locale
 
 class TelaNegocioAutonomo : AppCompatActivity() {
 
-    // ViewBinding para acesso seguro aos componentes de UI
+    // ViewBinding para acesso seguro e nulo aos componentes da UI
     private lateinit var binding: ActivityTelaNegocioAutonomoBinding
-    // Instância do Firestore
+    // Instância do banco de dados Firestore
     private lateinit var db: FirebaseFirestore
-    // ID do autônomo cujo perfil está sendo exibido
+    // ID do autônomo cujo perfil está sendo exibido, recebido da tela anterior
     private var autonomoId: String? = null
-    // Adapter para a lista de serviços
+    // Armazena o objeto do usuário carregado para evitar releituras
+    private var usuarioAtual: Usuario? = null 
+    // Adapter para a lista de serviços oferecidos
     private lateinit var servicoAdapter: ServicoAdapter
-    // Lista para armazenar os serviços do autônomo
+    // Lista mutável que armazena os serviços para o adapter
     private val servicosList = mutableListOf<Servico>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Infla o layout usando ViewBinding
         binding = ActivityTelaNegocioAutonomoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -36,14 +40,14 @@ class TelaNegocioAutonomo : AppCompatActivity() {
         // 1. Pega o ID do autônomo passado pela tela anterior (ex: ServicoAdapter)
         autonomoId = intent.getStringExtra("AUTONOMO_ID")
 
-        // Validação para garantir que o ID foi recebido
+        // 2. Validação de segurança: se o ID não for fornecido, fecha a tela
         if (autonomoId == null) {
             Toast.makeText(this, "Erro: ID do autônomo não fornecido.", Toast.LENGTH_LONG).show()
             finish()
             return
         }
 
-        // Configura os componentes da tela
+        // 3. Chama as funções para configurar a tela
         setupRecyclerView()
         carregarDadosAutonomo()
         configurarBotoes()
@@ -51,11 +55,12 @@ class TelaNegocioAutonomo : AppCompatActivity() {
     }
 
     /**
-     * Configura o RecyclerView para a lista de serviços.
-     * Define o layout como horizontal.
+     * Configura o RecyclerView que exibirá os serviços.
+     * Define seu layout como horizontal para a rolagem lateral.
      */
     private fun setupRecyclerView() {
-        servicoAdapter = ServicoAdapter(servicosList)
+        // Cria o adapter, passando 'false' para não mostrar o nome do freelancer nos cards
+        servicoAdapter = ServicoAdapter(servicosList, showFreelancerName = false)
         binding.rvServicosOferecidos.apply {
             layoutManager = LinearLayoutManager(this@TelaNegocioAutonomo, LinearLayoutManager.HORIZONTAL, false)
             adapter = servicoAdapter
@@ -63,7 +68,7 @@ class TelaNegocioAutonomo : AppCompatActivity() {
     }
 
     /**
-     * Busca os dados principais do perfil do usuário autônomo no Firestore.
+     * Busca no Firestore o documento do usuário (autônomo) e chama a função para preencher a UI.
      */
     private fun carregarDadosAutonomo() {
         db.collection("users").document(autonomoId!!).get()
@@ -71,8 +76,8 @@ class TelaNegocioAutonomo : AppCompatActivity() {
                 if (document != null && document.exists()) {
                     val usuario = document.toObject(Usuario::class.java)
                     if (usuario != null) {
-                        // 2. Preenche a UI com os dados encontrados
-                        preencherDados(usuario)
+                        usuarioAtual = usuario // Armazena para uso no botão do WhatsApp
+                        preencherDados(usuario) // Chama a função que preenche a tela
                     } else {
                         Toast.makeText(this, "Falha ao processar dados do perfil.", Toast.LENGTH_SHORT).show()
                     }
@@ -86,38 +91,39 @@ class TelaNegocioAutonomo : AppCompatActivity() {
     }
 
     /**
-     * Preenche os componentes da UI com os dados do autônomo.
-     * Inclui a lógica para exibir ou esconder a seção de avaliações.
+     * Preenche todos os componentes visuais da tela com os dados do objeto Usuario.
+     * @param usuario O objeto Usuario contendo as informações do autônomo.
      */
     private fun preencherDados(usuario: Usuario) {
-        // Preenche nome, endereço e foto
+        // Preenche nome, telefone, e o endereço formatado como "Cidade - UF"
         binding.tvNomeAutonomo.text = usuario.nome
-        binding.tvEndereco.text = "${usuario.cidade} - ${usuario.estado}"
+        binding.tvTelefone.text = usuario.numeroTelefone
+        binding.tvEndereco.text = "${usuario.cidade ?: ""} - ${usuario.estado ?: ""}"
         binding.ivAutonomoAvatar.load(usuario.fotoUrl) {
             placeholder(R.drawable.ic_profile_placeholder)
             error(R.drawable.ic_profile_placeholder)
         }
 
-        // 3. Lógica para a seção de avaliações
+        // Lógica para a seção de avaliações: só exibe se houverem avaliações
         val perfilAutonomo = usuario.autonomo
         if (perfilAutonomo != null && perfilAutonomo.totalAvaliacoes > 0) {
-            // Se houver avaliações, mostra e popula os componentes
             binding.rbMediaAvaliacoes.visibility = View.VISIBLE
             binding.tvNumeroAvaliacoes.visibility = View.VISIBLE
             binding.btnVerAvaliacoes.visibility = View.VISIBLE
 
+            // Preenche a RatingBar e o texto com a contagem
             binding.rbMediaAvaliacoes.rating = perfilAutonomo.mediaAvaliacoes.toFloat()
             binding.tvNumeroAvaliacoes.text = String.format(Locale.getDefault(), "(%d)", perfilAutonomo.totalAvaliacoes)
         } else {
-            // Caso contrário, esconde a seção de avaliações
+            // Se não há avaliações, esconde toda a seção
             binding.rbMediaAvaliacoes.visibility = View.GONE
             binding.tvNumeroAvaliacoes.visibility = View.GONE
             binding.btnVerAvaliacoes.visibility = View.GONE
         }
-
-        // Popula as categorias (especializações) como Chips
+        
+        // Popula as especializações do autônomo como Chips
         perfilAutonomo?.especializacao?.let { especializacoes ->
-            binding.chipGroupCategorias.removeAllViews()
+            binding.chipGroupCategorias.removeAllViews() // Limpa chips antigos
             val categorias = especializacoes.split(",").map { it.trim() }
             for (categoria in categorias) {
                 if (categoria.isNotEmpty()){
@@ -130,7 +136,7 @@ class TelaNegocioAutonomo : AppCompatActivity() {
     }
 
     /**
-     * Busca na coleção 'servico' todos os serviços oferecidos pelo autônomo.
+     * Busca na coleção 'servico' todos os serviços que pertencem a este autônomo.
      */
     private fun carregarServicos() {
         db.collection("servico")
@@ -157,29 +163,49 @@ class TelaNegocioAutonomo : AppCompatActivity() {
     }
 
     /**
-     * Configura os listeners de clique para os botões da tela.
+     * Configura os listeners de clique para todos os botões da tela.
      */
     private fun configurarBotoes() {
+        // Botão para voltar à tela anterior
         binding.btnVoltarPesquisa.setOnClickListener {
             finish()
         }
 
-        // Botão para ver a lista de avaliações
+        // Botão para abrir a lista detalhada de avaliações
         binding.btnVerAvaliacoes.setOnClickListener {
             val intent = Intent(this, FragmentContainerActivity::class.java).apply {
                 putExtra("FRAGMENT_NAME", "fragmentListaAvaliacoes")
-                putExtra("autonomo_id", autonomoId) // Passa o ID para o fragmento de lista
+                putExtra("autonomo_id", autonomoId)
             }
             startActivity(intent)
         }
 
-        // Botão para iniciar a criação de um pedido para este autônomo
+        // Botão para iniciar o fluxo de criação de um pedido para este autônomo
         binding.btnFazerPedido.setOnClickListener {
             val intent = Intent(this, TelaCriacaoPedido::class.java).apply {
-                putExtra("AUTONOMO_ID", autonomoId) // Passa o ID para a tela de pedido
+                putExtra("AUTONOMO_ID", autonomoId)
                 putExtra("MODE", "CREATE")
             }
             startActivity(intent)
+        }
+
+        // Botão para abrir a conversa no WhatsApp
+        binding.btnWhatsapp.setOnClickListener {
+            usuarioAtual?.numeroTelefone?.let { numero ->
+                // Limpa o número para conter apenas dígitos
+                val numeroLimpo = numero.replace(Regex("[^0-9]"), "")
+                val url = "https://api.whatsapp.com/send?phone=$numeroLimpo"
+                
+                val whatsappIntent = Intent(Intent.ACTION_VIEW).apply {
+                    data = Uri.parse(url)
+                }
+                // Tenta abrir o WhatsApp, com um tratamento de erro caso não esteja instalado
+                try {
+                    startActivity(whatsappIntent)
+                } catch (e: Exception) {
+                    Toast.makeText(this, "WhatsApp não instalado.", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 }

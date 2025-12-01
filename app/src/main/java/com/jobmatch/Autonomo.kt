@@ -10,8 +10,10 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 data class Autonomo(
     val cnpj: String? = null,
     val especializacao: String? = null,
-    val formacao: String? = null
+    val formacao: String? = null,
+    val mediaAvaliacoes: Double = 0.0,
+    val totalAvaliacoes: Int = 0
 ) {
     // Construtor vazio para o Firebase
-    constructor() : this(null, null, null)
+    constructor() : this(null, null, null, 0.0, 0)
 }

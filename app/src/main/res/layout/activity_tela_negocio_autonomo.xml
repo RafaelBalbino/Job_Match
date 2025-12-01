@@ -94,23 +94,25 @@
 
         <TextView
             android:id="@+id/btn_ver_avaliacoes"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="start"
-            android:text="Ver avaliações"
+            android:layout_marginTop="3dp"
+            android:text="Ver Avaliações"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/rb_media_avaliacoes"
             app:layout_constraintTop_toBottomOf="@id/rb_media_avaliacoes"
             tools:visibility="visible" />
 
-        <!-- Seção de Endereço -->
+        <!-- Seção de Contato -->
         <TextView
-            android:id="@+id/tv_endereco_label"
+            android:id="@+id/tv_contato_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Endereço"
+            android:text="Contato"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
@@ -118,23 +120,67 @@
             app:layout_constraintTop_toBottomOf="@id/iv_autonomo_avatar" />
 
         <TextView
+            android:id="@+id/tv_telefone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:drawableStart="@drawable/ic_phone_24"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            app:drawableTint="?attr/colorPrimary"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_contato_label"
+            app:layout_constraintEnd_toStartOf="@+id/btn_whatsapp"
+            tools:text="(11) 99999-9999" />
+
+        <ImageView
+            android:id="@+id/btn_whatsapp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Abrir no WhatsApp"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_telefone"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintTop_toTopOf="@id/tv_telefone"
+            app:srcCompat="@drawable/ic_whatsapp_24" />
+
+
+        <!-- Seção de Endereço -->
+        <TextView
+            android:id="@+id/tv_endereco_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Endereço"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_telefone" />
+
+        <TextView
             android:id="@+id/tv_endereco"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_location_on_24"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            app:drawableTint="?attr/colorPrimary"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/tv_endereco_label"
             tools:text="São Paulo - SP" />
 
-        <!-- Seção de Categorias -->
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chip_group_categorias"
+        <!-- Linha Divisória -->
+        <View
+            android:id="@+id/divider"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:singleLine="true"
-            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            android:layout_height="1dp"
+            android:layout_marginTop="24dp"
+            android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/tv_endereco" />
 
         <!-- Seção de Serviços -->
@@ -148,7 +194,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
-            app:layout_constraintTop_toBottomOf="@id/chip_group_categorias" />
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_servicos_oferecidos"

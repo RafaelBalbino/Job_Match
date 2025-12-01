@@ -75,8 +75,8 @@ class TelaCadastro : AppCompatActivity() {
     }
 
     private fun setupPrivacyPolicyClick() {
-        val radioButton = binding.radioButton
-        val fullText = radioButton.text.toString()
+        val cbPoliticas = binding.cbPoliticas
+        val fullText = cbPoliticas.text.toString()
         val clickableText = "Políticas de Privacidade"
         val spannableString = SpannableString(fullText)
         val linkColor = MaterialColors.getColor(this, MaterialR.attr.colorSecondary, Color.BLACK)
@@ -103,9 +103,9 @@ class TelaCadastro : AppCompatActivity() {
             }
         }
         spannableString.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        radioButton.text = spannableString
-        radioButton.movementMethod = LinkMovementMethod.getInstance()
-        radioButton.highlightColor = Color.TRANSPARENT
+        cbPoliticas.text = spannableString
+        cbPoliticas.movementMethod = LinkMovementMethod.getInstance()
+        cbPoliticas.highlightColor = Color.TRANSPARENT
     }
 
     private fun setupUserTypeSelection() {
@@ -126,6 +126,12 @@ class TelaCadastro : AppCompatActivity() {
         val states = resources.getStringArray(R.array.brazilian_states)
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, states)
         binding.actvEstado.setAdapter(adapter)
+
+        // Listener para quando um estado for selecionado
+        binding.actvEstado.setOnItemClickListener { parent, view, position, id ->
+            // Limpa o campo de cidade sempre que um novo estado for selecionado
+            binding.txtCidade.text = null
+        }
     }
 
     private fun setupClickableText() {
@@ -226,7 +232,7 @@ class TelaCadastro : AppCompatActivity() {
         val estado = binding.actvEstado.text.toString().trim()
         val senha = binding.txtSenha.text.toString()
         val confirmarSenha = binding.txtConfirmarSenha.text.toString()
-        val politicasAceitas = binding.radioButton.isChecked
+        val politicasAceitas = binding.cbPoliticas.isChecked
         val isFreelancer = binding.rbFreelancer.isChecked
 
         if (nome.isEmpty() || email.isEmpty() || telefoneLimpo.length < 10 || cidade.isEmpty() || estado.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty()) {
