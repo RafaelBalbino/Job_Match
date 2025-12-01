@@ -13,10 +13,10 @@ data class Usuario(
     val email: String? = null,
     val fotoUrl: String? = null,
     val numeroTelefone: String? = null,
-    val cidade: String? = null,      // Adicionado aqui
-    val estado: String? = null,        // Adicionado aqui
+    //val cidade: String? = null,      // Adicionado aqui
+    //val estado: String? = null,        // Adicionado aqui
     val contratante: Contratante? = null,
     val autonomo: Autonomo? = null
 ) {
-    constructor() : this(null, null, null, null, null, null, null, null, null)
+    constructor() : this(null, null, null, null, null, null, null)
 }

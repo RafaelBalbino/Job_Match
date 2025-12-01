@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.JobMatch">
-        
+        <activity
+            android:name=".TelaNegocioAutonomo"
+            android:exported="false" />
         <activity
             android:name=".telaEntrada"
             android:exported="true">
@@ -20,17 +22,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Todas as outras telas não são de entrada -->
+        </activity> <!-- Todas as outras telas não são de entrada -->
         <activity
             android:name=".TelaLogin"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".TelaPerfilAutonomo"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".TelaAvaliacao"
             android:exported="false" />
@@ -53,24 +51,22 @@
             android:name=".TelaPesquisaErro"
             android:exported="false" />
         <activity
-            android:name=".TelaNegocioAutonomo"
-            android:exported="false" />
-        <activity
             android:name=".TelaMenuPrincipal"
             android:exported="false" />
-        <activity android:name=".TelaMeuPerfil"
+        <activity
+            android:name=".TelaMeuPerfil"
             android:exported="false" />
         <activity
             android:name=".TelaMenuPerfil"
             android:exported="false" />
         <activity
             android:name=".TelaEdicaoPerfilAutonomo"
-            android:windowSoftInputMode="adjustResize" 
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".TelaEdicaoPerfilContratante"
-            android:windowSoftInputMode="adjustResize" 
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".TelaPesquisa"
             android:exported="false" />
@@ -98,7 +94,8 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-3940256099942544~3347511713" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
