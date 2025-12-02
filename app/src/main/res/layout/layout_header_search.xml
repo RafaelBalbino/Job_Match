@@ -55,7 +55,7 @@
                 android:id="@+id/search_input_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:boxBackgroundMode="none" 
+                app:boxBackgroundMode="none"
                 app:hintEnabled="false"
                 app:startIconDrawable="@drawable/ic_pesquisa_24"
                 app:layout_constraintTop_toTopOf="parent"

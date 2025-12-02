@@ -20,7 +20,6 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.R as MaterialR
@@ -30,17 +29,44 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaCadastroBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
 
+
+
+
+interface IbgeService{
+
+    @GET("municipios")
+    fun buscarTodosMunicipios(): Call<List<Municipio>>
+}
 class TelaCadastro : AppCompatActivity() {
 
     private lateinit var binding: ActivityTelaCadastroBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
-    //                                         ▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+
+
     // PASSO FINAL: SUBSTITUA ESTA LINHA PELA SUA URL DO FIREBASE STORAGE
     private val DEFAULT_PROFILE_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/jobmatch-3faec.firebasestorage.app/o/avatar-do-usuario.png?alt=media&token=d1d15194-bf59-4a2b-9df3-75c0a23053d1"
-    //                                         ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+    //variavel para a busca de cidades/estados
+    private val ibgeService: IbgeService by lazy{
+        Retrofit.Builder()
+        .baseUrl("https://servicodados.ibge.gov.br/api/v1/localidades/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(IbgeService::class.java)
+    }
+
+    //Cache para armazenar os municipios
+    private var allMunicipios: List<Municipio>? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,18 +84,48 @@ class TelaCadastro : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
+        fetchIbgeData()
+
         setupClickableText()
         setupPasswordFocusListener()
         setupUserTypeSelection()
         setupPrivacyPolicyClick()
         binding.txtTelefone.addTextChangedListener(PhoneMaskWatcher())
-        setupStateDropdown()
+        setupCityInputWatcher()
+
+        setupCityInputWatcher()
 
         binding.btnEnviaCadastro.setOnClickListener {
             cadastrarUsuario()
         }
     }
-    
+
+    private fun fetchIbgeData() {
+        if (allMunicipios != null) return
+
+        ibgeService.buscarTodosMunicipios().enqueue(object : Callback<List<Municipio>> {
+            override fun onResponse(call: Call<List<Municipio>>, response: Response<List<Municipio>>) {
+                if (response.isSuccessful) {
+                    allMunicipios = response.body()
+                    Log.d("IBGE", "Municípios do IBGE carregados: ${allMunicipios?.size}")
+                    // Tenta acionar a busca se o usuário já digitou algo
+                    binding.txtCidade.text?.let {
+                        if (it.isNotEmpty()) setupCityInputWatcher()
+                    }
+                } else {
+                    Log.e("IBGE", "Erro ao carregar municípios: ${response.code()}")
+                    Toast.makeText(this@TelaCadastro, "Erro ao carregar dados de localização. Tente novamente.", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onFailure(call: Call<List<Municipio>>, t: Throwable) {
+                Log.e("IBGE", "Falha na requisição IBGE", t)
+                Toast.makeText(this@TelaCadastro, "Falha de rede ao carregar localizações.", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
+
     private fun limparNumeroTelefone(numero: String?): String {
         return numero?.replace(Regex("[^0-9]"), "") ?: ""
     }
@@ -215,6 +271,61 @@ class TelaCadastro : AppCompatActivity() {
         return if (erros.isEmpty()) null else "A senha deve conter: ${erros.joinToString(", ")}."
     }
 
+    private fun setupCityInputWatcher() {
+        binding.txtCidade.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val cidadeDigitada = s.toString().trim()
+                // Busca no cache quando o usuário digita pelo menos 3 caracteres
+                if (cidadeDigitada.length >= 3 && allMunicipios != null) {
+                    buscarEstadosPorCidade(cidadeDigitada)
+                } else {
+                    // Limpa o dropdown do estado se o texto for muito curto
+                    binding.actvEstado.setText("", false)
+                    binding.actvEstado.setAdapter(null)
+                }
+            }
+        })
+    }
+
+
+    //Função pra chamar Estados pela cidade
+    private fun buscarEstadosPorCidade(cidade: String) {
+        // Encontra todos os municípios com o nome digitado (ignora case)
+        val municipiosEncontrados = allMunicipios
+            ?.filter { it.nome.equals(cidade, ignoreCase = true) }
+            ?: emptyList()
+
+        if (municipiosEncontrados.isNotEmpty()) {
+            // Mapeia para uma lista de strings no formato "Sigla (Nome do Estado)"
+            val estadosUnicos = municipiosEncontrados
+                .map {
+                    val uf = it.microrregiao.mesorregiao.uf
+                    "${uf.sigla} (${uf.nome})"
+                }
+                .distinct() // Remove duplicatas de estados
+
+            val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, estadosUnicos)
+
+            // Define o adaptador e mostra a lista
+            binding.actvEstado.setAdapter(adapter)
+            binding.actvEstado.showDropDown()
+
+            // Se for apenas um, preenche automaticamente
+            if (estadosUnicos.size == 1) {
+                binding.actvEstado.setText(estadosUnicos.first(), false)
+            } else {
+                Toast.makeText(this, "Selecione o Estado. Múltiplos resultados encontrados.", Toast.LENGTH_LONG).show()
+            }
+
+        } else if (allMunicipios != null) {
+            binding.actvEstado.setText("", false)
+            binding.actvEstado.setAdapter(null)
+            // Opcional: binding.tilCidade.error = "Cidade não encontrada"
+        }
+    }
     private fun cadastrarUsuario() {
         // Validação dos campos...
         binding.tilNome.error = null
@@ -224,6 +335,7 @@ class TelaCadastro : AppCompatActivity() {
         binding.tilSenha.error = null
         binding.tilConfirmarSenha.error = null
         binding.tilSpecialization.error = null
+        binding.tilEstado.error = null
 
         val nome = binding.txtNome.text.toString().trim()
         val email = binding.txtEmail.text.toString().trim()
@@ -234,6 +346,15 @@ class TelaCadastro : AppCompatActivity() {
         val confirmarSenha = binding.txtConfirmarSenha.text.toString()
         val politicasAceitas = binding.cbPoliticas.isChecked
         val isFreelancer = binding.rbFreelancer.isChecked
+
+        val estadoSigla = estado.substringBefore("(").trim().substringAfterLast(" ")
+
+        if (cidade.isEmpty() || estadoSigla.isEmpty()) {
+            Toast.makeText(this, "Cidade e Estado são obrigatórios.", Toast.LENGTH_SHORT).show()
+            if (cidade.isEmpty()) binding.tilCidade.error = "Obrigatório"
+            if (estadoSigla.isEmpty()) binding.tilEstado.error = "Selecione o estado na lista"
+            return
+        }
 
         if (nome.isEmpty() || email.isEmpty() || telefoneLimpo.length < 10 || cidade.isEmpty() || estado.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty()) {
             Toast.makeText(this, "Por favor, preencha todos os campos obrigatórios.", Toast.LENGTH_SHORT).show()
@@ -275,7 +396,7 @@ class TelaCadastro : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val contratante = Contratante()
                     val telefoneFormatado = "+55$telefoneLimpo"
-                    salvarDadosUsuario(nome, email, telefoneFormatado, cidade, estado, contratante, autonomo)
+                    salvarDadosUsuario(nome, email, telefoneFormatado, cidade, estadoSigla, contratante, autonomo)
                 } else {
                     showLoading(false)
                     val exception = task.exception
@@ -295,7 +416,7 @@ class TelaCadastro : AppCompatActivity() {
             }
     }
 
-    private fun salvarDadosUsuario(nome: String, email: String, telefone: String, cidade: String, estado: String, contratante: Contratante, autonomo: Autonomo?) {
+    private fun salvarDadosUsuario(nome: String, email: String, telefone: String, cidade: String, estadoSigla: String, contratante: Contratante, autonomo: Autonomo?) {
         val userId = auth.currentUser?.uid
         if (userId == null) {
             showLoading(false)
@@ -309,8 +430,6 @@ class TelaCadastro : AppCompatActivity() {
             nome = nome,
             email = email,
             numeroTelefone = telefone,
-            cidade = cidade,
-            estado = estado,
             fotoUrl = DEFAULT_PROFILE_IMAGE_URL,
             contratante = contratante,
             autonomo = autonomo,
@@ -320,13 +439,36 @@ class TelaCadastro : AppCompatActivity() {
         db.collection("users").document(userId)
             .set(novoUsuario)
             .addOnSuccessListener {
-                Log.d("Firestore", "Usuário salvo com a nova estrutura. ID: $userId")
-                val intent = Intent(this, TelaMenuPrincipal::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
+                Log.d("Firestore", "Usuário salvo sem endereço. ID: $userId")
+
+                // --- PASSO 2: Salvar o Endereço (Interconectado) ---
+                val novoEndereco = Endereco(
+                    uidUsuario = userId, // Chave de interconexão
+                    cidade = cidade,
+                    estado = estadoSigla,
+                    // Deixamos CEP, logradouro e bairro como null, pois o cadastro não coleta esses dados
+                )
+
+                db.collection("enderecos").document(userId) // Usando o UID como ID do documento de endereço
+                    .set(novoEndereco)
+                    .addOnSuccessListener {
+                        Log.d("Firestore", "Endereço salvo na coleção 'enderecos' e interconectado.")
+                        showLoading(false)
+                        val intent = Intent(this, TelaMenuPrincipal::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    }
+                    .addOnFailureListener { e ->
+                        // Se falhar ao salvar endereço, tentamos reverter o usuário no Auth
+                        Log.w("Firestore", "Erro ao salvar endereço. Deletando Auth user.", e)
+                        auth.currentUser?.delete()
+                        showLoading(false)
+                        Toast.makeText(baseContext, "Falha ao salvar endereço.", Toast.LENGTH_SHORT).show()
+                    }
             }
             .addOnFailureListener { e ->
+                // Se falhar ao salvar usuário, deletamos o Auth user
                 showLoading(false)
                 Log.w("Firestore", "Erro ao salvar usuário", e)
                 auth.currentUser?.delete()

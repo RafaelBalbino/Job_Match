@@ -133,20 +133,23 @@
             app:layout_constraintEnd_toStartOf="@+id/btn_whatsapp"
             tools:text="(11) 99999-9999" />
 
+
+        <!-- Seção de Endereço -->
+
         <ImageView
             android:id="@+id/btn_whatsapp"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Abrir no WhatsApp"
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="@id/tv_telefone"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintTop_toTopOf="@id/tv_telefone"
+            app:layout_constraintVertical_bias="0.363"
             app:srcCompat="@drawable/ic_whatsapp_24" />
 
-
-        <!-- Seção de Endereço -->
         <TextView
             android:id="@+id/tv_endereco_label"
             android:layout_width="0dp"
@@ -196,6 +199,7 @@
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/divider" />
 
+        <!-- Botão de Ação Principal -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_servicos_oferecidos"
             android:layout_width="match_parent"
@@ -207,12 +211,12 @@
             android:paddingEnd="16dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_servicos_label"
             tools:itemCount="3"
             tools:listitem="@layout/item_servico_encontrado" />
 
-        <!-- Botão de Ação Principal -->
         <Button
             android:id="@+id/btn_fazer_pedido"
             android:layout_width="0dp"
