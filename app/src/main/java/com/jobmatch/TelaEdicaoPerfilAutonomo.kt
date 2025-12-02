@@ -16,7 +16,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.jobmatch.databinding.ActivityTelaEdicaoPerfilAutonomoBinding
-import kotlin.math.min
+import android.util.Log
+
 
 class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
 
@@ -86,16 +87,21 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
             return
         }
 
+        // --- Etapa 1: Carregar Dados do Usuário (Coleção 'users') ---
         db.collection("users").document(userId!!).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
                     val usuario = document.toObject(Usuario::class.java)
                     usuario?.let {
                         binding.txtNomeAutonomo.setText(it.nome)
-                        // A máscara será aplicada automaticamente pelo TextWatcher
-                        binding.txtTelefoneAutonomo.setText(limparNumeroTelefone(it.numeroTelefone, true))
-                        val enderecoFmt = listOfNotNull(it.cidade, it.estado).filter { it.isNotBlank() }.joinToString(" - ")
-                        binding.txtEnderecoAutonomo.setText(enderecoFmt)
+
+                        binding.txtTelefoneAutonomo.setText(
+                            limparNumeroTelefone(it.numeroTelefone, true)
+                        )
+
+
+                        // --- Etapa 2: CHAMA A BUSCA DE ENDEREÇO SEPARADAMENTE ---
+                        carregarEFormatarEndereco(userId!!)
 
                         it.autonomo?.let { autonomo ->
                             binding.txtEspecializacaoAutonomo.setText(autonomo.especializacao)
@@ -114,6 +120,26 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
             }
     }
 
+    private fun carregarEFormatarEndereco(userId: String) {
+        db.collection("enderecos").document(userId).get()
+            .addOnSuccessListener { document ->
+                val endereco = document.toObject(Endereco::class.java)
+                if (endereco != null) {
+                    // Formata o endereço a partir do objeto Endereco
+                    val enderecoFmt = listOfNotNull(endereco.cidade, endereco.estado)
+                        .filter { it.isNotBlank() }
+                        .joinToString(" - ")
+
+                    binding.txtEnderecoAutonomo.setText(enderecoFmt)
+                } else {
+                    binding.txtEnderecoAutonomo.setText("")
+                }
+            }
+            .addOnFailureListener {
+                Log.e("Firestore", "Falha ao carregar endereço para edição.")
+                binding.txtEnderecoAutonomo.setText("Erro ao carregar endereço.")
+            }
+    }
     private fun limparNumeroTelefone(numero: String?, removerPrefixo: Boolean = false): String {
         var digitos = numero?.replace(Regex("[^0-9]"), "") ?: ""
         if (removerPrefixo && digitos.startsWith("55")) {

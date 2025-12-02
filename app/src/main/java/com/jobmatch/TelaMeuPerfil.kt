@@ -20,6 +20,8 @@ class TelaMeuPerfil : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
+    private var enderecoCarregado: Endereco? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTelaMeuPerfilBinding.inflate(layoutInflater)
@@ -56,6 +58,8 @@ class TelaMeuPerfil : AppCompatActivity() {
             return
         }
 
+
+        carregarEExibirEndereco(userId)
         db.collection("users").document(userId)
             .get()
             .addOnSuccessListener { document ->
@@ -76,6 +80,28 @@ class TelaMeuPerfil : AppCompatActivity() {
             }
     }
 
+    private fun carregarEExibirEndereco(userId: String) {
+        db.collection("enderecos").document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                val endereco = document.toObject(Endereco::class.java)
+                if (endereco != null) {
+                    // Formata o endereço
+                    val enderecoFmt = listOfNotNull(endereco.cidade, endereco.estado)
+                        .filter { !it.isNullOrBlank() }
+                        .joinToString(" - ")
+
+                    binding.txtEnderecoInfo.text = if (enderecoFmt.isNotBlank()) enderecoFmt else "Endereço não informado"
+                } else {
+                    binding.txtEnderecoInfo.text = "Endereço não encontrado"
+                }
+            }
+            .addOnFailureListener {
+                Log.e("TelaMeuPerfil", "Falha ao carregar endereço", it)
+                binding.txtEnderecoInfo.text = "Erro ao carregar endereço."
+            }
+    }
+
     /**
      * Preenche a tela com os dados do objeto Usuario.
      */
@@ -93,8 +119,6 @@ class TelaMeuPerfil : AppCompatActivity() {
         // 2. Preenche as informações pessoais
         binding.txtEmailInfo.text = usuario.email ?: "E-mail não informado"
         binding.txtTelefoneMeuPerfil.text = formatarTelefone(usuario.numeroTelefone)
-        val enderecoFmt = listOfNotNull(usuario.cidade, usuario.estado).filter { it.isNotBlank() }.joinToString(" - ")
-        binding.txtEnderecoInfo.text = if (enderecoFmt.isNotBlank()) enderecoFmt else "Endereço não informado"
 
         // 3. Lógica para exibir os blocos de perfil com base no tipo de usuário
         if (usuario.autonomo != null) {

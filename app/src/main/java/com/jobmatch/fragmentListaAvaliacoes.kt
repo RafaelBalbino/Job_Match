@@ -49,7 +49,7 @@ class fragmentListaAvaliacoes : Fragment() {
 
     private fun setupRecyclerView() {
         avaliacaoAdapter = AvaliacaoAdapter(emptyList())
-        binding.rvAvaliacoes.apply {
+        binding.rvAvaliacoesList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = avaliacaoAdapter
         }
@@ -78,24 +78,24 @@ class fragmentListaAvaliacoes : Fragment() {
     }
 
     private fun showLoadingState(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.clHeaderAvaliacao.visibility = if (isLoading) View.VISIBLE else View.GONE
         binding.tvMensagem.visibility = View.GONE
-        binding.rvAvaliacoes.visibility = View.GONE
+        binding.rvAvaliacoesList.visibility = View.GONE
     }
 
     private fun showResultsState() {
-        binding.rvAvaliacoes.visibility = View.VISIBLE
+        binding.rvAvaliacoesList.visibility = View.VISIBLE
         binding.tvMensagem.visibility = View.GONE
     }
 
     private fun showEmptyState() {
-        binding.rvAvaliacoes.visibility = View.GONE
+        binding.rvAvaliacoesList.visibility = View.GONE
         binding.tvMensagem.visibility = View.VISIBLE
         binding.tvMensagem.text = "Este profissional ainda não possui avaliações."
     }
 
     private fun showErrorState(message: String) {
-        binding.rvAvaliacoes.visibility = View.GONE
+        binding.rvAvaliacoesList.visibility = View.GONE
         binding.tvMensagem.visibility = View.VISIBLE
         binding.tvMensagem.text = message
     }

@@ -9,8 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.jobmatch.databinding.ActivityTelaSuporteBinding
 
 class TelaSuporte : AppCompatActivity(), SuporteUsuarioAdapter.OnUserActionListener {
@@ -26,7 +24,7 @@ class TelaSuporte : AppCompatActivity(), SuporteUsuarioAdapter.OnUserActionListe
         binding = ActivityTelaSuporteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        db = Firebase.firestore
+        db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
         setupRecyclerView()

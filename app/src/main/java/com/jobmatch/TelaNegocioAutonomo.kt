@@ -78,6 +78,9 @@ class TelaNegocioAutonomo : AppCompatActivity() {
                     if (usuario != null) {
                         usuarioAtual = usuario // Armazena para uso no botão do WhatsApp
                         preencherDados(usuario) // Chama a função que preenche a tela
+
+
+                        carregarEPreencherEndereco(autonomoId!!)
                     } else {
                         Toast.makeText(this, "Falha ao processar dados do perfil.", Toast.LENGTH_SHORT).show()
                     }
@@ -98,7 +101,7 @@ class TelaNegocioAutonomo : AppCompatActivity() {
         // Preenche nome, telefone, e o endereço formatado como "Cidade - UF"
         binding.tvNomeAutonomo.text = usuario.nome
         binding.tvTelefone.text = usuario.numeroTelefone
-        binding.tvEndereco.text = "${usuario.cidade ?: ""} - ${usuario.estado ?: ""}"
+
         binding.ivAutonomoAvatar.load(usuario.fotoUrl) {
             placeholder(R.drawable.ic_profile_placeholder)
             error(R.drawable.ic_profile_placeholder)
@@ -122,17 +125,36 @@ class TelaNegocioAutonomo : AppCompatActivity() {
         }
         
         // Popula as especializações do autônomo como Chips
-        perfilAutonomo?.especializacao?.let { especializacoes ->
-            binding.chipGroupCategorias.removeAllViews() // Limpa chips antigos
-            val categorias = especializacoes.split(",").map { it.trim() }
-            for (categoria in categorias) {
-                if (categoria.isNotEmpty()){
-                    val chip = Chip(this)
-                    chip.text = categoria
-                    binding.chipGroupCategorias.addView(chip)
+      //  perfilAutonomo?.especializacao?.let { especializacoes ->
+          //  binding.chipGroupCategorias.removeAllViews() // Limpa chips antigos
+           // val categorias = especializacoes.split(",").map { it.trim() }
+           // for (categoria in categorias) {
+              //  if (categoria.isNotEmpty()){
+                //    val chip = Chip(this)
+              //      chip.text = categoria
+            //        binding.chipGroupCategorias.addView(chip)
+          //      }
+        //    }
+      //  }
+    }
+
+    private fun carregarEPreencherEndereco(userId: String) {
+        db.collection("enderecos").document(userId).get()
+            .addOnSuccessListener { document ->
+                val endereco = document.toObject(Endereco::class.java)
+                val cidade = endereco?.cidade ?: ""
+                val estado = endereco?.estado ?: ""
+
+                // Preenche o campo tvEndereco com o formato "Cidade - UF"
+                binding.tvEndereco.text = if (cidade.isNotBlank() || estado.isNotBlank()) {
+                    "$cidade - $estado"
+                } else {
+                    "Localização não informada"
                 }
             }
-        }
+            .addOnFailureListener {
+                binding.tvEndereco.text = "Erro ao carregar endereço."
+            }
     }
 
     /**

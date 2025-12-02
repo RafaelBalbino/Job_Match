@@ -1,5 +1,6 @@
 package com.jobmatch
 
+import android.util.Log
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -16,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.jobmatch.databinding.ActivityTelaEdicaoPerfilContratanteBinding
-import kotlin.math.min
+import com.google.firebase.firestore.SetOptions
 
 class TelaEdicaoPerfilContratante : AppCompatActivity() {
 
@@ -79,6 +80,30 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
         }
     }
 
+
+    private fun carregarEFormatarEndereco(userId: String) {
+        // Note que aqui estamos assumindo que o endereço usa o mesmo ID do usuário
+        db.collection("enderecos").document(userId).get()
+            .addOnSuccessListener { document ->
+                val endereco = document.toObject(Endereco::class.java)
+                if (endereco != null) {
+                    // Formata o endereço a partir do objeto Endereco
+                    val enderecoFmt = listOfNotNull(endereco.cidade, endereco.estado)
+                        .filter { !it.isNullOrBlank() } // Filtra nulo ou vazio
+                        .joinToString(" - ")
+
+                    binding.txtEnderecoContratante.setText(enderecoFmt)
+                    // OU binding.txtEnderecoContratante.setText(enderecoFmt) se for o Contratante
+                } else {
+                    binding.txtEnderecoContratante.setText("")
+                }
+            }
+            .addOnFailureListener {
+                Log.e("Firestore", "Falha ao carregar endereço para edição.")
+                // Pode ser útil manter o campo vazio em caso de falha de carregamento
+                binding.txtEnderecoContratante.setText("Erro ao carregar endereço.")
+            }
+    }
     private fun carregarDadosUsuario() {
         if (userId == null) {
             Toast.makeText(this, "Erro: Usuário não autenticado.", Toast.LENGTH_LONG).show()
@@ -95,8 +120,8 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
                         binding.txtEmailContratante.setText(it.email)
                         binding.txtTelefoneContratante.setText(limparNumeroTelefone(it.numeroTelefone, true))
 
-                        val enderecoFmt = listOfNotNull(it.cidade, it.estado).filter { it.isNotBlank() }.joinToString(" - ")
-                        binding.txtEnderecoContratante.setText(enderecoFmt)
+                        carregarEFormatarEndereco(userId!!)
+
 
                         val fotoUrl = it.fotoUrl
                         if (!fotoUrl.isNullOrEmpty()) {
@@ -125,7 +150,7 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
         if (fotoSelecionadaUri != null) {
             uploadImagemEAtualizarPerfil(fotoSelecionadaUri!!)
         } else {
-            atualizarDadosFirestore(null)
+            atualizarDadosUsuario(null)
         }
     }
 
@@ -134,7 +159,7 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
         storageRef.putFile(uri)
             .addOnSuccessListener {
                 storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-                    atualizarDadosFirestore(downloadUrl.toString())
+                    atualizarDadosUsuario(downloadUrl.toString())
                 }.addOnFailureListener { e ->
                     Toast.makeText(this, "Falha ao obter URL da imagem: ${e.message}", Toast.LENGTH_LONG).show()
                     binding.btnSalvar.isEnabled = true // Reabilita em caso de falha
@@ -146,55 +171,83 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
             }
     }
 
-    private fun atualizarDadosFirestore(novaFotoUrl: String?) {
-        val nome = binding.txtNomeContratante.text.toString().trim()
-        val email = binding.txtEmailContratante.text.toString().trim()
-        val telefone = limparNumeroTelefone(binding.txtTelefoneContratante.text.toString())
-        val enderecoStr = binding.txtEnderecoContratante.text.toString().trim()
-
-        if (nome.isEmpty() || email.isEmpty()) {
-            Toast.makeText(this, "Nome e Email são obrigatórios.", Toast.LENGTH_SHORT).show()
-            binding.btnSalvar.isEnabled = true // Reabilita em caso de falha
-            return
-        }
-
-        // Validação estrita do endereço
-        if (enderecoStr.isNotEmpty() && !enderecoStr.contains("-") && !enderecoStr.contains(",")) {
-            Toast.makeText(this, "Formato de endereço inválido. Use 'Cidade - Estado' ou 'Cidade, Estado'.", Toast.LENGTH_LONG).show()
-            binding.btnSalvar.isEnabled = true // Reabilita em caso de falha
-            return
-        }
-
-        val atualizacoes = mutableMapOf<String, Any>()
-        atualizacoes["nome"] = nome
-        atualizacoes["email"] = email
-
-        if(telefone.isNotEmpty()) {
-            atualizacoes["numeroTelefone"] = "+55$telefone"
-        }
-
+    private fun atualizarEnderecoFirestore(userId: String, enderecoStr: String) {
         val (cidade, estado) = parseEndereco(enderecoStr)
-        atualizacoes["cidade"] = cidade
-        atualizacoes["estado"] = estado
 
-        novaFotoUrl?.let {
-            atualizacoes["fotoUrl"] = it
-        }
+        // O documento de endereço é definido pelo ID do usuário
+        val enderecoDocRef = db.collection("enderecos").document(userId)
 
-        db.collection("users").document(userId!!).update(atualizacoes)
+        val atualizacoesEndereco = mapOf(
+            "cidade" to cidade,
+            "estado" to estado,
+            "uidUsuario" to userId // Garante que a chave de interconexão está presente
+            // Outros campos do Endereco (cep, logradouro, bairro) ficam nulos neste caso.
+        )
+
+        // Usamos 'set(..., SetOptions.merge())' ou 'set()' para garantir que o documento exista ou seja criado/atualizado
+        enderecoDocRef.set(atualizacoesEndereco, SetOptions.merge())
             .addOnSuccessListener {
-                Toast.makeText(this, "Perfil atualizado com sucesso!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Perfil e Endereço atualizados com sucesso!", Toast.LENGTH_SHORT).show()
+
+                // Navegação final após ambas as atualizações
                 val intent = Intent(this, TelaMeuPerfil::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Erro ao atualizar o perfil: ${e.message}", Toast.LENGTH_SHORT).show()
-                binding.btnSalvar.isEnabled = true // Reabilita em caso de falha
+                // Se o endereço falhar, o usuário já foi atualizado (pode ser necessário rollback em um sistema maior)
+                Toast.makeText(this, "Erro ao atualizar endereço: ${e.message}", Toast.LENGTH_LONG).show()
+                binding.btnSalvar.isEnabled = true
             }
     }
 
+
+    private fun atualizarDadosUsuario(novaFotoUrl: String?) {
+        val userIdFinal = userId ?: return
+
+        val nome = binding.txtNomeContratante.text.toString().trim()
+        val email = binding.txtEmailContratante.text.toString().trim()
+        val telefone = limparNumeroTelefone(binding.txtTelefoneContratante.text.toString())
+        val enderecoStr = binding.txtEnderecoContratante.text.toString().trim() // Endereço completo
+
+        if (nome.isEmpty() || email.isEmpty()) {
+            Toast.makeText(this, "Nome e Email são obrigatórios.", Toast.LENGTH_SHORT).show()
+            binding.btnSalvar.isEnabled = true
+            return
+        }
+
+        // Validação estrita do endereço (mantida)
+        if (enderecoStr.isNotEmpty() && !enderecoStr.contains("-") && !enderecoStr.contains(",")) {
+            Toast.makeText(this, "Formato de endereço inválido. Use 'Cidade - Estado' ou 'Cidade, Estado'.", Toast.LENGTH_LONG).show()
+            binding.btnSalvar.isEnabled = true
+            return
+        }
+
+        // 1. DADOS PARA A COLEÇÃO 'users'
+        val atualizacoesUsuario = mutableMapOf<String, Any>()
+        atualizacoesUsuario["nome"] = nome
+        atualizacoesUsuario["email"] = email
+        if (telefone.isNotEmpty()) {
+            atualizacoesUsuario["numeroTelefone"] = "+55$telefone"
+        }
+        novaFotoUrl?.let {
+            atualizacoesUsuario["fotoUrl"] = it
+        }
+
+        // 2. ATUALIZA O PERFIL (USUARIO)
+        db.collection("users").document(userIdFinal).update(atualizacoesUsuario)
+            .addOnSuccessListener {
+                Log.d("Firestore", "Dados pessoais (users) atualizados com sucesso.")
+
+                // 3. SE O PERFIL ATUALIZAR, ATUALIZA O ENDEREÇO
+                atualizarEnderecoFirestore(userIdFinal, enderecoStr)
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Erro ao atualizar perfil (Dados Pessoais): ${e.message}", Toast.LENGTH_SHORT).show()
+                binding.btnSalvar.isEnabled = true
+            }
+    }
     private fun parseEndereco(enderecoStr: String): Pair<String, String> {
         val parts = enderecoStr.split("-").map { it.trim() }
         return if (parts.size > 1) {

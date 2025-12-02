@@ -27,7 +27,7 @@ class ServicoAdapter(
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, TelaNegocioAutonomo::class.java).apply {
-                putExtra("AUTONOMO_ID", servico.autonomoId)
+                putExtra("AUTONOMO_ID", servico.uidAutonomo)
             }
             context.startActivity(intent)
         }

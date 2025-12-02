@@ -119,9 +119,31 @@ class TelaCriacaoPedido : AppCompatActivity() {
             binding.txtNome.setText(user?.nome)
             binding.txtTelefone.setText(user?.numeroTelefone)
             binding.txtEmail.setText(user?.email)
-            binding.txtCidade.setText(user?.cidade ?: "")
-            binding.actvEstado.setText(user?.estado ?: "", false)
+
+            buscarEPreencherEndereco(userId)
         }
+    }
+
+    private fun buscarEPreencherEndereco(userId: String) {
+        // podemos usar a função document(userId)
+        db.collection("enderecos").document(userId).get()
+            .addOnSuccessListener { enderecoDoc ->
+                val endereco = enderecoDoc.toObject(Endereco::class.java)
+
+                // Preenche os campos de localização
+                if (endereco != null) {
+                    // Os campos 'cidade' e 'estado' agora vêm do objeto Endereco
+                    binding.txtCidade.setText(endereco.cidade ?: "")
+                    // O 'false' indica que não deve disparar o listener do AutoCompleteTextView
+                    binding.actvEstado.setText(endereco.estado ?: "", false)
+                } else {
+                    // Caso o endereço não exista (primeiro login, por exemplo)
+                    Toast.makeText(this, "Endereço não encontrado. Por favor, preencha a localização.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Falha ao carregar endereço: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     // Preenche a UI com os dados de um pedido existente
