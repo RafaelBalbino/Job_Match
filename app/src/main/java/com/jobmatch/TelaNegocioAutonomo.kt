@@ -4,11 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
-import com.google.android.material.chip.Chip
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaNegocioAutonomoBinding
 import java.util.Locale
@@ -25,8 +26,11 @@ class TelaNegocioAutonomo : AppCompatActivity() {
     private var usuarioAtual: Usuario? = null 
     // Adapter para a lista de serviços oferecidos
     private lateinit var servicoAdapter: ServicoAdapter
-    // Lista mutável que armazena os serviços para o adapter
-    private val servicosList = mutableListOf<Servico>()
+    
+    // Lista que armazena TODOS os serviços do autônomo, sem filtros
+    private val allServicosList = mutableListOf<Servico>()
+    // Lista que armazena os serviços a serem exibidos (pode ser filtrada)
+    private val filteredServicosList = mutableListOf<Servico>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +63,8 @@ class TelaNegocioAutonomo : AppCompatActivity() {
      * Define seu layout como horizontal para a rolagem lateral.
      */
     private fun setupRecyclerView() {
-        // Cria o adapter, passando 'false' para não mostrar o nome do freelancer nos cards
-        servicoAdapter = ServicoAdapter(servicosList, showFreelancerName = false)
+        // O adapter agora usa a lista filtrada para exibição
+        servicoAdapter = ServicoAdapter(filteredServicosList, showFreelancerName = false)
         binding.rvServicosOferecidos.apply {
             layoutManager = LinearLayoutManager(this@TelaNegocioAutonomo, LinearLayoutManager.HORIZONTAL, false)
             adapter = servicoAdapter
@@ -78,8 +82,6 @@ class TelaNegocioAutonomo : AppCompatActivity() {
                     if (usuario != null) {
                         usuarioAtual = usuario // Armazena para uso no botão do WhatsApp
                         preencherDados(usuario) // Chama a função que preenche a tela
-
-
                         carregarEPreencherEndereco(autonomoId!!)
                     } else {
                         Toast.makeText(this, "Falha ao processar dados do perfil.", Toast.LENGTH_SHORT).show()
@@ -123,19 +125,6 @@ class TelaNegocioAutonomo : AppCompatActivity() {
             binding.tvNumeroAvaliacoes.visibility = View.GONE
             binding.btnVerAvaliacoes.visibility = View.GONE
         }
-        
-        // Popula as especializações do autônomo como Chips
-      //  perfilAutonomo?.especializacao?.let { especializacoes ->
-          //  binding.chipGroupCategorias.removeAllViews() // Limpa chips antigos
-           // val categorias = especializacoes.split(",").map { it.trim() }
-           // for (categoria in categorias) {
-              //  if (categoria.isNotEmpty()){
-                //    val chip = Chip(this)
-              //      chip.text = categoria
-            //        binding.chipGroupCategorias.addView(chip)
-          //      }
-        //    }
-      //  }
     }
 
     private fun carregarEPreencherEndereco(userId: String) {
@@ -167,9 +156,15 @@ class TelaNegocioAutonomo : AppCompatActivity() {
             .addOnSuccessListener { documents ->
                 if (!documents.isEmpty) {
                     val novosServicos = documents.toObjects(Servico::class.java)
-                    servicosList.clear()
-                    servicosList.addAll(novosServicos)
-                    servicoAdapter.notifyDataSetChanged()
+                    allServicosList.clear()
+                    allServicosList.addAll(novosServicos)
+
+                    // Após carregar todos os serviços, configura o filtro de categorias
+                    setupCategoryFilter()
+
+                    // Exibe inicialmente todos os serviços (equivalente a selecionar "Todas as categorias")
+                    filterServicesByCategory("Todas as categorias")
+
                     // Garante que a seção de serviços só aparece se houver serviços
                     binding.tvServicosLabel.visibility = View.VISIBLE
                     binding.rvServicosOferecidos.visibility = View.VISIBLE
@@ -177,11 +172,61 @@ class TelaNegocioAutonomo : AppCompatActivity() {
                     // Esconde a seção de serviços se o autônomo não tiver nenhum
                     binding.tvServicosLabel.visibility = View.GONE
                     binding.rvServicosOferecidos.visibility = View.GONE
+                    binding.spinnerCategorias.visibility = View.GONE
                 }
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Falha ao carregar serviços.", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    /**
+     * Configura o Spinner (dropdown) para filtrar os serviços por categoria.
+     */
+    private fun setupCategoryFilter() {
+        // Extrai as categorias únicas da lista de serviços, removendo valores nulos ou em branco.
+        val categories = allServicosList.mapNotNull { it.categoria }.filter { it.isNotBlank() }.distinct()
+
+        // O filtro só é útil e visível se houver mais de uma categoria.
+        if (categories.size > 1) {
+            val spinnerItems = mutableListOf("Todas as categorias")
+            spinnerItems.addAll(categories)
+
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, spinnerItems)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerCategorias.adapter = adapter
+
+            // Listener para atualizar a lista quando um item do Spinner for selecionado.
+            binding.spinnerCategorias.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                    val selectedCategory = parent.getItemAtPosition(position).toString()
+                    filterServicesByCategory(selectedCategory)
+                }
+                override fun onNothingSelected(parent: AdapterView<*>) { /* Não faz nada */ }
+            }
+
+            // Torna o Spinner visível.
+            binding.spinnerCategorias.visibility = View.VISIBLE
+        } else {
+            // Esconde o Spinner se não houver categorias suficientes para filtrar.
+            binding.spinnerCategorias.visibility = View.GONE
+        }
+    }
+
+    /**
+     * Filtra a lista de serviços exibida com base na categoria selecionada.
+     * @param category A categoria para o filtro. Se for "Todas as categorias", exibe todos.
+     */
+    private fun filterServicesByCategory(category: String) {
+        val filtered = if (category == "Todas as categorias") {
+            allServicosList // Mostra a lista completa
+        } else {
+            allServicosList.filter { it.categoria == category } // Mostra apenas os da categoria
+        }
+
+        filteredServicosList.clear()
+        filteredServicosList.addAll(filtered)
+        servicoAdapter.notifyDataSetChanged() // Notifica o adapter sobre a mudança nos dados
     }
 
     /**

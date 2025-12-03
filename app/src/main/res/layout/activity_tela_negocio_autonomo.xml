@@ -199,6 +199,17 @@
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/divider" />
 
+        <Spinner
+            android:id="@+id/spinner_categorias"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_servicos_label"
+            tools:visibility="visible" />
+
         <!-- Botão de Ação Principal -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_servicos_oferecidos"
@@ -213,7 +224,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_servicos_label"
+            app:layout_constraintTop_toBottomOf="@id/spinner_categorias"
             tools:itemCount="3"
             tools:listitem="@layout/item_servico_encontrado" />
 

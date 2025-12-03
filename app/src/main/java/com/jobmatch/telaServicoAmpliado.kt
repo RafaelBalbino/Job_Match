@@ -35,7 +35,7 @@ class telaServicoAmpliado : AppCompatActivity() {
             insets
         }
 
-        // 1. Receber o objeto Servico completo da tela anterior
+        // 1. CORREÇÃO: Recebe o objeto Servico de forma segura e compatível
         val servico = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra("SERVICO", Servico::class.java)
         } else {
@@ -58,9 +58,9 @@ class telaServicoAmpliado : AppCompatActivity() {
             error(R.drawable.ic_image_placeholder)
         }
 
-        // 3. Verificar o tipo de usuário e configurar os botões
+        // 3. CORREÇÃO: Usa uidAutonomo para verificar o dono do serviço
         val currentUser = auth.currentUser
-        if (currentUser != null && currentUser.uid == servico.uidUsuario) {
+        if (currentUser != null && currentUser.uid == servico.uidAutonomo) {
             // Cenário 1: O usuário é o dono do serviço
             binding.btnFazerPedido.visibility = View.GONE // Esconde o botão de fazer pedido
             binding.btnEditarServico.visibility = View.VISIBLE // Mostra o botão de editar
@@ -81,6 +81,7 @@ class telaServicoAmpliado : AppCompatActivity() {
                 val intent = Intent(this, TelaCriacaoPedido::class.java).apply {
                     putExtra("SERVICE_NAME", servico.nomeServico)
                     putExtra("SERVICE_DESCRIPTION", servico.descricaoServico)
+                    putExtra("AUTONOMO_ID", servico.uidAutonomo) // Passa o ID do autônomo para a próxima tela
                 }
                 startActivity(intent)
             }

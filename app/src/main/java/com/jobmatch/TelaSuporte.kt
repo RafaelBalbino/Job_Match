@@ -63,16 +63,17 @@ class TelaSuporte : AppCompatActivity(), SuporteUsuarioAdapter.OnUserActionListe
     override fun onBlockUser(user: Usuario) {
         val newBlockedStatus = !user.isBlocked
         val actionText = if (newBlockedStatus) "bloquear" else "desbloquear"
+        val pastParticiple = if (newBlockedStatus) "bloqueado" else "desbloqueado"
 
         AlertDialog.Builder(this)
-            .setTitle("${actionText.capitalize()} Usuário")
+            .setTitle("${actionText.replaceFirstChar { it.uppercase() }} Usuário")
             .setMessage("Tem certeza de que deseja $actionText o usuário ${user.nome}?")
             .setPositiveButton("Sim") { _, _ ->
                 user.uid?.let {
                     db.collection("users").document(it)
                         .update("isBlocked", newBlockedStatus)
                         .addOnSuccessListener { 
-                            Toast.makeText(this, "Usuário ${actionText}do com sucesso!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Usuário $pastParticiple com sucesso!", Toast.LENGTH_SHORT).show()
                             loadUsers() // Recarrega a lista para refletir a mudança
                         }
                         .addOnFailureListener { e ->

@@ -1,12 +1,13 @@
 package com.jobmatch
 
-import android.util.Log
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.jobmatch.databinding.ActivityTelaEdicaoPerfilContratanteBinding
 import com.google.firebase.firestore.SetOptions
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class TelaEdicaoPerfilContratante : AppCompatActivity() {
 
@@ -27,30 +33,39 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
     private lateinit var storage: FirebaseStorage
     private var userId: String? = null
     private var fotoSelecionadaUri: Uri? = null
+    
+    // Variáveis para a API do IBGE
+    private val ibgeService: IbgeService by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://servicodados.ibge.gov.br/api/v1/localidades/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(IbgeService::class.java)
+    }
+    private var allMunicipios: List<Municipio>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTelaEdicaoPerfilContratanteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Inicializa o Firebase
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
         userId = auth.currentUser?.uid
 
-        // Ajusta o padding para as barras do sistema
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        
+        fetchIbgeData()
         configurarBotoesETextos()
         carregarDadosUsuario()
+        setupCityInputWatcher()
     }
 
-    // Lançador para buscar imagem da galeria
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -62,48 +77,12 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
     }
 
     private fun configurarBotoesETextos() {
-        binding.btnVoltar.setOnClickListener {             val intent = Intent(this, TelaMeuPerfil::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent) 
-        }
+        binding.btnVoltar.setOnClickListener { finish() }
         binding.btnSalvar.setOnClickListener { salvarDados() }
         binding.btnAnexarImagem.setOnClickListener { pickImageLauncher.launch("image/*") }
         binding.txtTelefoneContratante.addTextChangedListener(PhoneMaskWatcher())
-
-        // Adiciona o listener de foco para o campo de endereço
-        binding.txtEnderecoContratante.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding.tilEnderecoContratante.helperText = "Use o formato: Cidade - Estado ou Cidade, Estado"
-            } else {
-                binding.tilEnderecoContratante.helperText = null
-            }
-        }
     }
 
-
-    private fun carregarEFormatarEndereco(userId: String) {
-        // Note que aqui estamos assumindo que o endereço usa o mesmo ID do usuário
-        db.collection("enderecos").document(userId).get()
-            .addOnSuccessListener { document ->
-                val endereco = document.toObject(Endereco::class.java)
-                if (endereco != null) {
-                    // Formata o endereço a partir do objeto Endereco
-                    val enderecoFmt = listOfNotNull(endereco.cidade, endereco.estado)
-                        .filter { !it.isNullOrBlank() } // Filtra nulo ou vazio
-                        .joinToString(" - ")
-
-                    binding.txtEnderecoContratante.setText(enderecoFmt)
-                    // OU binding.txtEnderecoContratante.setText(enderecoFmt) se for o Contratante
-                } else {
-                    binding.txtEnderecoContratante.setText("")
-                }
-            }
-            .addOnFailureListener {
-                Log.e("Firestore", "Falha ao carregar endereço para edição.")
-                // Pode ser útil manter o campo vazio em caso de falha de carregamento
-                binding.txtEnderecoContratante.setText("Erro ao carregar endereço.")
-            }
-    }
     private fun carregarDadosUsuario() {
         if (userId == null) {
             Toast.makeText(this, "Erro: Usuário não autenticado.", Toast.LENGTH_LONG).show()
@@ -122,7 +101,6 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
 
                         carregarEFormatarEndereco(userId!!)
 
-
                         val fotoUrl = it.fotoUrl
                         if (!fotoUrl.isNullOrEmpty()) {
                             binding.imgPerfilContratante.load(fotoUrl) { crossfade(true) }
@@ -134,7 +112,26 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
                 Toast.makeText(this, "Falha ao carregar dados: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
-
+    
+    private fun carregarEFormatarEndereco(userId: String) {
+        db.collection("enderecos").document(userId).get()
+            .addOnSuccessListener { document ->
+                val endereco = document.toObject(Endereco::class.java)
+                if (endereco != null) {
+                    binding.txtCidade.setText(endereco.cidade)
+                    binding.actvEstado.setText(endereco.estado, false)
+                } else {
+                    binding.txtCidade.setText("")
+                    binding.actvEstado.setText("", false)
+                }
+            }
+            .addOnFailureListener {
+                Log.e("Firestore", "Falha ao carregar endereço para edição.")
+                binding.txtCidade.setText("Erro ao carregar endereço.")
+                binding.actvEstado.setText("", false)
+            }
+    }
+    
     private fun limparNumeroTelefone(numero: String?, removerPrefixo: Boolean = false): String {
         var digitos = numero?.replace(Regex("[^0-9]"), "") ?: ""
         if (removerPrefixo && digitos.startsWith("55")) {
@@ -145,7 +142,7 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
 
     private fun salvarDados() {
         if (userId == null) return
-        binding.btnSalvar.isEnabled = false // Desabilita o botão
+        binding.btnSalvar.isEnabled = false
 
         if (fotoSelecionadaUri != null) {
             uploadImagemEAtualizarPerfil(fotoSelecionadaUri!!)
@@ -162,46 +159,14 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
                     atualizarDadosUsuario(downloadUrl.toString())
                 }.addOnFailureListener { e ->
                     Toast.makeText(this, "Falha ao obter URL da imagem: ${e.message}", Toast.LENGTH_LONG).show()
-                    binding.btnSalvar.isEnabled = true // Reabilita em caso de falha
+                    binding.btnSalvar.isEnabled = true
                 }
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Falha no upload da imagem: ${e.message}", Toast.LENGTH_LONG).show()
-                binding.btnSalvar.isEnabled = true // Reabilita em caso de falha
-            }
-    }
-
-    private fun atualizarEnderecoFirestore(userId: String, enderecoStr: String) {
-        val (cidade, estado) = parseEndereco(enderecoStr)
-
-        // O documento de endereço é definido pelo ID do usuário
-        val enderecoDocRef = db.collection("enderecos").document(userId)
-
-        val atualizacoesEndereco = mapOf(
-            "cidade" to cidade,
-            "estado" to estado,
-            "uidUsuario" to userId // Garante que a chave de interconexão está presente
-            // Outros campos do Endereco (cep, logradouro, bairro) ficam nulos neste caso.
-        )
-
-        // Usamos 'set(..., SetOptions.merge())' ou 'set()' para garantir que o documento exista ou seja criado/atualizado
-        enderecoDocRef.set(atualizacoesEndereco, SetOptions.merge())
-            .addOnSuccessListener {
-                Toast.makeText(this, "Perfil e Endereço atualizados com sucesso!", Toast.LENGTH_SHORT).show()
-
-                // Navegação final após ambas as atualizações
-                val intent = Intent(this, TelaMeuPerfil::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
-            }
-            .addOnFailureListener { e ->
-                // Se o endereço falhar, o usuário já foi atualizado (pode ser necessário rollback em um sistema maior)
-                Toast.makeText(this, "Erro ao atualizar endereço: ${e.message}", Toast.LENGTH_LONG).show()
                 binding.btnSalvar.isEnabled = true
             }
     }
-
 
     private fun atualizarDadosUsuario(novaFotoUrl: String?) {
         val userIdFinal = userId ?: return
@@ -209,22 +174,15 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
         val nome = binding.txtNomeContratante.text.toString().trim()
         val email = binding.txtEmailContratante.text.toString().trim()
         val telefone = limparNumeroTelefone(binding.txtTelefoneContratante.text.toString())
-        val enderecoStr = binding.txtEnderecoContratante.text.toString().trim() // Endereço completo
+        val cidade = binding.txtCidade.text.toString().trim()
+        val estado = binding.actvEstado.text.toString().trim()
 
-        if (nome.isEmpty() || email.isEmpty()) {
-            Toast.makeText(this, "Nome e Email são obrigatórios.", Toast.LENGTH_SHORT).show()
+        if (nome.isEmpty() || email.isEmpty() || cidade.isEmpty() || estado.isEmpty()) {
+            Toast.makeText(this, "Nome, Email, Cidade e Estado são obrigatórios.", Toast.LENGTH_SHORT).show()
             binding.btnSalvar.isEnabled = true
             return
         }
 
-        // Validação estrita do endereço (mantida)
-        if (enderecoStr.isNotEmpty() && !enderecoStr.contains("-") && !enderecoStr.contains(",")) {
-            Toast.makeText(this, "Formato de endereço inválido. Use 'Cidade - Estado' ou 'Cidade, Estado'.", Toast.LENGTH_LONG).show()
-            binding.btnSalvar.isEnabled = true
-            return
-        }
-
-        // 1. DADOS PARA A COLEÇÃO 'users'
         val atualizacoesUsuario = mutableMapOf<String, Any>()
         atualizacoesUsuario["nome"] = nome
         atualizacoesUsuario["email"] = email
@@ -235,31 +193,96 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
             atualizacoesUsuario["fotoUrl"] = it
         }
 
-        // 2. ATUALIZA O PERFIL (USUARIO)
         db.collection("users").document(userIdFinal).update(atualizacoesUsuario)
             .addOnSuccessListener {
                 Log.d("Firestore", "Dados pessoais (users) atualizados com sucesso.")
-
-                // 3. SE O PERFIL ATUALIZAR, ATUALIZA O ENDEREÇO
-                atualizarEnderecoFirestore(userIdFinal, enderecoStr)
+                val estadoSigla = estado.substringBefore("(").trim()
+                atualizarEnderecoFirestore(userIdFinal, cidade, estadoSigla)
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Erro ao atualizar perfil (Dados Pessoais): ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Erro ao atualizar perfil: ${e.message}", Toast.LENGTH_SHORT).show()
                 binding.btnSalvar.isEnabled = true
             }
     }
-    private fun parseEndereco(enderecoStr: String): Pair<String, String> {
-        val parts = enderecoStr.split("-").map { it.trim() }
-        return if (parts.size > 1) {
-            Pair(parts[0], parts.drop(1).joinToString("-").trim())
-        } else {
 
-            val commaParts = enderecoStr.split(",").map { it.trim() }
-            if (commaParts.size > 1) {
-                Pair(commaParts[0], commaParts.drop(1).joinToString(",").trim())
-            } else {
-                Pair(enderecoStr, "")
+    private fun atualizarEnderecoFirestore(userId: String, cidade: String, estado: String) {
+        val enderecoDocRef = db.collection("enderecos").document(userId)
+
+        val atualizacoesEndereco = mapOf(
+            "cidade" to cidade,
+            "estado" to estado,
+            "uidUsuario" to userId
+        )
+
+        enderecoDocRef.set(atualizacoesEndereco, SetOptions.merge())
+            .addOnSuccessListener {
+                Log.d("Firestore", "Endereço atualizado com sucesso.")
+                Toast.makeText(this, "Perfil atualizado com sucesso!", Toast.LENGTH_SHORT).show()
+                finish()
             }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Erro ao atualizar endereço: ${e.message}", Toast.LENGTH_LONG).show()
+                binding.btnSalvar.isEnabled = true
+            }
+    }
+    
+    // --- Lógica do IBGE ---
+    private fun fetchIbgeData() {
+        if (allMunicipios != null) return
+
+        ibgeService.buscarTodosMunicipios().enqueue(object : Callback<List<Municipio>> {
+            override fun onResponse(call: Call<List<Municipio>>, response: Response<List<Municipio>>) {
+                if (response.isSuccessful) {
+                    allMunicipios = response.body()
+                    Log.d("IBGE", "Municípios do IBGE carregados: ${allMunicipios?.size}")
+                } else {
+                    Log.e("IBGE", "Erro ao carregar municípios: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<List<Municipio>>, t: Throwable) {
+                Log.e("IBGE", "Falha na requisição IBGE", t)
+            }
+        })
+    }
+
+    private fun setupCityInputWatcher() {
+        binding.txtCidade.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val cidadeDigitada = s.toString().trim()
+                if (cidadeDigitada.length >= 3 && allMunicipios != null) {
+                    buscarEstadosPorCidade(cidadeDigitada)
+                } else {
+                    binding.actvEstado.setText("", false)
+                    binding.actvEstado.setAdapter(null)
+                }
+            }
+        })
+    }
+
+    private fun buscarEstadosPorCidade(cidade: String) {
+        val municipiosEncontrados = allMunicipios
+            ?.filter { it.nome.equals(cidade, ignoreCase = true) }
+            ?: emptyList()
+
+        if (municipiosEncontrados.isNotEmpty()) {
+            val estadosUnicos = municipiosEncontrados
+                .map { val uf = it.microrregiao.mesorregiao.uf; "${uf.sigla} (${uf.nome})" }
+                .distinct()
+
+            val adapter = ArrayAdapter(this@TelaEdicaoPerfilContratante, android.R.layout.simple_dropdown_item_1line, estadosUnicos)
+            binding.actvEstado.setAdapter(adapter)
+            binding.actvEstado.showDropDown()
+
+            if (estadosUnicos.size == 1) {
+                binding.actvEstado.setText(estadosUnicos.first(), false)
+            }
+        } else {
+            binding.actvEstado.setText("", false)
+            binding.actvEstado.setAdapter(null)
         }
     }
 

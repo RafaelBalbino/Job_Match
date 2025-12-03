@@ -38,6 +38,10 @@ class fragmentListaAvaliacoes : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         db = FirebaseFirestore.getInstance()
 
+        binding.btnVoltarListaAval.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
         setupRecyclerView()
 
         if (autonomoId == null) {
@@ -56,13 +60,12 @@ class fragmentListaAvaliacoes : Fragment() {
     }
 
     private fun buscarAvaliacoes() {
-        showLoadingState(true)
+        showLoadingState()
         db.collection("avaliacoes")
             .whereEqualTo("autonomoId", autonomoId)
             .orderBy("dataHora", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { documents ->
-                showLoadingState(false)
                 if (documents.isEmpty) {
                     showEmptyState()
                 } else {
@@ -72,29 +75,37 @@ class fragmentListaAvaliacoes : Fragment() {
                 }
             }
             .addOnFailureListener { e ->
-                showLoadingState(false)
                 showErrorState("Falha ao carregar avaliações: ${e.message}")
             }
     }
 
-    private fun showLoadingState(isLoading: Boolean) {
-        binding.clHeaderAvaliacao.visibility = if (isLoading) View.VISIBLE else View.GONE
+    private fun showLoadingState() {
+        // Garante que o cabeçalho esteja visível durante o carregamento
+        binding.clHeaderAvaliacao.visibility = View.VISIBLE
+        // Oculta a lista e as mensagens enquanto carrega
         binding.tvMensagem.visibility = View.GONE
         binding.rvAvaliacoesList.visibility = View.GONE
     }
 
     private fun showResultsState() {
+        binding.clHeaderAvaliacao.visibility = View.VISIBLE
         binding.rvAvaliacoesList.visibility = View.VISIBLE
         binding.tvMensagem.visibility = View.GONE
     }
 
     private fun showEmptyState() {
+        binding.clHeaderAvaliacao.visibility = View.VISIBLE
         binding.rvAvaliacoesList.visibility = View.GONE
         binding.tvMensagem.visibility = View.VISIBLE
         binding.tvMensagem.text = "Este profissional ainda não possui avaliações."
     }
 
     private fun showErrorState(message: String) {
+        if (autonomoId == null) {
+            binding.clHeaderAvaliacao.visibility = View.GONE
+        } else {
+            binding.clHeaderAvaliacao.visibility = View.VISIBLE
+        }
         binding.rvAvaliacoesList.visibility = View.GONE
         binding.tvMensagem.visibility = View.VISIBLE
         binding.tvMensagem.text = message

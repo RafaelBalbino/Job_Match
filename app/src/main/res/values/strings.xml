@@ -27,6 +27,8 @@
     <string name="register_specialization_hint">Sua principal especialização</string>
     <string name="register_button_text">Enviar</string>
     <string name="register_has_account">Já possui uma conta? Inicie a sessão.</string>
+    <string name="register_city_hint">Cidade</string>
+    <string name="register_state_hint">Estado</string>
 
     <!-- Strings da Tela de Recuperação de Senha -->
     <string name="recover_title">Esqueceu a sua senha?</string>

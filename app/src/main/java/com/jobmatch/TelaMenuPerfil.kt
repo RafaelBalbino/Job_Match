@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import coil.load
+import coil.transform.CircleCropTransformation
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaMenuPerfilBinding
@@ -83,6 +84,7 @@ class TelaMenuPerfil : AppCompatActivity() {
                             crossfade(true) // Efeito de transição suave
                             placeholder(R.drawable.ic_profile_placeholder) // Imagem enquanto carrega
                             error(R.drawable.ic_profile_placeholder) // Imagem em caso de erro
+                            transformations(CircleCropTransformation())
                         }
 
                         // AGORA, configura os botões que dependem do tipo de usuário
@@ -129,9 +131,8 @@ class TelaMenuPerfil : AppCompatActivity() {
         // Lógica do botão "Meu Perfil"
         binding.btnMeuPerfil.setOnClickListener {
             if (currentUser?.autonomo != null) {
-                // Se for autônomo, leva para a vitrine de serviços
+                // Se for autônomo, leva para a sua vitrine de serviços (TelaPerfilAutonomo)
                 val intent = Intent(this, TelaPerfilAutonomo::class.java)
-                intent.putExtra("AUTONOMO_ID", currentUser?.uid)
                 startActivity(intent)
             } else {
                 // Se for contratante, leva para a tela de informações da conta

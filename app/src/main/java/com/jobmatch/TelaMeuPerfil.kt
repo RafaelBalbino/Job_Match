@@ -20,8 +20,6 @@ class TelaMeuPerfil : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
-    private var enderecoCarregado: Endereco? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTelaMeuPerfilBinding.inflate(layoutInflater)
@@ -58,8 +56,12 @@ class TelaMeuPerfil : AppCompatActivity() {
             return
         }
 
-
+        // As duas buscas são feitas em paralelo
         carregarEExibirEndereco(userId)
+        carregarEExibirUsuario(userId)
+    }
+
+    private fun carregarEExibirUsuario(userId: String) {
         db.collection("users").document(userId)
             .get()
             .addOnSuccessListener { document ->
@@ -88,7 +90,7 @@ class TelaMeuPerfil : AppCompatActivity() {
                 if (endereco != null) {
                     // Formata o endereço
                     val enderecoFmt = listOfNotNull(endereco.cidade, endereco.estado)
-                        .filter { !it.isNullOrBlank() }
+                        .filter { it.isNotBlank() }
                         .joinToString(" - ")
 
                     binding.txtEnderecoInfo.text = if (enderecoFmt.isNotBlank()) enderecoFmt else "Endereço não informado"
@@ -120,30 +122,9 @@ class TelaMeuPerfil : AppCompatActivity() {
         binding.txtEmailInfo.text = usuario.email ?: "E-mail não informado"
         binding.txtTelefoneMeuPerfil.text = formatarTelefone(usuario.numeroTelefone)
 
-        // 3. Lógica para exibir os blocos de perfil com base no tipo de usuário
-        if (usuario.autonomo != null) {
-            // É autônomo
-            binding.blocoAcoesAutonomo.visibility = View.VISIBLE
-            binding.blocoAutonomoContratante.visibility = View.GONE
-            
-            binding.itemBuscarPedidos.setOnClickListener {
-                val intent = Intent(this, FragmentContainerActivity::class.java)
-                intent.putExtra("FRAGMENT_NAME", "fragmentListaPedidosContratante")
-                intent.putExtra("FRAGMENT_TYPE", "AUTONOMO")
-                startActivity(intent)
-            }
-            binding.itemProjetos.setOnClickListener {
-                val intent = Intent(this, FragmentContainerActivity::class.java)
-                intent.putExtra("FRAGMENT_NAME", "fragmentListaPedidosContratante")
-                intent.putExtra("FRAGMENT_TYPE", "AUTONOMO_ACEITOS")
-                startActivity(intent)
-            }
-        } else {
-            // É contratante
-            binding.blocoAutonomoContratante.visibility = View.VISIBLE
-            binding.blocoAcoesAutonomo.visibility = View.GONE
-            binding.lbPerfilAutonomoContratante.text = "Perfil Contratante"
-        }
+        // 3. Configura a UI para um Contratante
+        binding.blocoAutonomoContratante.visibility = View.VISIBLE
+        binding.lbPerfilAutonomoContratante.text = "Perfil Contratante"
 
         // 4. Configura os cliques dos outros botões
         binding.itemAlterarSenha.setOnClickListener {
@@ -184,11 +165,8 @@ class TelaMeuPerfil : AppCompatActivity() {
     }
 
     private fun navegarParaEdicaoDePerfil(usuario: Usuario) {
-        val intent = if (usuario.autonomo != null) {
-            Intent(this, TelaEdicaoPerfilAutonomo::class.java)
-        } else {
-            Intent(this, TelaEdicaoPerfilContratante::class.java)
-        }
+        // Navega sempre para a edição de contratante, já que esta tela é só para eles
+        val intent = Intent(this, TelaEdicaoPerfilContratante::class.java)
         startActivity(intent)
     }
 

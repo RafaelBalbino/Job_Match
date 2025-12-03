@@ -44,18 +44,18 @@ class fragmentListaPedidosAutonomo : Fragment() {
 
         val query = when (tipoQuery) {
             "PROJETOS" -> {
-                binding.tvTituloPedidosAutonomo.text = "Meus Projetos"
+                binding.tvTituloListaPedidos.text = "Meus Projetos"
                 buscarPedidosDoAutonomo()
             }
             else -> { // "BUSCA"
-                binding.tvTituloPedidosAutonomo.text = "Buscar Pedidos"
+                binding.tvTituloListaPedidos.text = "Buscar Pedidos"
                 buscarPedidosParaAutonomo()
             }
         }
 
         attachPedidosListener(query)
 
-        binding.btnVoltarListaPediAutonomo.setOnClickListener {
+        binding.btnVoltarListaPedidos.setOnClickListener {
             activity?.finish()
         }
     }
@@ -63,7 +63,7 @@ class fragmentListaPedidosAutonomo : Fragment() {
     private fun setupRecyclerView(tipoLista: String) {
         val userType = if(tipoLista == "PROJETOS") "AUTONOMO_ACEITOS" else "AUTONOMO"
         pedidoAdapter = PedidoAdapter(mutableListOf(), userType)
-        binding.rvListaPedidosAutonomo.apply {
+        binding.rvListaPedidos.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = pedidoAdapter
         }
@@ -76,14 +76,15 @@ class fragmentListaPedidosAutonomo : Fragment() {
 
     private fun buscarPedidosDoAutonomo(): Query {
         val autonomoId = auth.currentUser?.uid ?: return db.collection("__non_existent__")
+        // CORREÇÃO: O campo no Firestore é "autonomo", e não "autonomoId".
         return db.collection("pedido").whereEqualTo("autonomo", autonomoId)
             .orderBy("dataHora", Query.Direction.DESCENDING)
     }
 
     private fun attachPedidosListener(query: Query) {
-        binding.progressBarAutonomo.visibility = View.VISIBLE
+        binding.pbListaPedidos.visibility = View.VISIBLE
         firestoreListener = query.addSnapshotListener { snapshots, e ->
-            binding.progressBarAutonomo.visibility = View.GONE
+            binding.pbListaPedidos.visibility = View.GONE
 
             if (e != null) {
                 Log.e("ListaPedidosAutonomo", "Erro ao ouvir por atualizações. VERIFIQUE O ÍNDICE NO FIREBASE", e)
@@ -93,13 +94,13 @@ class fragmentListaPedidosAutonomo : Fragment() {
 
             if (snapshots != null && !snapshots.isEmpty) {
                 val listaPedidos = snapshots.toObjects(Pedidos::class.java)
-                binding.rvListaPedidosAutonomo.visibility = View.VISIBLE
-                binding.tvNoPedidosAutonomo.visibility = View.GONE
+                binding.rvListaPedidos.visibility = View.VISIBLE
+                binding.tvMensagemSemPedidos.visibility = View.GONE
                 pedidoAdapter.updateData(listaPedidos)
             } else {
-                binding.rvListaPedidosAutonomo.visibility = View.GONE
-                binding.tvNoPedidosAutonomo.text = getEmptyListMessage()
-                binding.tvNoPedidosAutonomo.visibility = View.VISIBLE
+                binding.rvListaPedidos.visibility = View.GONE
+                binding.tvMensagemSemPedidos.text = getEmptyListMessage()
+                binding.tvMensagemSemPedidos.visibility = View.VISIBLE
             }
         }
     }

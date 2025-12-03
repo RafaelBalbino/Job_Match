@@ -3,13 +3,16 @@ package com.jobmatch
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageView
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
-import com.google.android.material.chip.Chip
+import coil.transform.CircleCropTransformation
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -21,6 +24,7 @@ class TelaMenuPrincipal : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private var userId: String? = null
+    private lateinit var servicoAdapter: ServicoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,12 +36,8 @@ class TelaMenuPrincipal : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         userId = auth.currentUser?.uid
 
-        // Define os placeholders imediatamente
+        // Define o placeholder da imagem de perfil
         binding.imgPerfil.setImageResource(R.drawable.ic_profile_placeholder)
-        binding.imgViewAutonomo1.setImageResource(R.drawable.ic_image_placeholder)
-        binding.imgViewAutonomo2.setImageResource(R.drawable.ic_image_placeholder)
-        binding.imgViewAutonomo3.setImageResource(R.drawable.ic_image_placeholder)
-        binding.imgViewAutonomo4.setImageResource(R.drawable.ic_image_placeholder)
 
         // Ajusta o padding para as barras do sistema
         ViewCompat.setOnApplyWindowInsetsListener(binding.Main) { v, insets ->
@@ -46,9 +46,20 @@ class TelaMenuPrincipal : AppCompatActivity() {
             insets
         }
 
+        setupRecyclerView()
         configurarListeners()
         carregarDadosDoCabecalho()
+        carregarCategorias()
         carregarESetarServicos(null) // Carrega todos os serviços inicialmente
+    }
+    
+    private fun setupRecyclerView(){
+        // A lista de serviços é passada diretamente para o adapter
+        servicoAdapter = ServicoAdapter(emptyList())
+        binding.rvServicosPrincipal.apply {
+            layoutManager = LinearLayoutManager(this@TelaMenuPrincipal, LinearLayoutManager.HORIZONTAL, false)
+            adapter = servicoAdapter
+        }
     }
 
     private fun configurarListeners() {
@@ -76,75 +87,63 @@ class TelaMenuPrincipal : AppCompatActivity() {
             }
             startActivity(intent)
         }
+    }
 
-        binding.categoryChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
-            val categoriaSelecionada = if (checkedIds.isNotEmpty()) {
-                group.findViewById<Chip>(checkedIds.first()).text.toString()
+    private fun carregarCategorias() {
+        db.collection("servico").get().addOnSuccessListener { documents ->
+            val categories = documents.toObjects(Servico::class.java)
+                .mapNotNull { it.categoria }.filter { it.isNotBlank() }.distinct()
+
+            if (categories.isNotEmpty()) {
+                val spinnerItems = mutableListOf("Todas as categorias")
+                spinnerItems.addAll(categories)
+
+                val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, spinnerItems)
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                binding.spinnerCategoriasPrincipal.adapter = adapter
+
+                binding.spinnerCategoriasPrincipal.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                        val selectedCategory = parent.getItemAtPosition(position).toString()
+                        val filter = if (selectedCategory == "Todas as categorias") null else selectedCategory
+                        carregarESetarServicos(filter)
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>) {}
+                }
+                binding.spinnerCategoriasPrincipal.visibility = View.VISIBLE
             } else {
-                null
+                binding.spinnerCategoriasPrincipal.visibility = View.GONE
             }
-            carregarESetarServicos(categoriaSelecionada)
         }
     }
 
     private fun carregarESetarServicos(categoriaFiltro: String?) {
-        val imageViews: List<ImageView> = listOf(
-            binding.imgViewAutonomo1,
-            binding.imgViewAutonomo2,
-            binding.imgViewAutonomo3,
-            binding.imgViewAutonomo4
-        )
-
         var query: Query = db.collection("servico")
 
         if (categoriaFiltro != null) {
             query = query.whereEqualTo("categoria", categoriaFiltro)
         } else {
+            // Ordena por nome quando não há filtro, para consistência
             query = query.orderBy("nomeServico", Query.Direction.ASCENDING)
         }
 
-        query.limit(4).get()
+        query.limit(10).get() // Limite para o RecyclerView
             .addOnSuccessListener { documents ->
-                // Limpa as imagens antes de carregar novas
-                imageViews.forEach { it.setImageResource(R.drawable.ic_image_placeholder) }
+                val novosServicos = documents.toObjects(Servico::class.java)
+                
+                // Atualiza o adapter com a nova lista de serviços
+                servicoAdapter = ServicoAdapter(novosServicos)
+                binding.rvServicosPrincipal.adapter = servicoAdapter
 
                 if (documents.isEmpty) {
                     Log.d("Firestore", "Nenhum serviço encontrado para o filtro: $categoriaFiltro")
-                    return@addOnSuccessListener
-                }
-
-                for ((index, document) in documents.withIndex()) {
-                    if (index >= imageViews.size) break
-
-                    val servico = document.toObject(Servico::class.java)
-                    val imageView = imageViews[index]
-
-                    if (!servico.fotoServico.isNullOrEmpty()) {
-                        imageView.load(servico.fotoServico) {
-                            crossfade(true)
-                            placeholder(R.drawable.ic_image_placeholder)
-                            error(R.drawable.ic_image_placeholder)
-                        }
-                    } else {
-                        imageView.setImageResource(R.drawable.ic_image_placeholder)
-                    }
-
-                    imageView.setOnClickListener {
-                        abrirDetalhesDoServico(servico)
-                    }
                 }
             }
             .addOnFailureListener { exception ->
                 Log.w("Firestore", "Erro ao buscar serviços com filtro $categoriaFiltro: ", exception)
                 Toast.makeText(this, "Erro ao carregar serviços.", Toast.LENGTH_SHORT).show()
             }
-    }
-
-    private fun abrirDetalhesDoServico(servico: Servico) {
-        val intent = Intent(this, telaServicoAmpliado::class.java).apply {
-            putExtra("SERVICO", servico)
-        }
-        startActivity(intent)
     }
 
     private fun navegarParaMenuPerfil() {
@@ -166,6 +165,8 @@ class TelaMenuPrincipal : AppCompatActivity() {
                                 crossfade(true)
                                 placeholder(R.drawable.ic_profile_placeholder)
                                 error(R.drawable.ic_profile_placeholder)
+                                // CORREÇÃO: Adiciona a transformação para círculo
+                                transformations(CircleCropTransformation())
                             }
                         } else {
                             binding.imgPerfil.setImageResource(R.drawable.ic_profile_placeholder)

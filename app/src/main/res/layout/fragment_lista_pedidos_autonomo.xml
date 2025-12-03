@@ -8,13 +8,13 @@
     tools:context=".fragmentListaPedidosAutonomo">
 
     <Button
-        android:id="@+id/btn_voltar_lista_pedi"
+        android:id="@+id/btn_voltar_lista_pedidos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="4dp"
         android:background="#00FFFFFF"
-        android:contentDescription="Botão pra voltar"
+        android:contentDescription="Botão para voltar"
         app:icon="@drawable/ic_voltar_24"
         app:iconSize="25dp"
         app:iconTint="@color/secundaria_variante"
@@ -22,26 +22,26 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_titulo_pedidos"
+        android:id="@+id/tv_titulo_lista_pedidos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Lista de Pedidos"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_voltar_lista_pedi"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_voltar_lista_pedidos"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_voltar_lista_pedi" />
+        app:layout_constraintTop_toTopOf="@+id/btn_voltar_lista_pedidos" />
 
     <View
-        android:id="@+id/divider_header"
+        android:id="@+id/divider_header_pedidos"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginTop="16dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_voltar_lista_pedi" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_voltar_lista_pedidos" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_lista_pedidos"
@@ -53,11 +53,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider_header"
+        app:layout_constraintTop_toBottomOf="@+id/divider_header_pedidos"
         tools:listitem="@layout/item_pedido_autonomo" />
 
     <TextView
-        android:id="@+id/tv_no_pedidos"
+        android:id="@+id/tv_mensagem_sem_pedidos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nenhum pedido de serviço encontrado."
@@ -65,6 +65,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider_header" />
+        app:layout_constraintTop_toBottomOf="@+id/divider_header_pedidos" />
+
+    <ProgressBar
+        android:id="@+id/pb_lista_pedidos"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider_header_pedidos"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
