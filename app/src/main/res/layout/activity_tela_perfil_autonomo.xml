@@ -25,29 +25,27 @@
 
         <ImageView
             android:id="@+id/imgViewVoltar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="49dp"
+            android:layout_height="62dp"
             android:layout_marginStart="16dp"
             android:contentDescription="Botão Voltar"
             android:padding="16dp"
-            app:tint="#FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tbPerfilAutonomo"
-            app:layout_constraintBottom_toBottomOf="@+id/tbPerfilAutonomo"
-            app:srcCompat="@drawable/ic_voltar_24" />
+            app:srcCompat="@drawable/ic_voltar_24"
+            app:tint="#FFFFFF" />
 
         <ImageView
             android:id="@+id/imgViewCompartilhar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="53dp"
+            android:layout_height="62dp"
             android:layout_marginEnd="16dp"
             android:contentDescription="Botão Compartilhar Perfil"
             android:padding="16dp"
-            app:tint="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tbPerfilAutonomo"
-            app:layout_constraintBottom_toBottomOf="@+id/tbPerfilAutonomo"
-            app:srcCompat="@drawable/ic_compartilhar_24" />
+            app:srcCompat="@drawable/ic_compartilhar_24"
+            app:tint="#FFFFFF" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/LinhaGuiaCabecalho"

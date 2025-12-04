@@ -70,12 +70,13 @@
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:isIndicator="true"
             android:numStars="5"
             android:stepSize="0.1"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@id/tv_nome_autonomo"
+            app:layout_constraintStart_toEndOf="@+id/iv_autonomo_avatar"
             app:layout_constraintTop_toBottomOf="@id/tv_nome_autonomo"
             tools:rating="4.5"
             tools:visibility="visible" />
@@ -96,13 +97,14 @@
             android:id="@+id/btn_ver_avaliacoes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="3dp"
             android:text="Ver Avaliações"
             android:textColor="?attr/colorPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@id/rb_media_avaliacoes"
+            app:layout_constraintStart_toEndOf="@+id/iv_autonomo_avatar"
             app:layout_constraintTop_toBottomOf="@id/rb_media_avaliacoes"
             tools:visibility="visible" />
 
@@ -115,22 +117,19 @@
             android:text="Contato"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/iv_autonomo_avatar" />
 
         <TextView
             android:id="@+id/tv_telefone"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="151dp"
+            android:layout_height="21dp"
             android:layout_marginTop="4dp"
-            android:drawableStart="@drawable/ic_whatsapp_24"
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
             app:drawableTint="?attr/colorPrimary"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/tv_contato_label"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
             tools:text="(11) 99999-9999" />
 
         <!-- Seção de Endereço -->
@@ -142,7 +141,6 @@
             android:text="Endereço"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/tv_telefone" />
 
@@ -222,6 +220,18 @@
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/rv_servicos_oferecidos" />
+
+        <ImageButton
+            android:id="@+id/btn_Whatsapp"
+            android:layout_width="50dp"
+            android:layout_height="53dp"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="Abrir Whatsapp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_telefone"
+            app:layout_constraintStart_toEndOf="@+id/tv_telefone"
+            app:layout_constraintTop_toTopOf="@+id/tv_telefone"
+            app:srcCompat="@drawable/ic_whatsapp_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
