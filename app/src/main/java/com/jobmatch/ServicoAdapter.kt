@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 
 class ServicoAdapter(
-    private val servicos: List<Servico>,
+    private var servicos: MutableList<Servico>,
     private val showFreelancerName: Boolean = true // Parâmetro para controlar a visibilidade
 ) : RecyclerView.Adapter<ServicoAdapter.ServicoViewHolder>() {
 
@@ -22,18 +22,34 @@ class ServicoAdapter(
     override fun onBindViewHolder(holder: ServicoViewHolder, position: Int) {
         val servico = servicos[position]
         holder.bind(servico, showFreelancerName) // Passa a flag para o ViewHolder
-        
-        // O clique no card abre a tela de negócio do autônomo
+
+        // CORREÇÃO: Lógica de clique condicional
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
-            val intent = Intent(context, TelaNegocioAutonomo::class.java).apply {
-                putExtra("AUTONOMO_ID", servico.uidAutonomo)
+            // Quando a busca é por autônomo, o nome do serviço é "Ver Perfil"
+            if (servico.nomeServico == "Ver Perfil") {
+                // Navega para a tela de perfil do autônomo
+                val intent = Intent(context, TelaNegocioAutonomo::class.java).apply {
+                    putExtra("AUTONOMO_ID", servico.uidAutonomo)
+                }
+                context.startActivity(intent)
+            } else {
+                // Navega para a tela de detalhes do serviço (comportamento padrão)
+                val intent = Intent(context, telaServicoAmpliado::class.java).apply {
+                    putExtra("SERVICO", servico)
+                }
+                context.startActivity(intent)
             }
-            context.startActivity(intent)
         }
     }
 
     override fun getItemCount() = servicos.size
+
+    fun updateData(newServicos: List<Servico>) {
+        servicos.clear()
+        servicos.addAll(newServicos)
+        notifyDataSetChanged()
+    }
 
     class ServicoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val servicoImage: ImageView = itemView.findViewById(R.id.servico_image)
@@ -53,8 +69,11 @@ class ServicoAdapter(
             if (!servico.fotoServico.isNullOrEmpty()) {
                 servicoImage.load(servico.fotoServico) {
                     crossfade(true)
-                    error(R.drawable.rounded_edittext_background)
+                    placeholder(R.drawable.ic_image_placeholder)
+                    error(R.drawable.ic_image_placeholder)
                 }
+            } else {
+                servicoImage.load(R.drawable.ic_image_placeholder)
             }
         }
     }

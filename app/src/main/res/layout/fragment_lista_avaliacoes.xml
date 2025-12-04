@@ -33,43 +33,52 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_media_nota_grande"
+            <!-- CORREÇÃO: Grupo de Média Centralizado -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_media_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="100dp"
-                android:layout_marginTop="52dp"
-                android:textColor="@color/preto"
-                android:textSize="48sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="4.9" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/divider_header">
 
-            <RatingBar
-                android:id="@+id/rb_media_estrelas"
-                style="?android:attr/ratingBarStyleIndicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:isIndicator="true"
-                android:numStars="5"
-                android:rating="4.9"
-                android:stepSize="0.1"
-                app:layout_constraintStart_toStartOf="@+id/tv_media_nota_grande"
-                app:layout_constraintTop_toBottomOf="@+id/tv_media_nota_grande" />
+                <TextView
+                    android:id="@+id/tv_media_nota_grande"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/preto"
+                    android:textSize="48sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="4.9" />
 
-            <TextView
-                android:id="@+id/tv_contador_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_media_nota_grande"
-                app:layout_constraintStart_toEndOf="@+id/tv_media_nota_grande"
-                app:layout_constraintTop_toTopOf="@+id/tv_media_nota_grande"
-                app:layout_constraintVertical_bias="0.8"
-                tools:text="1000+ Avaliações" />
+                <RatingBar
+                    android:id="@+id/rb_media_estrelas"
+                    style="?android:attr/ratingBarStyleIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:rating="4.9"
+                    android:stepSize="0.1"
+                    app:layout_constraintStart_toStartOf="@id/tv_media_nota_grande"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_media_nota_grande" />
+
+                <TextView
+                    android:id="@+id/tv_contador_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_media_nota_grande"
+                    app:layout_constraintStart_toEndOf="@+id/tv_media_nota_grande"
+                    app:layout_constraintTop_toTopOf="@+id/tv_media_nota_grande"
+                    tools:text="1000+ Avaliações" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
                 android:id="@+id/divider_header"
@@ -80,7 +89,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rb_media_estrelas" />
+                app:layout_constraintTop_toBottomOf="@+id/cl_media_container" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView

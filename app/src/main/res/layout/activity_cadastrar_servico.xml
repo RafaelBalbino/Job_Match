@@ -35,10 +35,10 @@
             android:text="@string/cadastrar_servico_title"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/btnVoltarPerfilAutonomo2"
+            app:layout_constraintBottom_toBottomOf="@id/btnVoltarPerfilAutonomo2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btnVoltarPerfilAutonomo2" />
+            app:layout_constraintTop_toTopOf="@id/btnVoltarPerfilAutonomo2" />
 
         <View
             android:id="@+id/divider"
@@ -48,7 +48,7 @@
             android:background="#18B49D"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+            app:layout_constraintTop_toBottomOf="@id/textView10" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_start"
@@ -111,7 +111,7 @@
                 android:id="@+id/txtCategoriaServico"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none"
+                android:inputType="text"
                 android:dropDownHeight="250dp"
                 tools:ignore="LabelFor" />
 

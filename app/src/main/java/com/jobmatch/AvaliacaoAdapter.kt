@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import coil.transform.CircleCropTransformation
 import com.jobmatch.databinding.FragmentItemAvaliacaoBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -20,17 +21,20 @@ class AvaliacaoAdapter(
                 rbNotaAvaliacao.rating = avaliacao.nota.toFloat()
                 tvComentario.text = avaliacao.comentario
 
-                // Carrega a imagem do contratante
                 ivAvatarContratante.load(avaliacao.contratanteFotoUrl) {
+                    crossfade(true)
                     placeholder(R.drawable.ic_profile_placeholder)
                     error(R.drawable.ic_profile_placeholder)
+                    transformations(CircleCropTransformation())
                 }
+
+                // Agora esta linha funciona, pois o campo foi adicionado à classe Avaliacao
+                tvServicoPrestado.text = "Serviço Prestado: ${avaliacao.servicoNome ?: "Não informado"}"
 
                 avaliacao.dataHora?.let {
                     val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                     tvDataAvaliacao.text = sdf.format(it)
                 }
-
             }
         }
     }
@@ -44,7 +48,7 @@ class AvaliacaoAdapter(
 
     override fun onBindViewHolder(holder: AvaliacaoViewHolder, position: Int) {
         val avaliacao = avaliacoes[position]
-        holder.bind(avaliacao) // Chama o método bind no ViewHolder
+        holder.bind(avaliacao)
     }
 
     override fun getItemCount() = avaliacoes.size

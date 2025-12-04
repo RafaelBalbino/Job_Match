@@ -34,7 +34,6 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
     private var userId: String? = null
     private var fotoSelecionadaUri: Uri? = null
 
-    // Variáveis para a API do IBGE
     private val ibgeService: IbgeService by lazy {
         Retrofit.Builder()
             .baseUrl("https://servicodados.ibge.gov.br/api/v1/localidades/")
@@ -42,7 +41,6 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
             .build()
             .create(IbgeService::class.java)
     }
-    private var allMunicipios: List<Municipio>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,10 +58,9 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
             insets
         }
 
-        fetchIbgeData()
+        setupStateDropdown()
         configurarBotoesETextos()
         carregarDadosUsuario()
-        setupCityInputWatcher()
     }
 
     private val pickImageLauncher = registerForActivityResult(
@@ -123,17 +120,17 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 val endereco = document.toObject(Endereco::class.java)
                 if (endereco != null) {
-                    binding.txtCidade.setText(endereco.cidade)
                     binding.actvEstado.setText(endereco.estado, false)
+                    fetchCidadesPorEstado(endereco.estado ?: "") { 
+                        binding.txtCidade.setText(endereco.cidade)
+                    }
                 } else {
-                    binding.txtCidade.setText("")
                     binding.actvEstado.setText("", false)
+                    binding.txtCidade.setText("")
                 }
             }
             .addOnFailureListener {
                 Log.e("Firestore", "Falha ao carregar endereço para edição.")
-                binding.txtCidade.setText("Erro ao carregar endereço.")
-                binding.actvEstado.setText("", false)
             }
     }
 
@@ -144,10 +141,22 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
         }
         return digitos
     }
+    
+    private fun showLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.btnSalvarAutonomo.text = ""
+            binding.progressBarSalvarAutonomo.visibility = View.VISIBLE
+            binding.btnSalvarAutonomo.isEnabled = false
+        } else {
+            binding.btnSalvarAutonomo.text = getString(R.string.botao_salvar)
+            binding.progressBarSalvarAutonomo.visibility = View.GONE
+            binding.btnSalvarAutonomo.isEnabled = true
+        }
+    }
 
     private fun salvarDados() {
         if (userId == null) return
-        binding.btnSalvarAutonomo.isEnabled = false
+        showLoading(true)
 
         if (fotoSelecionadaUri != null) {
             uploadImagemEAtualizarPerfil(fotoSelecionadaUri!!)
@@ -163,13 +172,13 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
                 storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
                     atualizarDadosFirestore(downloadUrl.toString())
                 }.addOnFailureListener { e ->
+                    showLoading(false)
                     Toast.makeText(this, "Falha ao obter URL da imagem: ${e.message}", Toast.LENGTH_LONG).show()
-                    binding.btnSalvarAutonomo.isEnabled = true
                 }
             }
             .addOnFailureListener { e ->
+                showLoading(false)
                 Toast.makeText(this, "Falha no upload da imagem: ${e.message}", Toast.LENGTH_LONG).show()
-                binding.btnSalvarAutonomo.isEnabled = true
             }
     }
 
@@ -183,7 +192,7 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
 
         if (nome.isEmpty() || cidade.isEmpty() || estado.isEmpty() || especializacao.isEmpty()) {
             Toast.makeText(this, "Nome, Cidade, Estado e Especialização são obrigatórios.", Toast.LENGTH_SHORT).show()
-            binding.btnSalvarAutonomo.isEnabled = true
+            showLoading(false)
             return
         }
 
@@ -196,94 +205,64 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
 
         db.collection("users").document(userId!!).update(atualizacoesUsuario)
             .addOnSuccessListener {
-                Log.d("Firestore", "Dados do usuário atualizados com sucesso.")
-                val estadoSigla = estado.substringBefore("(").trim()
-                atualizarEnderecoFirestore(userId!!, cidade, estadoSigla)
+                atualizarEnderecoFirestore(userId!!, cidade, estado)
             }
             .addOnFailureListener { e ->
-                Log.e("Firestore", "Erro ao atualizar dados do usuário.", e)
+                showLoading(false)
                 Toast.makeText(this, "Erro ao atualizar o perfil: ${e.message}", Toast.LENGTH_SHORT).show()
-                binding.btnSalvarAutonomo.isEnabled = true
             }
     }
 
     private fun atualizarEnderecoFirestore(userId: String, cidade: String, estado: String) {
         val enderecoDocRef = db.collection("enderecos").document(userId)
-        val atualizacoesEndereco = mapOf(
-            "cidade" to cidade,
-            "estado" to estado,
-            "uidUsuario" to userId
-        )
+        val atualizacoesEndereco = mapOf("cidade" to cidade, "estado" to estado, "uidUsuario" to userId)
+        
         enderecoDocRef.set(atualizacoesEndereco, SetOptions.merge())
             .addOnSuccessListener {
-                Log.d("Firestore", "Endereço atualizado com sucesso.")
+                showLoading(false)
                 Toast.makeText(this, "Perfil atualizado com sucesso!", Toast.LENGTH_SHORT).show()
                 finish()
             }
             .addOnFailureListener { e ->
+                showLoading(false)
                 Toast.makeText(this, "Erro ao atualizar endereço: ${e.message}", Toast.LENGTH_LONG).show()
-                binding.btnSalvarAutonomo.isEnabled = true
             }
     }
 
-    // --- Lógica do IBGE ---
-    private fun fetchIbgeData() {
-        if (allMunicipios != null) return
+    private fun setupStateDropdown() {
+        val states = resources.getStringArray(R.array.brazilian_states)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, states)
+        binding.actvEstado.setAdapter(adapter)
 
-        ibgeService.buscarTodosMunicipios().enqueue(object : Callback<List<Municipio>> {
+        binding.tilCidade.isEnabled = false
+
+        binding.actvEstado.setOnItemClickListener { parent, view, position, id ->
+            val selectedState = parent.getItemAtPosition(position).toString()
+            binding.txtCidade.setText("")
+            fetchCidadesPorEstado(selectedState)
+        }
+    }
+
+    private fun fetchCidadesPorEstado(uf: String, onComplete: (() -> Unit)? = null) {
+        binding.tilCidade.isEnabled = false
+        
+        ibgeService.buscarCidadesPorEstado(uf).enqueue(object : Callback<List<Municipio>> {
             override fun onResponse(call: Call<List<Municipio>>, response: Response<List<Municipio>>) {
                 if (response.isSuccessful) {
-                    allMunicipios = response.body()
-                    Log.d("IBGE", "Municípios do IBGE carregados: ${allMunicipios?.size}")
+                    val cidades = response.body()?.map { it.nome } ?: emptyList()
+                    val cityAdapter = ArrayAdapter(this@TelaEdicaoPerfilAutonomo, android.R.layout.simple_dropdown_item_1line, cidades)
+                    binding.txtCidade.setAdapter(cityAdapter)
+                    binding.tilCidade.isEnabled = true
+                    onComplete?.invoke()
                 } else {
-                    Log.e("IBGE", "Erro ao carregar municípios: ${response.code()}")
+                    Toast.makeText(this@TelaEdicaoPerfilAutonomo, "Erro ao carregar cidades.", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<List<Municipio>>, t: Throwable) {
-                Log.e("IBGE", "Falha na requisição IBGE", t)
+                Toast.makeText(this@TelaEdicaoPerfilAutonomo, "Falha de rede ao carregar cidades.", Toast.LENGTH_SHORT).show()
             }
         })
-    }
-
-    private fun setupCityInputWatcher() {
-        binding.txtCidade.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                val cidadeDigitada = s.toString().trim()
-                if (cidadeDigitada.length >= 3 && allMunicipios != null) {
-                    buscarEstadosPorCidade(cidadeDigitada)
-                } else {
-                    binding.actvEstado.setText("", false)
-                    binding.actvEstado.setAdapter(null)
-                }
-            }
-        })
-    }
-
-    private fun buscarEstadosPorCidade(cidade: String) {
-        val municipiosEncontrados = allMunicipios
-            ?.filter { it.nome.equals(cidade, ignoreCase = true) }
-            ?: emptyList()
-
-        if (municipiosEncontrados.isNotEmpty()) {
-            val estadosUnicos = municipiosEncontrados
-                .map { val uf = it.microrregiao.mesorregiao.uf; "${uf.sigla} (${uf.nome})" }
-                .distinct()
-
-            val adapter = ArrayAdapter(this@TelaEdicaoPerfilAutonomo, android.R.layout.simple_dropdown_item_1line, estadosUnicos)
-            binding.actvEstado.setAdapter(adapter)
-            binding.actvEstado.showDropDown()
-
-            if (estadosUnicos.size == 1) {
-                binding.actvEstado.setText(estadosUnicos.first(), false)
-            }
-        } else {
-            binding.actvEstado.setText("", false)
-            binding.actvEstado.setAdapter(null)
-        }
     }
 
     inner class PhoneMaskWatcher : TextWatcher {

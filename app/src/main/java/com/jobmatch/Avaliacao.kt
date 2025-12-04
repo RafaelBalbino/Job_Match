@@ -18,8 +18,9 @@ data class Avaliacao(
     val contratanteFotoUrl: String? = null,
     val nota: Double = 0.0,
     val comentario: String = "",
-    @ServerTimestamp val dataHora: Date? = null
+    @ServerTimestamp val dataHora: Date? = null,
+    val servicoNome: String? = null // Campo adicionado para o nome do serviço
 ) {
     // Construtor vazio exigido pelo Firebase para a deserialização (toObject())
-    constructor() : this("", "", "", "", "", null, 0.0, "", null)
+    constructor() : this("", "", "", "", "", null, 0.0, "", null, null)
 }

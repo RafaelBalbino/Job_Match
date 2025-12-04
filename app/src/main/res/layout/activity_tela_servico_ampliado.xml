@@ -28,9 +28,9 @@
             android:layout_marginStart="8dp"
             android:visibility="gone" 
             tools:text="(500 avaliações)"
-            app:layout_constraintBottom_toBottomOf="@+id/rb_media_avaliacoes"
-            app:layout_constraintStart_toEndOf="@+id/rb_media_avaliacoes"
-            app:layout_constraintTop_toTopOf="@+id/rb_media_avaliacoes" />
+            app:layout_constraintBottom_toBottomOf="@id/rb_media_avaliacoes"
+            app:layout_constraintStart_toEndOf="@id/rb_media_avaliacoes"
+            app:layout_constraintTop_toTopOf="@id/rb_media_avaliacoes" />
 
         <ImageView
             android:id="@+id/iv_servico_imagem"
@@ -104,7 +104,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_ver_avaliacoes" />
+            app:layout_constraintTop_toBottomOf="@id/btn_ver_avaliacoes" />
 
         <Button
             android:id="@+id/btn_fazer_pedido"
@@ -121,7 +121,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_editar_servico" />
+            app:layout_constraintTop_toBottomOf="@id/btn_editar_servico" />
 
         <ImageButton
             android:id="@+id/btn_voltar"

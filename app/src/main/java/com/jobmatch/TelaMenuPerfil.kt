@@ -1,6 +1,7 @@
 package com.jobmatch // Mantenha seu pacote original aqui
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import coil.load
@@ -52,6 +54,8 @@ class TelaMenuPerfil : AppCompatActivity() {
         carregarDadosUsuario()
         // Configura os cliques dos botões que são iguais para todos os usuários
         configurarCliquesGenericos()
+        // Configura o novo seletor de tema
+        configurarSeletorDeTema()
     }
 
     /**
@@ -147,12 +151,26 @@ class TelaMenuPerfil : AppCompatActivity() {
     private fun configurarCliquesGenericos() {
         binding.btnFecharMenu.setOnClickListener { finish() } // Fecha a tela
         binding.btnPagamentos.setOnClickListener { showToast("Será implementado no futuro") }
-        binding.btnSobreNos.setOnClickListener { showToast("Projeto feito pelo grupo 3 do ADS VA6 - Fatec SCS") }
+        binding.btnSobreNos.setOnClickListener { abrirFragmento("SobreNosFragment") } // CORREÇÃO: Abre o novo fragmento
         binding.btnTermos.setOnClickListener { mostrarPopupTermos() }
-        binding.btnConfiguracoes.setOnClickListener { showToast("Será implementado no futuro") }
         binding.btnEncerrarSessao.setOnClickListener { fazerLogout() } // Desloga o usuário
     }
     
+    private fun configurarSeletorDeTema() {
+        // Define o estado inicial do switch baseado no tema atual do app
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        binding.switchTema.isChecked = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+
+        // Adiciona um listener para mudar o tema quando o switch for clicado
+        binding.switchTema.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
+    }
+
     /**
      * Abre a tela que contém o fragmento da lista de pedidos.
      * @param fragmentName O nome da classe do fragmento a ser carregado.
@@ -162,6 +180,16 @@ class TelaMenuPerfil : AppCompatActivity() {
         val intent = Intent(this, FragmentContainerActivity::class.java).apply {
             putExtra("FRAGMENT_NAME", fragmentName)
             putExtra("TIPO_QUERY", tipoQuery)
+        }
+        startActivity(intent)
+    }
+    
+    /**
+     * Abre a tela que contém um fragmento genérico.
+     */
+    private fun abrirFragmento(fragmentName: String) {
+        val intent = Intent(this, FragmentContainerActivity::class.java).apply {
+            putExtra("FRAGMENT_NAME", fragmentName)
         }
         startActivity(intent)
     }

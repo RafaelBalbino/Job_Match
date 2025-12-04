@@ -88,12 +88,29 @@
         android:orientation="vertical"
         android:paddingBottom="32dp">
 
+      <Button
+          android:id="@+id/btn_fazer_pedido"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="24dp"
+          android:layout_marginTop="16dp"
+          android:layout_marginEnd="24dp"
+          android:minHeight="56dp"
+          android:text="Fazer um novo pedido"
+          app:icon="@android:drawable/ic_menu_add" />
+
+      <com.google.android.material.divider.MaterialDivider
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="16dp" />
+          
       <!-- Seção de Informações Pessoais -->
       <TextView
           android:id="@+id/lb_info_meu_perfil"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="16dp"
+          android:layout_marginTop="16dp"
           android:layout_marginEnd="16dp"
           android:text="Informações Pessoais"
           android:textColor="@color/preto"
@@ -171,7 +188,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Perfil Autônomo"
+            android:text="Perfil Contratante"
             android:textColor="@color/preto"
             android:textSize="18sp"
             android:textStyle="bold"

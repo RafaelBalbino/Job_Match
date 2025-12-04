@@ -6,14 +6,13 @@
     android:layout_height="wrap_content"
     android:paddingStart="24dp"
     android:paddingEnd="24dp"
-    android:paddingTop="12dp"
-    android:paddingBottom="12dp">
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_avatar_contratante"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:contentDescription="Avatar do Contratante"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:src="@drawable/ic_usuario_padrao_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -55,19 +54,31 @@
         android:id="@+id/tv_comentario"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_avatar_contratante"
         tools:text="O serviço foi excelente! O Victor resolveu o problema do meu computador em menos de 2 horas. Recomendo muito!" />
 
+    <TextView
+        android:id="@+id/tv_servico_prestado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_comentario"
+        tools:text="Serviço Prestado: Conserto de Notebook" />
+
     <View
         android:id="@+id/divider_item"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_comentario" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_servico_prestado" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.jobmatch.databinding.FragmentListaAvaliacoesBinding
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class fragmentListaAvaliacoes : Fragment() {
 
@@ -61,22 +64,45 @@ class fragmentListaAvaliacoes : Fragment() {
 
     private fun buscarAvaliacoes() {
         showLoadingState()
-        db.collection("avaliacoes")
-            .whereEqualTo("autonomoId", autonomoId)
-            .orderBy("dataHora", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
+        lifecycleScope.launch {
+            try {
+                val avaliacoesSnapshot = db.collection("avaliacoes")
+                    .whereEqualTo("autonomoId", autonomoId)
+                    .orderBy("dataHora", Query.Direction.DESCENDING)
+                    .get()
+                    .await()
+
+                if (avaliacoesSnapshot.isEmpty) {
                     showEmptyState()
-                } else {
-                    val avaliacoes = documents.toObjects(Avaliacao::class.java)
-                    avaliacaoAdapter.updateData(avaliacoes)
-                    showResultsState()
+                    return@launch
                 }
-            }
-            .addOnFailureListener { e ->
+
+                val avaliacoes = avaliacoesSnapshot.toObjects(Avaliacao::class.java)
+                val avaliacoesEnriquecidas = mutableListOf<Avaliacao>()
+
+                for (avaliacao in avaliacoes) {
+                    if (avaliacao.pedidoId.isNotEmpty()) {
+                        try {
+                            val pedidoDoc = db.collection("pedido").document(avaliacao.pedidoId).get().await()
+                            val servicoNome = pedidoDoc.getString("nomeSolicitacao")
+                            // Adiciona a avaliação com o nome do serviço preenchido
+                            avaliacoesEnriquecidas.add(avaliacao.copy(servicoNome = servicoNome))
+                        } catch (e: Exception) {
+                             // Se o pedido não for encontrado, adiciona a avaliação sem o nome
+                            avaliacoesEnriquecidas.add(avaliacao)
+                        }
+                    } else {
+                        avaliacoesEnriquecidas.add(avaliacao)
+                    }
+                }
+
+                avaliacaoAdapter.updateData(avaliacoesEnriquecidas)
+                showResultsState()
+
+            } catch (e: Exception) {
                 showErrorState("Falha ao carregar avaliações: ${e.message}")
             }
+        }
     }
 
     private fun showLoadingState() {

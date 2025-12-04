@@ -31,8 +31,6 @@ class PedidoAdapter(
     inner class AutonomoViewHolder(val binding: ItemPedidoAutonomoBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun getItemViewType(position: Int): Int {
-        // Usa o layout de contratante apenas para a lista do contratante.
-        // Todas as listas do autônomo usarão o layout de autônomo.
         return when (userType) {
             "CONTRATANTE" -> TYPE_CONTRATANTE_VIEW
             else -> TYPE_AUTONOMO_VIEW
@@ -67,12 +65,25 @@ class PedidoAdapter(
         notifyDataSetChanged()
     }
 
-    // Lógica para a visão do CONTRATANTE (usa item_pedido_contratante.xml)
+    // Lógica para a visão do CONTRATANTE
     private fun bindContratanteView(holder: ContratanteViewHolder, pedido: Pedidos) {
         val db = FirebaseFirestore.getInstance()
         val context = holder.itemView.context
         holder.binding.tvStatusPedido.text = pedido.status.uppercase()
         holder.binding.tvResumoDescricao.text = pedido.descricaoServico
+
+        // CORREÇÃO: Lógica da imagem do problema agora usa o campo 'anexos'
+        if (pedido.anexos.isEmpty()) {
+            holder.binding.imgProblema.visibility = View.GONE
+            holder.binding.tvImagemProblemaLabel.text = "Não há imagem em anexo"
+        } else {
+            holder.binding.imgProblema.visibility = View.VISIBLE
+            holder.binding.tvImagemProblemaLabel.text = "Imagem do Problema"
+            // Carrega a primeira imagem da lista
+            holder.binding.imgProblema.load(pedido.anexos[0]) {
+                error(R.drawable.ic_image_placeholder)
+            }
+        }
 
         holder.binding.tvVerMaisContratante.setOnClickListener {
             val intent = Intent(context, TelaCriacaoPedido::class.java).apply {
@@ -121,7 +132,7 @@ class PedidoAdapter(
         }
     }
 
-    // Lógica para TODAS as visões do AUTÔNOMO (usa item_pedido_autonomo.xml)
+    // Lógica para TODAS as visões do AUTÔNOMO
     private fun bindAutonomoView(holder: AutonomoViewHolder, pedido: Pedidos, position: Int) {
         val context = holder.itemView.context
         holder.binding.tvNomeContratante.text = pedido.nomeSolicitacao
@@ -134,7 +145,6 @@ class PedidoAdapter(
         val statusUpper = pedido.status.uppercase()
         holder.binding.tvStatusPedido.text = statusUpper
 
-        // Lógica de visibilidade dos botões e status
         if (userType == "AUTONOMO" && statusUpper == "PENDENTE") {
             holder.binding.botoesAutonomoContainer.visibility = View.VISIBLE
             holder.binding.tvStatusPedido.visibility = View.GONE
@@ -221,6 +231,8 @@ class PedidoAdapter(
             )
         ).addOnSuccessListener {
             Toast.makeText(context, "Pedido aceito!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(context, telaNegocioFechado::class.java)
+            context.startActivity(intent)
         }.addOnFailureListener {
             Toast.makeText(context, "Falha ao aceitar o pedido.", Toast.LENGTH_SHORT).show()
         }

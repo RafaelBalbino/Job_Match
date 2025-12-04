@@ -1,6 +1,11 @@
 package com.jobmatch
 
+import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -131,10 +136,7 @@ class fragmentListaPedidosContratante : Fragment() {
                 return@addSnapshotListener
             }
 
-            Log.d("ListaPedidos", "Snapshot recebido com ${snapshots.size()} documentos.")
-
             val listaPedidos = snapshots.toObjects(Pedidos::class.java)
-            Log.d("ListaPedidos", "Convertido para ${listaPedidos.size} objetos.")
 
             if (listaPedidos.isNotEmpty()) {
                 binding.rvListaPedidos.visibility = View.VISIBLE
@@ -142,9 +144,33 @@ class fragmentListaPedidosContratante : Fragment() {
                 pedidoAdapter.updateData(listaPedidos)
             } else {
                 binding.rvListaPedidos.visibility = View.GONE
-                binding.tvNoPedidos.text = getEmptyListMessage()
                 binding.tvNoPedidos.visibility = View.VISIBLE
+                // CORREÇÃO: Chama a função para configurar o texto clicável
+                setupEmptyStateClickableText()
             }
+        }
+    }
+    
+    // NOVA FUNÇÃO: Configura o texto para o estado vazio com um link clicável
+    private fun setupEmptyStateClickableText(){
+        val fullText = "Você ainda não realizou nenhum pedido.\nClique aqui para criar um."
+        val clickableText = "Clique aqui para criar um."
+        val spannableString = SpannableString(fullText)
+
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val intent = Intent(context, TelaCriacaoPedido::class.java)
+                startActivity(intent)
+            }
+        }
+
+        val startIndex = fullText.indexOf(clickableText)
+        if(startIndex != -1){
+            spannableString.setSpan(clickableSpan, startIndex, startIndex + clickableText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            binding.tvNoPedidos.text = spannableString
+            binding.tvNoPedidos.movementMethod = LinkMovementMethod.getInstance()
+        } else {
+            binding.tvNoPedidos.text = getEmptyListMessage() // Fallback para a mensagem simples
         }
     }
 

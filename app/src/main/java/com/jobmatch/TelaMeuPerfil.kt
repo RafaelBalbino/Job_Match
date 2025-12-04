@@ -126,7 +126,11 @@ class TelaMeuPerfil : AppCompatActivity() {
         binding.blocoAutonomoContratante.visibility = View.VISIBLE
         binding.lbPerfilAutonomoContratante.text = "Perfil Contratante"
 
-        // 4. Configura os cliques dos outros botões
+        // 4. Configura os cliques dos botões
+        binding.btnFazerPedido.setOnClickListener {
+            startActivity(Intent(this, TelaCriacaoPedido::class.java))
+        }
+        
         binding.itemAlterarSenha.setOnClickListener {
             usuario.email?.let { email ->
                 enviarEmailRedefinicaoSenha(email)

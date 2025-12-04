@@ -151,7 +151,7 @@ class TelaNegocioAutonomo : AppCompatActivity() {
      */
     private fun carregarServicos() {
         db.collection("servico")
-            .whereEqualTo("autonomoId", autonomoId)
+            .whereEqualTo("uidAutonomo", autonomoId)
             .get()
             .addOnSuccessListener { documents ->
                 if (!documents.isEmpty) {
@@ -251,13 +251,12 @@ class TelaNegocioAutonomo : AppCompatActivity() {
         binding.btnFazerPedido.setOnClickListener {
             val intent = Intent(this, TelaCriacaoPedido::class.java).apply {
                 putExtra("AUTONOMO_ID", autonomoId)
-                putExtra("MODE", "CREATE")
             }
             startActivity(intent)
         }
 
-        // Botão para abrir a conversa no WhatsApp
-        binding.btnWhatsapp.setOnClickListener {
+        // O número de telefone agora é clicável para abrir o WhatsApp
+        binding.tvTelefone.setOnClickListener {
             usuarioAtual?.numeroTelefone?.let { numero ->
                 // Limpa o número para conter apenas dígitos
                 val numeroLimpo = numero.replace(Regex("[^0-9]"), "")

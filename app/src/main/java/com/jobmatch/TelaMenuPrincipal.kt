@@ -54,8 +54,8 @@ class TelaMenuPrincipal : AppCompatActivity() {
     }
     
     private fun setupRecyclerView(){
-        // A lista de serviços é passada diretamente para o adapter
-        servicoAdapter = ServicoAdapter(emptyList())
+        // CORREÇÃO: Inicializa o adapter com uma lista mutável e vazia.
+        servicoAdapter = ServicoAdapter(mutableListOf(), true)
         binding.rvServicosPrincipal.apply {
             layoutManager = LinearLayoutManager(this@TelaMenuPrincipal, LinearLayoutManager.HORIZONTAL, false)
             adapter = servicoAdapter
@@ -132,9 +132,8 @@ class TelaMenuPrincipal : AppCompatActivity() {
             .addOnSuccessListener { documents ->
                 val novosServicos = documents.toObjects(Servico::class.java)
                 
-                // Atualiza o adapter com a nova lista de serviços
-                servicoAdapter = ServicoAdapter(novosServicos)
-                binding.rvServicosPrincipal.adapter = servicoAdapter
+                // CORREÇÃO: Atualiza os dados do adapter existente em vez de criar um novo.
+                servicoAdapter.updateData(novosServicos)
 
                 if (documents.isEmpty) {
                     Log.d("Firestore", "Nenhum serviço encontrado para o filtro: $categoriaFiltro")
@@ -165,7 +164,6 @@ class TelaMenuPrincipal : AppCompatActivity() {
                                 crossfade(true)
                                 placeholder(R.drawable.ic_profile_placeholder)
                                 error(R.drawable.ic_profile_placeholder)
-                                // CORREÇÃO: Adiciona a transformação para círculo
                                 transformations(CircleCropTransformation())
                             }
                         } else {

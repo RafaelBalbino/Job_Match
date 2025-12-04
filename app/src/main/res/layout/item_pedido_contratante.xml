@@ -8,6 +8,7 @@
     android:layout_marginTop="8dp"
     android:layout_marginEnd="16dp"
     android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="?attr/colorSurface"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
@@ -22,7 +23,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/ic_profile_placeholder"
-            app:civ_border_color="@color/cinza_claro"
+            app:civ_border_color="?attr/colorOutline"
             app:civ_border_width="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,7 +36,7 @@
             android:layout_marginStart="16dp"
             android:text="Nome do Autônomo"
             android:textSize="12sp"
-            android:textColor="@color/texto_secundario"
+            android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintStart_toEndOf="@id/img_autonomo_perfil"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,7 +45,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:textColor="@color/texto_primario"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -61,9 +62,9 @@
             android:drawableStart="@drawable/ic_phone_24"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
-            android:textColor="@color/texto_secundario"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
-            app:drawableTint="@color/texto_secundario"
+            app:drawableTint="?android:attr/textColorSecondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/img_autonomo_perfil"
             app:layout_constraintTop_toBottomOf="@id/tv_nome_autonomo"
@@ -78,9 +79,9 @@
             android:drawableStart="@drawable/ic_email_24"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
-            android:textColor="@color/texto_secundario"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
-            app:drawableTint="@color/texto_secundario"
+            app:drawableTint="?android:attr/textColorSecondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/img_autonomo_perfil"
             app:layout_constraintTop_toBottomOf="@id/tv_numero_autonomo"
@@ -95,7 +96,7 @@
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_autonomo_perfil" />
+            app:layout_constraintTop_toBottomOf="@id/img_autonomo_perfil" />
 
         <!-- Seção: Resumo do Pedido -->
         <TextView
@@ -107,7 +108,7 @@
             android:maxLength="50"
             android:maxLines="2"
             android:text="Resumo do pedido..."
-            android:textColor="@color/texto_secundario"
+            android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider_item" />
@@ -118,10 +119,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Ver mais"
-            android:textColor="@color/primaria"
+            android:textColor="?attr/colorPrimary"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_resumo_descricao" />
+            app:layout_constraintTop_toBottomOf="@id/tv_resumo_descricao" />
 
         <!-- Seção: Imagem do Problema -->
         <TextView
@@ -130,7 +131,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Imagem do Problema"
-            android:textColor="@color/texto_secundario"
+            android:textColor="?android:attr/textColorSecondary"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_ver_mais_contratante" />
@@ -140,11 +141,11 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="8dp"
-            android:background="@color/cinza_claro"
+            android:background="?attr/colorSurfaceVariant"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_image_placeholder"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_imagem_problema_label"
+            app:layout_constraintTop_toBottomOf="@id/tv_imagem_problema_label"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <TextView

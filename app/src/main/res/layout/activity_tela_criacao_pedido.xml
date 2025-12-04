@@ -72,7 +72,7 @@
                 android:hint="@string/creation_pedido_phone_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_nome">
+                app:layout_constraintTop_toBottomOf="@id/til_nome">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txt_telefone"
@@ -90,7 +90,7 @@
                 android:hint="@string/creation_pedido_email_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_telefone">
+                app:layout_constraintTop_toBottomOf="@id/til_telefone">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txt_email"
@@ -108,7 +108,7 @@
                 android:text="@string/creation_pedido_service_details_title"
                 android:textColor="?attr/colorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_email" />
+                app:layout_constraintTop_toBottomOf="@id/til_email" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_tipoServico"
@@ -155,6 +155,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -162,17 +163,18 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_cidade"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="2"
                     android:hint="@string/creation_pedido_city_hint">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <AutoCompleteTextView
                         android:id="@+id/txt_cidade"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -180,7 +182,7 @@
                     android:id="@+id/til_estado"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:hint="@string/creation_pedido_state_hint">
 

@@ -5,7 +5,6 @@
     android:id="@+id/layout_root_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
     tools:context=".TelaMenuPerfil">
 
     <!-- Cabeçalho -->
@@ -18,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
-        app:tint="#18B49D" />
+        app:tint="?attr/colorPrimary" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_perfil_usuario"
@@ -27,7 +26,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:contentDescription="Foto de perfil do usuário"
-        app:civ_border_color="#E0E0E0"
+        app:civ_border_color="?attr/colorOutline"
         app:civ_border_width="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -38,7 +37,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:textColor="@color/preto"
+        android:layout_marginEnd="8dp"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/btn_fechar_menu"
@@ -52,9 +52,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
-        android:textColor="@color/preto"
+        android:layout_marginEnd="16dp"
+        android:textColor="?android:attr/textColorSecondary"
         android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@id/btn_fechar_menu"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/img_perfil_usuario"
         app:layout_constraintTop_toBottomOf="@+id/txt_nome_usuario"
         tools:text="fulano.tal@gmail.com" />
@@ -64,7 +65,7 @@
         android:layout_width="0dp"
         android:layout_height="2dp"
         android:layout_marginTop="24dp"
-        android:background="#18B49D"
+        android:background="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img_perfil_usuario" />
@@ -101,7 +102,7 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="20dp"
                     android:text="Meu Perfil"
-                    android:textColor="@color/preto"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -109,7 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_gravity="bottom"
-                    android:background="#E0E0E0" />
+                    android:background="?android:attr/listDivider" />
             </FrameLayout>
 
             <!-- Item 2: Meus Pedidos -->
@@ -130,7 +131,7 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="20dp"
                     android:text="Meus Pedidos"
-                    android:textColor="@color/preto"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -138,7 +139,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_gravity="bottom"
-                    android:background="#E0E0E0" />
+                    android:background="?android:attr/listDivider" />
             </FrameLayout>
 
             <!-- Item 3: Projetos -->
@@ -158,7 +159,7 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="20dp"
                     android:text="Projetos"
-                    android:textColor="@color/preto"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -166,7 +167,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_gravity="bottom"
-                    android:background="#E0E0E0" />
+                    android:background="?android:attr/listDivider" />
             </FrameLayout>
 
             <!-- Item 4: Pagamentos -->
@@ -186,7 +187,7 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="20dp"
                     android:text="Pagamentos"
-                    android:textColor="@color/preto"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -194,7 +195,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_gravity="bottom"
-                    android:background="#E0E0E0" />
+                    android:background="?android:attr/listDivider" />
             </FrameLayout>
 
             <!-- Item 5: Sobre Nós -->
@@ -214,7 +215,7 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="20dp"
                     android:text="Sobre Nós"
-                    android:textColor="@color/preto"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -222,7 +223,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_gravity="bottom"
-                    android:background="#E0E0E0" />
+                    android:background="?android:attr/listDivider" />
             </FrameLayout>
 
             <!-- Item 6: Termos e Condições -->
@@ -242,7 +243,7 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="20dp"
                     android:text="Termos e Condições"
-                    android:textColor="@color/preto"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -250,36 +251,42 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_gravity="bottom"
-                    android:background="#E0E0E0" />
+                    android:background="?android:attr/listDivider" />
             </FrameLayout>
 
-            <!-- Item 7: Configurações -->
-            <FrameLayout
-                android:id="@+id/btn_configuracoes"
+            <!-- Item 7: Seletor de Tema -->
+            <RelativeLayout
+                android:id="@+id/container_tema"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true">
+                android:paddingStart="16dp"
+                android:paddingTop="20dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="20dp">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/tv_tema_label"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
-                    android:paddingTop="20dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="20dp"
-                    android:text="Configurações"
-                    android:textColor="@color/preto"
+                    android:layout_centerVertical="true"
+                    android:text="Tema Escuro"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_gravity="bottom"
-                    android:background="#E0E0E0" />
-            </FrameLayout>
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switch_tema"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
 
             <!-- ÚLTIMO ITEM: Encerrar Sessão (sem linha divisória) -->
             <FrameLayout
@@ -298,7 +305,7 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="20dp"
                     android:text="Encerrar Sessão"
-                    android:textColor="#C62828"
+                    android:textColor="#C62828" 
                     android:textSize="20sp"
                     android:textStyle="bold" />
             </FrameLayout>

@@ -8,7 +8,7 @@
     android:layout_marginTop="8dp"
     android:layout_marginEnd="16dp"
     android:layout_marginBottom="8dp"
-    app:cardBackgroundColor="@color/superficie"
+    app:cardBackgroundColor="?attr/colorSurface"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Contratante"
-            android:textColor="@color/texto_secundario"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -33,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:textColor="@color/texto_primario"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/tv_status_pedido"
@@ -49,9 +49,9 @@
             android:drawableStart="@drawable/ic_phone_24"
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
-            android:textColor="@color/texto_secundario"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
-            app:drawableTint="@color/texto_secundario"
+            app:drawableTint="?android:attr/textColorSecondary"
             app:layout_constraintEnd_toEndOf="@id/tv_nome_contratante"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_nome_contratante"
@@ -65,9 +65,9 @@
             android:drawableStart="@drawable/ic_email_24"
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
-            android:textColor="@color/texto_secundario"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
-            app:drawableTint="@color/texto_secundario"
+            app:drawableTint="?android:attr/textColorSecondary"
             app:layout_constraintEnd_toEndOf="@id/tv_nome_contratante"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_telefone"
@@ -81,9 +81,9 @@
             android:drawableStart="@drawable/ic_location_on_24"
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
-            android:textColor="@color/texto_secundario"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
-            app:drawableTint="@color/texto_secundario"
+            app:drawableTint="?android:attr/textColorSecondary"
             app:layout_constraintEnd_toEndOf="@id/tv_nome_contratante"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_email_contratante"
@@ -104,7 +104,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:backgroundTint="@color/primaria"
+            tools:backgroundTint="?attr/colorPrimary"
             tools:text="PENDENTE" />
 
         <!-- Divisor -->
@@ -116,7 +116,7 @@
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_endereco_contratante" />
+            app:layout_constraintTop_toBottomOf="@id/tv_endereco_contratante" />
 
         <!-- Detalhes do Serviço -->
         <TextView
@@ -124,7 +124,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textColor="@color/texto_primario"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -138,11 +138,11 @@
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:maxLines="3"
-            android:textColor="@color/texto_secundario"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_tipo_servico"
+            app:layout_constraintTop_toBottomOf="@id/tv_tipo_servico"
             tools:text="Descrição curta do problema a ser resolvido. Aqui vai um resumo do que o autônomo precisa saber para avaliar o serviço." />
 
         <TextView
@@ -151,11 +151,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Ver mais detalhes"
-            android:textColor="@color/primaria"
+            android:textColor="?attr/colorPrimary"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_descricao_curta" />
+            app:layout_constraintTop_toBottomOf="@id/tv_descricao_curta" />
 
         <!-- Botões de Ação do Autônomo -->
         <LinearLayout

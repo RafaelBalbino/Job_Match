@@ -55,7 +55,6 @@ class TelaPerfilAutonomo : AppCompatActivity() {
                 activityResultLauncher.launch(Intent(this, CadastrarServico::class.java))
             }
 
-            // ADICIONADO: Lógica dos novos botões
             binding.btnBuscarPedidos.setOnClickListener {
                 abrirListaDePedidos("fragmentListaPedidosAutonomo", "BUSCA")
             }
@@ -104,7 +103,14 @@ class TelaPerfilAutonomo : AppCompatActivity() {
             .addOnSuccessListener { documents ->
                 binding.progressBar.visibility = View.GONE
                 val servicos = documents.toObjects(Servico::class.java)
-                servicosAdapter.updateData(servicos)
+                if (servicos.isEmpty()) {
+                    binding.containerServicos.visibility = View.GONE
+                    binding.tvSemServicos.visibility = View.VISIBLE
+                } else {
+                    binding.containerServicos.visibility = View.VISIBLE
+                    binding.tvSemServicos.visibility = View.GONE
+                    servicosAdapter.updateData(servicos)
+                }
             }
             .addOnFailureListener { e ->
                 binding.progressBar.visibility = View.GONE

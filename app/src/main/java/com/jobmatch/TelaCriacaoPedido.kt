@@ -15,12 +15,25 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.jobmatch.databinding.ActivityTelaCriacaoPedidoBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class TelaCriacaoPedido : AppCompatActivity() {
 
     private lateinit var binding: ActivityTelaCriacaoPedidoBinding
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
+
+    private val ibgeService: IbgeService by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://servicodados.ibge.gov.br/api/v1/localidades/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(IbgeService::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +42,6 @@ class TelaCriacaoPedido : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        // Ajusta o padding para as barras do sistema (comum a ambos os modos)
         ViewCompat.setOnApplyWindowInsetsListener(binding.Main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -38,8 +50,9 @@ class TelaCriacaoPedido : AppCompatActivity() {
 
         setupToolbar()
         setupDropdownMenus()
+        setupStateDropdown() // Lógica do endereço
+        fetchAndSetupCategories() // Lógica das categorias
 
-        // Verifica o modo de operação (Criação vs. Visualização)
         val mode = intent.getStringExtra("MODE")
         if (mode == "VIEW_ONLY") {
             val pedidoId = intent.getStringExtra("PEDIDO_ID")
@@ -65,21 +78,17 @@ class TelaCriacaoPedido : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
-    // Configura a tela para o modo de CRIAÇÃO de pedido
     private fun setupCreateMode() {
         setupClickListeners()
         preencherDadosUsuarioLogado()
         preencherCamposComIntentAnterior()
     }
 
-    // Configura a tela para o modo de VISUALIZAÇÃO de pedido
     private fun setupViewOnlyMode(pedidoId: String) {
-        // 1. Altera a UI para modo de visualização
         binding.toolbar.title = "Informações do Pedido"
         binding.btnEnviarPedido.visibility = View.GONE
         binding.btnAnexarFotos.visibility = View.GONE
 
-        // Desabilita todos os campos de entrada
         binding.txtNome.isEnabled = false
         binding.txtTelefone.isEnabled = false
         binding.txtEmail.isEnabled = false
@@ -89,7 +98,6 @@ class TelaCriacaoPedido : AppCompatActivity() {
         binding.actvEstado.isEnabled = false
         binding.actvTempoServico.isEnabled = false
 
-        // 2. Carrega e exibe os dados do pedido
         binding.progressBar.visibility = View.VISIBLE
         db.collection("pedido").document(pedidoId).get()
             .addOnSuccessListener { document ->
@@ -111,7 +119,6 @@ class TelaCriacaoPedido : AppCompatActivity() {
             }
     }
     
-    // Preenche a UI com os dados do usuário para conveniência
     private fun preencherDadosUsuarioLogado(){
         val userId = auth.currentUser?.uid ?: return
         db.collection("users").document(userId).get().addOnSuccessListener { userDoc ->
@@ -125,19 +132,15 @@ class TelaCriacaoPedido : AppCompatActivity() {
     }
 
     private fun buscarEPreencherEndereco(userId: String) {
-        // podemos usar a função document(userId)
         db.collection("enderecos").document(userId).get()
             .addOnSuccessListener { enderecoDoc ->
                 val endereco = enderecoDoc.toObject(Endereco::class.java)
-
-                // Preenche os campos de localização
                 if (endereco != null) {
-                    // Os campos 'cidade' e 'estado' agora vêm do objeto Endereco
-                    binding.txtCidade.setText(endereco.cidade ?: "")
-                    // O 'false' indica que não deve disparar o listener do AutoCompleteTextView
-                    binding.actvEstado.setText(endereco.estado ?: "", false)
+                    binding.actvEstado.setText(endereco.estado, false)
+                    fetchCidadesPorEstado(endereco.estado ?: "") {
+                        binding.txtCidade.setText(endereco.cidade)
+                    }
                 } else {
-                    // Caso o endereço não exista (primeiro login, por exemplo)
                     Toast.makeText(this, "Endereço não encontrado. Por favor, preencha a localização.", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -146,7 +149,6 @@ class TelaCriacaoPedido : AppCompatActivity() {
             }
     }
 
-    // Preenche a UI com os dados de um pedido existente
     private fun populateUiWithPedidoData(pedido: Pedidos) {
         binding.txtNome.setText(pedido.nomeSolicitacao)
         binding.txtTelefone.setText(pedido.telefoneSolicitante)
@@ -159,20 +161,55 @@ class TelaCriacaoPedido : AppCompatActivity() {
     }
 
     private fun setupDropdownMenus() {
-        val serviceTypes = resources.getStringArray(R.array.service_type_options)
-        val serviceTypeAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, serviceTypes)
-        binding.actvTipoServico.setAdapter(serviceTypeAdapter)
-
         val serviceTimes = resources.getStringArray(R.array.service_time_options)
         val serviceTimeAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, serviceTimes)
         binding.actvTempoServico.setAdapter(serviceTimeAdapter)
-        
-        val states = resources.getStringArray(R.array.brazilian_states)
-        val stateAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, states)
-        binding.actvEstado.setAdapter(stateAdapter)
+    }
+    
+    private fun fetchAndSetupCategories() {
+        db.collection("servico").get().addOnSuccessListener {
+            val categories = it.documents.mapNotNull { doc -> doc.getString("categoria") }.filter { it.isNotBlank() }.distinct().sorted()
+            val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categories)
+            binding.actvTipoServico.setAdapter(adapter)
+        }
     }
 
-    // Preenche os campos se vierem de uma tela anterior (apenas no modo de criação)
+    private fun setupStateDropdown() {
+        val states = resources.getStringArray(R.array.brazilian_states)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, states)
+        binding.actvEstado.setAdapter(adapter)
+
+        binding.tilCidade.isEnabled = false
+
+        binding.actvEstado.setOnItemClickListener { parent, view, position, id ->
+            val selectedState = parent.getItemAtPosition(position).toString()
+            binding.txtCidade.setText("")
+            fetchCidadesPorEstado(selectedState)
+        }
+    }
+
+    private fun fetchCidadesPorEstado(uf: String, onComplete: (() -> Unit)? = null) {
+        binding.tilCidade.isEnabled = false
+
+        ibgeService.buscarCidadesPorEstado(uf).enqueue(object : Callback<List<Municipio>> {
+            override fun onResponse(call: Call<List<Municipio>>, response: Response<List<Municipio>>) {
+                if (response.isSuccessful) {
+                    val cidades = response.body()?.map { it.nome } ?: emptyList()
+                    val cityAdapter = ArrayAdapter(this@TelaCriacaoPedido, android.R.layout.simple_dropdown_item_1line, cidades)
+                    binding.txtCidade.setAdapter(cityAdapter)
+                    binding.tilCidade.isEnabled = true
+                    onComplete?.invoke()
+                } else {
+                    Toast.makeText(this@TelaCriacaoPedido, "Erro ao carregar cidades.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<List<Municipio>>, t: Throwable) {
+                Toast.makeText(this@TelaCriacaoPedido, "Falha de rede ao carregar cidades.", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     private fun preencherCamposComIntentAnterior() {
         val serviceName = intent.getStringExtra("SERVICE_NAME")
         val serviceDescription = intent.getStringExtra("SERVICE_DESCRIPTION")
@@ -191,7 +228,6 @@ class TelaCriacaoPedido : AppCompatActivity() {
         binding.btnEnviarPedido.setOnClickListener { enviarPedido() }
     }
     
-    // NOVA FUNÇÃO para lidar com o envio do pedido
     private fun enviarPedido() {
         val currentUser = auth.currentUser
         if (currentUser == null) {
@@ -199,7 +235,6 @@ class TelaCriacaoPedido : AppCompatActivity() {
             return
         }
 
-        // 1. Validação dos campos do formulário
         val nome = binding.txtNome.text.toString().trim()
         val telefone = binding.txtTelefone.text.toString().trim()
         val email = binding.txtEmail.text.toString().trim()
@@ -216,7 +251,6 @@ class TelaCriacaoPedido : AppCompatActivity() {
         
         binding.progressBar.visibility = View.VISIBLE
 
-        // 2. Cria o objeto Pedido como um Mapa para usar o Timestamp do servidor
         val novoPedido = hashMapOf(
             "nomeSolicitacao" to nome,
             "telefoneSolicitante" to telefone,
@@ -228,22 +262,21 @@ class TelaCriacaoPedido : AppCompatActivity() {
             "estado" to estado,
             "status" to "pendente",
             "contratanteId" to currentUser.uid,
-            "autonomo" to "",
-            "dataHora" to FieldValue.serverTimestamp() // Usa o timestamp do servidor para ordenação
+            "autonomo" to (intent.getStringExtra("AUTONOMO_ID") ?: ""),
+            "dataHora" to FieldValue.serverTimestamp()
         )
 
-        // 3. Salva o pedido no Firestore. O @DocumentId na classe Pedidos cuidará de obter o ID.
         db.collection("pedido").add(novoPedido)
             .addOnSuccessListener { 
                 binding.progressBar.visibility = View.GONE
                 Toast.makeText(this, "Pedido criado com sucesso!", Toast.LENGTH_SHORT).show()
 
-                // 4. Navega para a lista de pedidos, como você sugeriu
                 val intent = Intent(this, FragmentContainerActivity::class.java).apply {
-                    putExtra("FRAGMENT_TYPE", "CONTRATANTE")
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    putExtra("FRAGMENT_NAME", "fragmentListaPedidosContratante")
+                    putExtra("TIPO_QUERY", "CONTRATANTE")
                 }
                 startActivity(intent)
+                finish()
             }
             .addOnFailureListener { e ->
                 binding.progressBar.visibility = View.GONE

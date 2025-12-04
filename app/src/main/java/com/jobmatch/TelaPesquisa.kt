@@ -8,16 +8,19 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.PopupWindow
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.Query
 import com.jobmatch.databinding.ActivityTelaPesquisaBinding
 import com.jobmatch.databinding.LayoutHeaderSearchBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.text.Normalizer
 
 class TelaPesquisa : AppCompatActivity() {
 
@@ -25,9 +28,10 @@ class TelaPesquisa : AppCompatActivity() {
     private lateinit var headerBinding: LayoutHeaderSearchBinding
     private lateinit var firestore: FirebaseFirestore
     private lateinit var servicoAdapter: ServicoAdapter
-    private val servicos = mutableListOf<Servico>()
-    private var searchField = "nomeServico" // Campo de busca padrão
-    private var firestoreListener: ListenerRegistration? = null
+
+    private val allDataSource = mutableListOf<Servico>()
+
+    private var searchField = "nomeServico"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,96 +43,118 @@ class TelaPesquisa : AppCompatActivity() {
 
         setupRecyclerView()
         setupSearch()
+        loadDataBasedOnFilter()
 
-        // Verifica se a tela foi aberta para mostrar todos os serviços
-        if (intent.getBooleanExtra("SHOW_ALL", false)) {
-            fetchAllServices()
-        } else {
-            showInitialState()
-        }
-
-        headerBinding.backButton.setOnClickListener {
-            finish()
-        }
-
-        headerBinding.filterButton.setOnClickListener { view ->
-            showFilterPopupMenu(view)
-        }
+        headerBinding.backButton.setOnClickListener { finish() }
+        headerBinding.filterButton.setOnClickListener { view -> showFilterPopupMenu(view) }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        // Remove o listener para evitar memory leaks
-        firestoreListener?.remove()
+    private fun setupRecyclerView() {
+        servicoAdapter = ServicoAdapter(mutableListOf<Servico>(), true)
+        binding.recyclerView.apply {
+            layoutManager = GridLayoutManager(this@TelaPesquisa, 2)
+            adapter = servicoAdapter
+        }
     }
 
     private fun setupSearch() {
-        // Listener para o texto digitado no novo TextInputEditText
         headerBinding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val newText = s.toString()
-                if (newText.isNotEmpty()) {
-                    search(newText)
-                } else {
-                    // Se o texto for limpo, volta ao estado inicial ou à lista completa
-                    if (intent.getBooleanExtra("SHOW_ALL", false)) {
-                        fetchAllServices()
-                    } else {
-                        showInitialState()
-                    }
-                }
+                filterAndDisplay(s.toString())
             }
-
             override fun afterTextChanged(s: Editable?) {}
         })
+    }
 
-        // Opcional: Executa a busca ao pressionar o botão de "pesquisar" no teclado
-        headerBinding.etSearch.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                search(headerBinding.etSearch.text.toString())
-                true
-            } else {
-                false
+    private fun loadDataBasedOnFilter() {
+        showLoadingState()
+        if (searchField == "nomeAutonomo") {
+            loadAllAutonomos()
+        } else {
+            loadAllServices()
+        }
+    }
+
+    private fun loadAllServices() {
+        firestore.collection("servico").orderBy(searchField).get()
+            .addOnSuccessListener { snapshot ->
+                hideLoadingState()
+                if (snapshot == null || snapshot.isEmpty) {
+                    allDataSource.clear()
+                    filterAndDisplay("")
+                } else {
+                    val servicos = snapshot.toObjects(Servico::class.java)
+                    allDataSource.clear()
+                    allDataSource.addAll(servicos)
+                    filterAndDisplay(headerBinding.etSearch.text.toString())
+                }
+            }
+            .addOnFailureListener {
+                hideLoadingState()
+                showErrorState()
+            }
+    }
+
+    private fun loadAllAutonomos() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val usersSnapshot = firestore.collection("users").whereNotEqualTo("autonomo", null).get().await()
+                val autonomosAsServices = usersSnapshot.toObjects(Usuario::class.java).map { 
+                    Servico(uidAutonomo = it.uid ?: "", nomeAutonomo = it.nome ?: "", fotoServico = it.fotoUrl, nomeServico = "Ver Perfil")
+                }
+                withContext(Dispatchers.Main) {
+                    hideLoadingState()
+                    allDataSource.clear()
+                    allDataSource.addAll(autonomosAsServices)
+                    filterAndDisplay(headerBinding.etSearch.text.toString())
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    hideLoadingState()
+                    showErrorState()
+                }
             }
         }
     }
 
-    private fun fetchAllServices() {
-        // Cancela a busca anterior antes de iniciar uma nova
-        firestoreListener?.remove()
-
-        firestoreListener = firestore.collection("servico")
-            .orderBy("nomeServico", Query.Direction.ASCENDING)
-            .addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                    showErrorState()
-                    return@addSnapshotListener
+    private fun filterAndDisplay(query: String) {
+        val filteredList = if (query.isBlank()) {
+            allDataSource
+        } else {
+            val normalizedQuery = query.normalize()
+            allDataSource.filter { servico ->
+                val fieldValue = when (searchField) {
+                    "nomeServico" -> servico.nomeServico
+                    "categoria" -> servico.categoria
+                    "nomeAutonomo" -> servico.nomeAutonomo
+                    else -> null
                 }
-
-                if (snapshot == null || snapshot.isEmpty) {
-                    showErrorState()
-                } else {
-                    val newServicos = snapshot.toObjects(Servico::class.java)
-                    servicos.clear()
-                    servicos.addAll(newServicos)
-                    servicoAdapter.notifyDataSetChanged()
-                    showResultsState()
-                }
+                 fieldValue?.let { 
+                    it.normalize().contains(normalizedQuery, ignoreCase = true)
+                } ?: false
             }
+        }
+
+        servicoAdapter.updateData(filteredList)
+
+        if (filteredList.isEmpty()) {
+            showErrorState()
+        } else {
+            showResultsState()
+        }
+    }
+
+    private fun String.normalize(): String {
+        return Normalizer.normalize(this, Normalizer.Form.NFD)
+            .replace(Regex("\\p{InCombiningDiacriticalMarks}+"), "")
+            .lowercase()
     }
 
     private fun showFilterPopupMenu(view: View) {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.search_options_menu, null)
-
-        val popupWindow = PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
+        val popupWindow = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             popupWindow.elevation = 10.0f
@@ -142,78 +168,43 @@ class TelaPesquisa : AppCompatActivity() {
         }
 
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            searchField = when (checkedId) {
+            popupWindow.dismiss()
+            val newSearchField = when (checkedId) {
                 R.id.search_by_service_name -> "nomeServico"
                 R.id.search_by_category -> "categoria"
                 R.id.search_by_freelancer_name -> "nomeAutonomo"
                 else -> "nomeServico"
             }
-            popupWindow.dismiss()
-            val currentQuery = headerBinding.etSearch.text.toString()
-            if (currentQuery.isNotEmpty()) {
-                search(currentQuery)
+            if (searchField != newSearchField) {
+                searchField = newSearchField
+                headerBinding.etSearch.text?.clear()
+                loadDataBasedOnFilter()
             }
         }
-
         popupWindow.showAsDropDown(view)
     }
 
-    private fun search(query: String) {
-        // Cancela a busca anterior antes de iniciar uma nova
-        firestoreListener?.remove()
-
-        val formattedQuery = query.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
-
-        firestoreListener = firestore.collection("servico")
-            .orderBy(searchField)
-            .whereGreaterThanOrEqualTo(searchField, formattedQuery)
-            .whereLessThanOrEqualTo(searchField, formattedQuery + '\uf8ff')
-            .addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                    showErrorState()
-                    return@addSnapshotListener
-                }
-
-                if (snapshot == null || snapshot.isEmpty) {
-                    showErrorState()
-                } else {
-                    val newServicos = snapshot.toObjects(Servico::class.java)
-                    servicos.clear()
-                    servicos.addAll(newServicos)
-                    servicoAdapter.notifyDataSetChanged()
-                    showResultsState()
-                }
-            }
-    }
-
-    private fun setupRecyclerView() {
-        servicoAdapter = ServicoAdapter(servicos)
-        binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(this@TelaPesquisa, 2)
-            adapter = servicoAdapter
-        }
-    }
-
-    private fun showInitialState() {
-        firestoreListener?.remove()
-        servicos.clear()
-        servicoAdapter.notifyDataSetChanged()
-        binding.searchHintText.visibility = View.VISIBLE
+    private fun showLoadingState() {
+        binding.progressBar.visibility = View.VISIBLE
         binding.recyclerView.visibility = View.GONE
         binding.errorContainer.visibility = View.GONE
+        binding.searchHintText.visibility = View.GONE
+    }
+    
+    private fun hideLoadingState() {
+        binding.progressBar.visibility = View.GONE
     }
 
     private fun showResultsState() {
-        binding.searchHintText.visibility = View.GONE
         binding.recyclerView.visibility = View.VISIBLE
         binding.errorContainer.visibility = View.GONE
+        binding.searchHintText.visibility = View.GONE
     }
 
     private fun showErrorState() {
-        servicos.clear()
-        servicoAdapter.notifyDataSetChanged()
-        binding.searchHintText.visibility = View.GONE
+        servicoAdapter.updateData(emptyList())
         binding.recyclerView.visibility = View.GONE
         binding.errorContainer.visibility = View.VISIBLE
+        binding.searchHintText.visibility = View.GONE
     }
 }

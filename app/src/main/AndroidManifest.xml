@@ -48,12 +48,6 @@
             android:name=".TelaMudanca"
             android:exported="false" />
         <activity
-            android:name=".TelaPesquisaEncontrada"
-            android:exported="false" />
-        <activity
-            android:name=".TelaPesquisaErro"
-            android:exported="false" />
-        <activity
             android:name=".TelaMenuPrincipal"
             android:exported="false" />
         <activity

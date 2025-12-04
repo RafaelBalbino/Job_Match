@@ -61,7 +61,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/divider" />
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_nome_contratante"
@@ -94,7 +94,7 @@
             android:hint="@string/register_email_hint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_nome_contratante">
+            app:layout_constraintTop_toBottomOf="@id/til_nome_contratante">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txt_email_contratante"
@@ -115,7 +115,7 @@
             app:prefixText="+55 "
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_email_contratante">
+            app:layout_constraintTop_toBottomOf="@id/til_email_contratante">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txt_telefone_contratante"
@@ -124,45 +124,51 @@
                 android:inputType="phone" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_cidade"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <LinearLayout
+            android:id="@+id/ll_location_edit_contratante"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
-            android:hint="@string/register_city_hint"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/til_telefone_contratante">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txt_cidade"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_estado"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="@string/register_state_hint">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_estado"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:hint="@string/register_state_hint"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_cidade">
+                <AutoCompleteTextView
+                    android:id="@+id/actv_estado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <AutoCompleteTextView
-                android:id="@+id/actv_estado"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none" />
-        </com.google.android.material.textfield.TextInputLayout>
-        
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_cidade"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_weight="2"
+                android:hint="@string/register_city_hint">
+
+                <AutoCompleteTextView
+                    android:id="@+id/txt_cidade"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tv_section_image"
             android:layout_width="wrap_content"
@@ -174,7 +180,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_estado" />
+            app:layout_constraintTop_toBottomOf="@id/ll_location_edit_contratante" />
 
         <Button
             android:id="@+id/btn_anexar_imagem"
@@ -204,19 +210,31 @@
             tools:srcCompat="@tools:sample/avatars"
             tools:visibility="visible" />
 
-        <Button
-            android:id="@+id/btn_salvar"
+        <FrameLayout
             android:layout_width="150sp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
-            android:layout_marginEnd="24dp"
-            android:minHeight="56dp"
-            android:text="@string/botao_salvar"
-            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_perfil_contratante" />
+            app:layout_constraintTop_toBottomOf="@+id/img_perfil_contratante">
+
+            <Button
+                android:id="@+id/btn_salvar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:text="@string/botao_salvar"
+                android:textSize="18sp" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar_salvar"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:elevation="8dp"
+                android:visibility="gone" />
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

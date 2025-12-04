@@ -29,7 +29,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="16dp"
             android:contentDescription="Botão Voltar"
-            android:padding="8dp"
+            android:padding="16dp"
             app:tint="#FFFFFF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tbPerfilAutonomo"
@@ -42,7 +42,7 @@
             android:layout_height="40dp"
             android:layout_marginEnd="16dp"
             android:contentDescription="Botão Compartilhar Perfil"
-            android:padding="8dp"
+            android:padding="16dp"
             app:tint="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tbPerfilAutonomo"
@@ -79,7 +79,7 @@
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtViewNomeAutonomo" />
+            app:layout_constraintTop_toBottomOf="@id/txtViewNomeAutonomo" />
 
         <TextView
             android:id="@+id/txtViewEndereco"
@@ -149,7 +149,7 @@
             android:text="Editar Perfil"
             android:textSize="14sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/btnCadastrarServico"
+            app:layout_constraintBottom_toBottomOf="@id/btnCadastrarServico"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/btnCadastrarServico"
@@ -204,6 +204,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/HscrViewCategorias" />
 
+        <TextView
+            android:id="@+id/tv_sem_servicos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingBottom="30dp"
+            android:text="Você ainda não cadastrou nenhum serviço."
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtViewServicos" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/containerServicos"
             android:layout_width="0dp"
@@ -212,7 +224,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtViewServicos"/>
-            
+
         <LinearLayout
             android:id="@+id/botoes_pedidos_container"
             android:layout_width="match_parent"
