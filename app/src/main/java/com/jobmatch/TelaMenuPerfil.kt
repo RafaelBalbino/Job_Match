@@ -150,8 +150,8 @@ class TelaMenuPerfil : AppCompatActivity() {
      */
     private fun configurarCliquesGenericos() {
         binding.btnFecharMenu.setOnClickListener { finish() } // Fecha a tela
-        binding.btnPagamentos.setOnClickListener { showToast("Será implementado no futuro") }
-        binding.btnSobreNos.setOnClickListener { abrirFragmento("SobreNosFragment") } // CORREÇÃO: Abre o novo fragmento
+        binding.btnPagamentos.setOnClickListener { startActivity(Intent(this, TelaPagamentos::class.java)) } // CORREÇÃO: Abre a TelaPagamentos
+        binding.btnSobreNos.setOnClickListener { abrirFragmento("SobreNosFragment") } 
         binding.btnTermos.setOnClickListener { mostrarPopupTermos() }
         binding.btnEncerrarSessao.setOnClickListener { fazerLogout() } // Desloga o usuário
     }

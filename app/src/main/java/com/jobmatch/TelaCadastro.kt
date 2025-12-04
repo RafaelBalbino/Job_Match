@@ -105,6 +105,11 @@ class TelaCadastro : AppCompatActivity() {
             // Busca as cidades do estado selecionado
             fetchCidadesPorEstado(selectedState)
         }
+
+        // CORREÇÃO: Força o dropdown a aparecer em cada clique
+        binding.actvEstado.setOnClickListener {
+            binding.actvEstado.showDropDown()
+        }
     }
 
     private fun fetchCidadesPorEstado(uf: String) {

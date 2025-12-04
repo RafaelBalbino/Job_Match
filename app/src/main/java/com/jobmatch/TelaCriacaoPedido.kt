@@ -186,6 +186,11 @@ class TelaCriacaoPedido : AppCompatActivity() {
             binding.txtCidade.setText("")
             fetchCidadesPorEstado(selectedState)
         }
+
+        // CORREÇÃO: Força o dropdown a aparecer em cada clique
+        binding.actvEstado.setOnClickListener {
+            binding.actvEstado.showDropDown()
+        }
     }
 
     private fun fetchCidadesPorEstado(uf: String, onComplete: (() -> Unit)? = null) {

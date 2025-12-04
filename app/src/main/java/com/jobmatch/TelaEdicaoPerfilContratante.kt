@@ -240,6 +240,10 @@ class TelaEdicaoPerfilContratante : AppCompatActivity() {
             binding.txtCidade.setText("")
             fetchCidadesPorEstado(selectedState)
         }
+
+        binding.actvEstado.setOnClickListener {
+            binding.actvEstado.showDropDown()
+        }
     }
 
     private fun fetchCidadesPorEstado(uf: String, onComplete: (() -> Unit)? = null) {

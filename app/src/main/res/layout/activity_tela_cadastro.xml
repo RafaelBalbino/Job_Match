@@ -28,7 +28,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+        app:layout_constraintTop_toBottomOf="@id/imageView4" />
 
     <TextView
         android:id="@+id/textView14"
@@ -41,7 +41,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lbl_primeiro" />
+        app:layout_constraintTop_toBottomOf="@id/lbl_primeiro" />
 
     <TextView
         android:id="@+id/lbl_segundo"
@@ -52,7 +52,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+        app:layout_constraintTop_toBottomOf="@id/textView14" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/LinhaGuiaEsquerda"
@@ -109,7 +109,7 @@
                 android:hint="@string/register_email_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_nome">
+                app:layout_constraintTop_toBottomOf="@id/til_nome">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txt_email"
@@ -129,7 +129,7 @@
                 app:prefixText="+55 "
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_email">
+                app:layout_constraintTop_toBottomOf="@id/til_email">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txt_telefone"
@@ -161,24 +161,27 @@
                     <AutoCompleteTextView
                         android:id="@+id/actv_estado"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
                         android:inputType="none" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_cidade"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
-                    android:layout_weight="2"
+                    android:layout_weight="2.5"
                     android:hint="Cidade">
 
                     <AutoCompleteTextView
                         android:id="@+id/txt_cidade"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingStart="16dp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

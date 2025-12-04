@@ -17,12 +17,9 @@ class SobreNosFragment : Fragment() {
     private var _binding: FragmentSobreNosBinding? = null
     private val binding get() = _binding!!
 
-    // Crie uma data class para organizar os dados de cada integrante
     private data class Integrante(
         val nome: String,
-        val linkedinUrl: String,
-        val fotoUrl: String? = null, // Para carregar da internet
-        val fotoDrawable: Int? = null // Para carregar do projeto
+        val linkedinUrl: String
     )
 
     override fun onCreateView(
@@ -36,28 +33,26 @@ class SobreNosFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Botão para voltar
         binding.btnVoltarSobreNos.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        // PREENCHA AQUI: Lista com os dados dos integrantes
-        val integrantes = listOf(
-            // Documentação
-            Integrante("Nome Documentação 1", "https://www.linkedin.com/in/seu-usuario-1", fotoDrawable = R.drawable.ic_profile_placeholder),
-            Integrante("Nome Documentação 2", "https://www.linkedin.com/in/seu-usuario-2", fotoDrawable = R.drawable.ic_profile_placeholder),
-            // Desenvolvimento
-            Integrante("Nome Dev 1", "https://www.linkedin.com/in/seu-usuario-3", fotoUrl = "URL_DA_SUA_IMAGEM_AQUI"),
-            Integrante("Nome Dev 2", "https://www.linkedin.com/in/seu-usuario-4", fotoDrawable = R.drawable.ic_profile_placeholder),
-            Integrante("Nome Dev 3", "https://www.linkedin.com/in/seu-usuario-5", fotoDrawable = R.drawable.ic_profile_placeholder)
-        )
+        // Define os dados de cada integrante para facilitar a reordenação
+        val adriel = Integrante("Adriel de Castro Moura", "https://www.linkedin.com/in/adricastro/")
+        val leticiaO = Integrante("Letícia Oliveira Gonzalez", "https://www.linkedin.com/in/leticia-gonzalez/")
+        val kaio = Integrante("Kaio Freires de Abreu", "https://www.linkedin.com/in/kaio-freires-de-abreu/")
+        val leticiaS = Integrante("Letícia Silva de Bonis", "https://www.linkedin.com/in/leticia-de-bonis/")
+        val rafael = Integrante("Rafael Ballabinute Balbino", "https://www.linkedin.com/in/rafael-ballabinute-balbino/")
 
-        // Mapeia os dados da lista para os cards no layout
-        setupIntegranteCard(binding.integrante1, integrantes[0])
-        setupIntegranteCard(binding.integrante2, integrantes[1])
-        setupIntegranteCard(binding.integrante3, integrantes[2])
-        setupIntegranteCard(binding.integrante4, integrantes[3])
-        setupIntegranteCard(binding.integrante5, integrantes[4])
+        // Mapeia os dados para os cards na ordem que você pediu
+        // Documentação
+        setupIntegranteCard(binding.integrante1, adriel)
+        setupIntegranteCard(binding.integrante2, leticiaO)
+        // Desenvolvimento
+        setupIntegranteCard(binding.integrante3, adriel) // Adriel novamente
+        setupIntegranteCard(binding.integrante4, kaio)
+        setupIntegranteCard(binding.integrante5, leticiaS)
+        setupIntegranteCard(binding.integrante6, rafael)
     }
 
     /**
@@ -65,35 +60,33 @@ class SobreNosFragment : Fragment() {
      */
     private fun setupIntegranteCard(cardBinding: ItemIntegranteBinding, integrante: Integrante) {
         cardBinding.apply {
-            // Preenche o nome
             tvNomeIntegrante.text = integrante.nome
 
-            // Configura o clique do LinkedIn para abrir o navegador
             tvLinkedinIntegrante.setOnClickListener {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(integrante.linkedinUrl))
                 startActivity(intent)
             }
 
-            // Exemplo de como carregar a foto de uma URL da internet (descomente para usar)
-            // ivFotoIntegrante.load(integrante.fotoUrl) {
-            //     crossfade(true)
-            //     placeholder(R.drawable.ic_profile_placeholder)
-            //     error(R.drawable.ic_profile_placeholder)
-            // }
+            // Lógica automática para carregar a foto do drawable.
+            val resourceName = when (integrante.nome) {
+                "Letícia Oliveira Gonzalez" -> "leticiao"
+                "Letícia Silva de Bonis" -> "leticias"
+                else -> integrante.nome.split(" ")[0].lowercase()
+            }
+            
+            val resourceId = requireContext().resources.getIdentifier(resourceName, "drawable", requireContext().packageName)
 
-            // Exemplo de como carregar a foto de um recurso drawable do projeto
-             integrante.fotoDrawable?.let {
-                 ivFotoIntegrante.setImageResource(it)
-             }
-
-            // Se estiver usando URL, pode descomentar o bloco acima e comentar o de baixo
-             integrante.fotoUrl?.let {
-                 ivFotoIntegrante.load(it) {
-                     crossfade(true)
-                     placeholder(R.drawable.ic_profile_placeholder)
-                     error(R.drawable.ic_profile_placeholder)
-                 }
-             }
+            // Se encontrar o arquivo, carrega. Se não, usa o placeholder.
+            if (resourceId != 0) {
+                ivFotoIntegrante.load(resourceId) {
+                    crossfade(true)
+                    transformations(CircleCropTransformation()) // Garante a foto circular
+                }
+            } else {
+                ivFotoIntegrante.load(R.drawable.ic_profile_placeholder) {
+                    transformations(CircleCropTransformation()) // Garante a foto circular
+                }
+            }
         }
     }
 

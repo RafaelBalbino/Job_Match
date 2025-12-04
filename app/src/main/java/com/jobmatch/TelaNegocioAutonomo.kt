@@ -63,7 +63,7 @@ class TelaNegocioAutonomo : AppCompatActivity() {
      * Define seu layout como horizontal para a rolagem lateral.
      */
     private fun setupRecyclerView() {
-        // O adapter agora usa a lista filtrada para exibição
+        // CORREÇÃO: Garante que o nome do autônomo não será exibido nos cards desta tela.
         servicoAdapter = ServicoAdapter(filteredServicosList, showFreelancerName = false)
         binding.rvServicosOferecidos.apply {
             layoutManager = LinearLayoutManager(this@TelaNegocioAutonomo, LinearLayoutManager.HORIZONTAL, false)
@@ -255,8 +255,8 @@ class TelaNegocioAutonomo : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // O número de telefone agora é clicável para abrir o WhatsApp
-        binding.tvTelefone.setOnClickListener {
+        // CORREÇÃO: O clique agora é apenas no ícone do WhatsApp.
+        binding.btnWhatsapp.setOnClickListener {
             usuarioAtual?.numeroTelefone?.let { numero ->
                 // Limpa o número para conter apenas dígitos
                 val numeroLimpo = numero.replace(Regex("[^0-9]"), "")

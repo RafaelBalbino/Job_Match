@@ -115,21 +115,33 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Contato"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/iv_autonomo_avatar" />
 
+        <ImageButton
+            android:id="@+id/btn_whatsapp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Abrir no WhatsApp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_whatsapp_24"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_contato_label" />
+
         <TextView
             android:id="@+id/tv_telefone"
-            android:layout_width="151dp"
-            android:layout_height="21dp"
-            android:layout_marginTop="4dp"
-            android:drawablePadding="8dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:gravity="center_vertical"
-            app:drawableTint="?attr/colorPrimary"
-            app:layout_constraintStart_toStartOf="@id/guideline_start"
-            app:layout_constraintTop_toBottomOf="@id/tv_contato_label"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_whatsapp"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toEndOf="@+id/btn_whatsapp"
+            app:layout_constraintTop_toTopOf="@+id/btn_whatsapp"
             tools:text="(11) 99999-9999" />
 
         <!-- Seção de Endereço -->
@@ -139,18 +151,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Endereço"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
-            app:layout_constraintTop_toBottomOf="@id/tv_telefone" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_telefone" />
 
         <TextView
             android:id="@+id/tv_endereco"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:drawableStart="@drawable/ic_location_on_24"
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
+            android:textSize="17sp"
             app:drawableTint="?attr/colorPrimary"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
@@ -175,7 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Serviços Oferecidos"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
@@ -186,6 +200,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:minHeight="48dp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
@@ -220,18 +235,6 @@
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/rv_servicos_oferecidos" />
-
-        <ImageButton
-            android:id="@+id/btn_Whatsapp"
-            android:layout_width="50dp"
-            android:layout_height="53dp"
-            android:backgroundTint="@android:color/transparent"
-            android:contentDescription="Abrir Whatsapp"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_telefone"
-            app:layout_constraintStart_toEndOf="@+id/tv_telefone"
-            app:layout_constraintTop_toTopOf="@+id/tv_telefone"
-            app:srcCompat="@drawable/ic_whatsapp_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
