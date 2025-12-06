@@ -17,17 +17,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Foto do Autônomo no Topo -->
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/img_autonomo_perfil"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/ic_profile_placeholder"
-            app:civ_border_color="?attr/colorOutline"
-            app:civ_border_width="2dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <!-- Status no canto, não interfere com o resto -->
         <TextView
             android:id="@+id/tv_status_pedido"
@@ -37,32 +26,47 @@
             android:padding="8dp"
             android:textColor="@color/branco"
             android:textStyle="bold"
+            android:elevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="STATUS" />
 
-        <!-- Informações ABAIXO da foto -->
+        <!-- Label "Profissional" acima da foto -->
         <TextView
             android:id="@+id/tv_nome_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="Profissional"
             android:textSize="12sp"
             android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/img_autonomo_perfil" />
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Foto abaixo da Label -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_autonomo_perfil"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/ic_profile_placeholder"
+            app:civ_border_color="?attr/colorOutline"
+            app:civ_border_width="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_nome_label" />
+
+        <!-- Nome ao lado da foto -->
         <TextView
             android:id="@+id/tv_nome_autonomo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/img_autonomo_perfil"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_nome_label"
+            app:layout_constraintTop_toTopOf="@id/img_autonomo_perfil"
             tools:text="João da Silva" />
 
         <TextView
@@ -76,8 +80,8 @@
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
             app:drawableTint="?android:attr/textColorSecondary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_nome_autonomo"
+            app:layout_constraintEnd_toEndOf="@id/tv_nome_autonomo"
             app:layout_constraintTop_toBottomOf="@id/tv_nome_autonomo"
             tools:text="(11) 98765-4321" />
 
@@ -92,8 +96,8 @@
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
             app:drawableTint="?android:attr/textColorSecondary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_nome_autonomo"
+            app:layout_constraintEnd_toEndOf="@id/tv_nome_autonomo"
             app:layout_constraintTop_toBottomOf="@id/tv_numero_autonomo"
             tools:text="joao.silva@email.com" />
 
@@ -106,7 +110,7 @@
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_email_autonomo" />
+            app:layout_constraintTop_toBottomOf="@id/img_autonomo_perfil" />
 
         <!-- Seção: Resumo do Pedido -->
         <TextView
