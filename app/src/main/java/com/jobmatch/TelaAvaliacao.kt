@@ -19,6 +19,7 @@ class TelaAvaliacao : AppCompatActivity() {
 
     private var pedidoId: String? = null
     private var autonomoId: String? = null
+    private var descricaoServico: String? = null // Novo campo para receber a descrição
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +31,7 @@ class TelaAvaliacao : AppCompatActivity() {
 
         pedidoId = intent.getStringExtra("PEDIDO_ID")
         autonomoId = intent.getStringExtra("AUTONOMO_ID")
+        descricaoServico = intent.getStringExtra("DESCRICAO_SERVICO") // Recebe a descrição
 
         if (autonomoId == null || pedidoId == null) {
             Toast.makeText(this, "Erro: IDs não encontrados.", Toast.LENGTH_LONG).show()
@@ -38,6 +40,7 @@ class TelaAvaliacao : AppCompatActivity() {
         }
 
         carregarDadosAutonomo()
+        binding.tvDescricaoServicoAvaliacao.text = descricaoServico // Exibe a descrição
 
         binding.btnEnviarAvaliacao.setOnClickListener {
             iniciarProcessoDeAvaliacao()
@@ -109,7 +112,8 @@ class TelaAvaliacao : AppCompatActivity() {
             contratanteNome = contratante.nome ?: "", // Salva o nome para eficiência
             contratanteFotoUrl = contratante.fotoUrl, // Salva a foto para eficiência
             nota = nota,
-            comentario = comentario
+            comentario = comentario,
+            descricaoServico = descricaoServico ?: "" // Salva a descrição
         )
 
         // 3. Usa .document(id).set(objeto) para salvar com o ID controlado
@@ -145,6 +149,9 @@ class TelaAvaliacao : AppCompatActivity() {
 
             null
         }.addOnSuccessListener {
+            // 5. Após tudo, atualiza o status do pedido para finalizado, completando o ciclo.
+            db.collection("pedido").document(pedidoId!!).update("status", "finalizado")
+            
             Toast.makeText(this, "Avaliação enviada com sucesso!", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, TelaMenuPrincipal::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

@@ -1,5 +1,6 @@
 package com.jobmatch
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -46,7 +47,7 @@ class TelaSuporte : AppCompatActivity(), SuporteUsuarioAdapter.OnUserActionListe
                 if (!documents.isEmpty) {
                     val allUsers = documents.toObjects(Usuario::class.java)
                     // Filtra para não exibir a própria conta de suporte
-                    val filteredUsers = allUsers.filter { it.email != "SuporteJobMatch@gmail.com" }
+                    val filteredUsers = allUsers.filter { it.email != "suportejobmatch@email.com" }
                     userList.clear()
                     userList.addAll(filteredUsers)
                     adapter.updateUsers(userList)
@@ -58,6 +59,18 @@ class TelaSuporte : AppCompatActivity(), SuporteUsuarioAdapter.OnUserActionListe
                 binding.progressBar.visibility = View.GONE
                 Toast.makeText(this, "Erro ao carregar usuários: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    override fun onEditUser(user: Usuario) {
+        val targetActivity = if (user.autonomo != null) {
+            TelaEdicaoPerfilAutonomo::class.java
+        } else {
+            TelaEdicaoPerfilContratante::class.java
+        }
+        val intent = Intent(this, targetActivity).apply {
+            putExtra("USER_ID", user.uid)
+        }
+        startActivity(intent)
     }
 
     override fun onBlockUser(user: Usuario) {

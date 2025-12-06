@@ -75,12 +75,6 @@ class TelaMenuPrincipal : AppCompatActivity() {
             val intent = Intent(this, TelaPesquisa::class.java)
             startActivity(intent)
         }
-
-        binding.imgFiltro.setOnClickListener {
-            val intent = Intent(this, TelaPesquisa::class.java)
-            startActivity(intent)
-        }
-
         binding.tvVerTodos.setOnClickListener {
             val intent = Intent(this, TelaPesquisa::class.java).apply {
                 putExtra("SHOW_ALL", true)

@@ -4,20 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="?android:attr/colorBackground"
     tools:context=".fragmentListaPedidosAutonomo">
 
     <Button
         android:id="@+id/btn_voltar_lista_pedidos"
+        style="?attr/materialIconButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="4dp"
-        android:background="#00FFFFFF"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="25dp"
         android:contentDescription="Botão para voltar"
         app:icon="@drawable/ic_voltar_24"
         app:iconSize="25dp"
-        app:iconTint="@color/secundaria_variante"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +25,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Lista de Pedidos"
-        android:textSize="20sp"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:textColor="?android:attr/textColorPrimary"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/btn_voltar_lista_pedidos"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,6 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nenhum pedido de serviço encontrado."
+        android:textAppearance="?attr/textAppearanceBodyLarge"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

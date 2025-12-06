@@ -14,6 +14,7 @@
     <color name="cinza_escuro">#333333</color>
     <color name="preto_cinza">#121212</color>
     <color name="cinza_claro">#EEEEEE</color>
+    <color name="linkedin_blue">#0A66C2</color>
 
     <!-- Customizando o projeto -->
     <color name="primaria">@color/verde_agua</color>
@@ -36,5 +37,11 @@
     <color name="atenção">@color/amarelo_limao</color>
     <color name="erro">@color/vermelho</color>
 
-    
+    <!-- Cores de Status -->
+    <color name="status_pendente">#FFC107</color> <!-- Amber 500 -->
+    <color name="status_aceito">#4CAF50</color>   <!-- Green 500 -->
+    <color name="status_concluido">#2196F3</color> <!-- Blue 500 -->
+    <color name="status_negado">#F44336</color>   <!-- Red 500 -->
+    <color name="status_concluido_autonomo">#673AB7</color> <!-- Deep Purple 500 -->
+
 </resources>

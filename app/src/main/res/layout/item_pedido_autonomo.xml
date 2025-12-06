@@ -17,6 +17,19 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <!-- Status no canto, não interfere com o resto -->
+        <TextView
+            android:id="@+id/tv_status_pedido"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:textColor="@color/branco"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="STATUS" />
+
         <!-- Informações do Contratante -->
         <TextView
             android:id="@+id/tv_nome_contratante_label"
@@ -32,11 +45,10 @@
             android:id="@+id/tv_nome_contratante"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/tv_status_pedido"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_nome_contratante_label"
             tools:text="Nome Completo do Contratante" />
@@ -52,7 +64,7 @@
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
             app:drawableTint="?android:attr/textColorSecondary"
-            app:layout_constraintEnd_toEndOf="@id/tv_nome_contratante"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_nome_contratante"
             tools:text="(11) 98765-4321" />
@@ -68,7 +80,7 @@
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
             app:drawableTint="?android:attr/textColorSecondary"
-            app:layout_constraintEnd_toEndOf="@id/tv_nome_contratante"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_telefone"
             tools:text="email.contratante@example.com" />
@@ -84,30 +96,12 @@
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
             app:drawableTint="?android:attr/textColorSecondary"
-            app:layout_constraintEnd_toEndOf="@id/tv_nome_contratante"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_email_contratante"
             tools:text="São Paulo - SP" />
 
-        <!-- Status do Pedido -->
-        <TextView
-            android:id="@+id/tv_status_pedido"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_status"
-            android:paddingStart="12dp"
-            android:paddingTop="6dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="6dp"
-            android:textColor="@color/branco"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:backgroundTint="?attr/colorPrimary"
-            tools:text="PENDENTE" />
-
-        <!-- Divisor -->
+        
         <View
             android:id="@+id/divider"
             android:layout_width="0dp"
@@ -164,7 +158,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/tv_ver_detalhes"
+            app:layout_constraintTop_toBottomOf="@id/tv_ver_detalhes"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -185,6 +179,19 @@
                 android:layout_weight="1"
                 android:text="Aceitar" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_finalizar_servico_autonomo"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Finalizar Serviço"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/tv_ver_detalhes"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

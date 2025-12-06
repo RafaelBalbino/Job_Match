@@ -41,6 +41,19 @@
         tools:text="Nome do Autônomo" />
 
     <TextView
+        android:id="@+id/tv_descricao_servico_avaliacao"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="?android:attr/textColorSecondary"
+        app:layout_constraintTop_toBottomOf="@id/tv_nome_autonomo_avaliado"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Serviço: Conserto de vazamento na pia da cozinha" />
+
+    <TextView
         android:id="@+id/tv_instrucao_avaliacao"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -48,7 +61,7 @@
         android:text="Sua opinião é muito importante para a comunidade. Por favor, deixe uma nota e um comentário sobre sua experiência."
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-        app:layout_constraintTop_toBottomOf="@id/tv_nome_autonomo_avaliado"
+        app:layout_constraintTop_toBottomOf="@id/tv_descricao_servico_avaliacao"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -67,21 +80,19 @@
         android:id="@+id/til_comentario"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:layout_marginBottom="16dp"
         android:hint="Deixe seu comentário (opcional)"
-        app:layout_constraintHeight_min="100dp"
         app:layout_constraintTop_toBottomOf="@id/rating_bar_avaliacao"
-        app:layout_constraintBottom_toTopOf="@+id/btn_enviar_avaliacao"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_comentario"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="top" />
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:minHeight="100dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -89,10 +100,11 @@
         android:id="@+id/btn_enviar_avaliacao"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Enviar Avaliação"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/til_comentario"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -102,9 +114,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="@+id/btn_enviar_avaliacao"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_enviar_avaliacao"
-        app:layout_constraintStart_toStartOf="@+id/btn_enviar_avaliacao"
+        app:layout_constraintTop_toTopOf="@id/btn_enviar_avaliacao"
+        app:layout_constraintBottom_toBottomOf="@id/btn_enviar_avaliacao"
+        app:layout_constraintStart_toStartOf="@id/btn_enviar_avaliacao"
         app:layout_constraintEnd_toEndOf="@+id/btn_enviar_avaliacao" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

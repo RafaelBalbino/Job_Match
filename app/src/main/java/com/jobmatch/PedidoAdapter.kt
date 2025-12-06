@@ -6,6 +6,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -53,7 +54,7 @@ class PedidoAdapter(
         if (holder.itemViewType == TYPE_CONTRATANTE_VIEW) {
             bindContratanteView(holder as ContratanteViewHolder, pedido)
         } else {
-            bindAutonomoView(holder as AutonomoViewHolder, pedido, position)
+            bindAutonomoView(holder as AutonomoViewHolder, pedido)
         }
     }
 
@@ -65,11 +66,28 @@ class PedidoAdapter(
         notifyDataSetChanged()
     }
 
+    // Função para definir a cor do status
+    private fun setStatusColor(statusTextView: TextView, status: String, context: Context) {
+        val backgroundColor = when (status.lowercase()) {
+            "pendente" -> R.color.status_pendente // Amarelo
+            "aceito" -> R.color.status_aceito   // Verde
+            "finalizado" -> R.color.status_concluido // Azul
+            "concluido_pelo_autonomo" -> R.color.status_concluido_autonomo // Roxo
+            "cancelado", "negado" -> R.color.status_negado   // Vermelho
+            else -> R.color.cinza_claro
+        }
+        statusTextView.setBackgroundColor(ContextCompat.getColor(context, backgroundColor))
+        statusTextView.setTextColor(ContextCompat.getColor(context, R.color.branco)) // Texto sempre branco
+    }
+
     // Lógica para a visão do CONTRATANTE
     private fun bindContratanteView(holder: ContratanteViewHolder, pedido: Pedidos) {
         val db = FirebaseFirestore.getInstance()
         val context = holder.itemView.context
-        holder.binding.tvStatusPedido.text = pedido.status.uppercase()
+        
+        val statusText = if (pedido.status == "concluido_pelo_autonomo") "FINALIZADO PELO AUTÔNOMO" else pedido.status.uppercase()
+        holder.binding.tvStatusPedido.text = statusText
+        setStatusColor(holder.binding.tvStatusPedido, pedido.status, context) // Aplica a cor do status
         holder.binding.tvResumoDescricao.text = pedido.descricaoServico
 
         // CORREÇÃO: Lógica da imagem do problema agora usa o campo 'anexos'
@@ -96,9 +114,13 @@ class PedidoAdapter(
         holder.binding.tvNomeLabel.text = "Profissional"
         if (pedido.autonomo.isNotEmpty()) {
             holder.binding.tvNomeAutonomo.visibility = View.VISIBLE
+            holder.binding.tvNumeroAutonomo.visibility = View.VISIBLE
+            holder.binding.tvEmailAutonomo.visibility = View.VISIBLE
             db.collection("users").document(pedido.autonomo).get().addOnSuccessListener { doc ->
                 val user = doc.toObject(Usuario::class.java)
                 holder.binding.tvNomeAutonomo.text = user?.nome
+                holder.binding.tvNumeroAutonomo.text = user?.numeroTelefone
+                holder.binding.tvEmailAutonomo.text = user?.email
                 holder.binding.imgAutonomoPerfil.load(user?.fotoUrl) { 
                     placeholder(R.drawable.ic_profile_placeholder)
                     error(R.drawable.ic_profile_placeholder)
@@ -106,8 +128,14 @@ class PedidoAdapter(
             }
         } else {
             holder.binding.tvNomeAutonomo.text = "Procurando..."
+            holder.binding.tvNumeroAutonomo.visibility = View.GONE
+            holder.binding.tvEmailAutonomo.visibility = View.GONE
             holder.binding.imgAutonomoPerfil.setImageResource(R.drawable.ic_profile_placeholder)
         }
+
+        // Oculta todos os botões por padrão
+        holder.binding.botoesContratanteContainer.visibility = View.GONE
+        holder.binding.btnAvaliarServico.visibility = View.GONE
 
         when (pedido.status) {
             "pendente" -> {
@@ -126,14 +154,27 @@ class PedidoAdapter(
                     showConfirmationDialog(context, "Concluir Serviço", "Deseja marcar este serviço como concluído?", "finalizado", pedido)
                 }
             }
+            "concluido_pelo_autonomo" -> {
+                holder.binding.btnAvaliarServico.visibility = View.VISIBLE
+                holder.binding.btnAvaliarServico.setOnClickListener {
+                    val intent = Intent(context, TelaAvaliacao::class.java).apply {
+                        putExtra("PEDIDO_ID", pedido.id)
+                        putExtra("AUTONOMO_ID", pedido.autonomo)
+                        putExtra("DESCRICAO_SERVICO", pedido.descricaoServico) // Passa a descrição do serviço
+                    }
+                    context.startActivity(intent)
+                }
+            }
+            // Para status "finalizado", "cancelado", etc., nenhum botão de ação é mostrado.
             else -> {
-                holder.binding.botoesContratanteContainer.visibility = View.GONE
+                 holder.binding.botoesContratanteContainer.visibility = View.GONE
+                 holder.binding.btnAvaliarServico.visibility = View.GONE
             }
         }
     }
 
     // Lógica para TODAS as visões do AUTÔNOMO
-    private fun bindAutonomoView(holder: AutonomoViewHolder, pedido: Pedidos, position: Int) {
+    private fun bindAutonomoView(holder: AutonomoViewHolder, pedido: Pedidos) {
         val context = holder.itemView.context
         holder.binding.tvNomeContratante.text = pedido.nomeSolicitacao
         holder.binding.tvTelefone.text = pedido.telefoneSolicitante
@@ -142,19 +183,32 @@ class PedidoAdapter(
         holder.binding.tvTipoServico.text = pedido.tipoServico
         holder.binding.tvDescricaoCurta.text = pedido.descricaoServico
         
-        val statusUpper = pedido.status.uppercase()
-        holder.binding.tvStatusPedido.text = statusUpper
+        val statusText = if (pedido.status == "concluido_pelo_autonomo") "FINALIZADO PELO AUTÔNOMO" else pedido.status.uppercase()
+        holder.binding.tvStatusPedido.text = statusText
+        setStatusColor(holder.binding.tvStatusPedido, pedido.status, context) // Aplica a cor do status
 
-        if (userType == "AUTONOMO" && statusUpper == "PENDENTE") {
-            holder.binding.botoesAutonomoContainer.visibility = View.VISIBLE
-            holder.binding.tvStatusPedido.visibility = View.GONE
-        } else {
-            holder.binding.botoesAutonomoContainer.visibility = View.GONE
-            holder.binding.tvStatusPedido.visibility = View.VISIBLE
+        // Oculta todos os botões por padrão
+        holder.binding.botoesAutonomoContainer.visibility = View.GONE
+        holder.binding.btnFinalizarServicoAutonomo.visibility = View.GONE
+        holder.binding.tvStatusPedido.visibility = View.VISIBLE
+
+        when (pedido.status) {
+            "pendente" -> {
+                holder.binding.botoesAutonomoContainer.visibility = View.VISIBLE
+                holder.binding.tvStatusPedido.visibility = View.GONE // Esconde o status para dar lugar aos botões de aceitar/negar
+            }
+            "aceito" -> {
+                holder.binding.btnFinalizarServicoAutonomo.visibility = View.VISIBLE
+            }
         }
         
         holder.binding.btnAceitarPedido.setOnClickListener { showAcceptDialog(pedido, context) }
-        holder.binding.btnNegarPedido.setOnClickListener { negarPedido(position) }
+        holder.binding.btnNegarPedido.setOnClickListener { 
+            showConfirmationDialog(context, "Negar Pedido", "Tem certeza que deseja negar este serviço?", "negado", pedido)
+        }
+        holder.binding.btnFinalizarServicoAutonomo.setOnClickListener {
+            showConfirmationDialog(context, "Finalizar Serviço", "Deseja marcar este serviço como concluído?", "concluido_pelo_autonomo", pedido)
+        }
 
         holder.binding.tvVerDetalhes.setOnClickListener {
             val intent = Intent(context, TelaCriacaoPedido::class.java).apply {
@@ -163,12 +217,6 @@ class PedidoAdapter(
             }
             context.startActivity(intent)
         }
-    }
-    
-    private fun negarPedido(position: Int) {
-        pedidos.removeAt(position)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, pedidos.size)
     }
 
     private fun showConfirmationDialog(context: Context, title: String, message: String, newStatus: String, pedido: Pedidos) {
@@ -188,10 +236,12 @@ class PedidoAdapter(
             .update("status", status)
             .addOnSuccessListener {
                 Toast.makeText(context, "Pedido atualizado com sucesso!", Toast.LENGTH_SHORT).show()
+                // A navegação para avaliação agora é feita pelo contratante, exceto quando ele mesmo finaliza.
                 if (status == "finalizado") {
                     val intent = Intent(context, TelaAvaliacao::class.java).apply {
                         putExtra("PEDIDO_ID", pedido.id)
                         putExtra("AUTONOMO_ID", pedido.autonomo)
+                        putExtra("DESCRICAO_SERVICO", pedido.descricaoServico) // Passa a descrição do serviço
                     }
                     context.startActivity(intent)
                 }
@@ -231,6 +281,7 @@ class PedidoAdapter(
             )
         ).addOnSuccessListener {
             Toast.makeText(context, "Pedido aceito!", Toast.LENGTH_SHORT).show()
+            // CORREÇÃO: Usar o nome de classe correto (letra maiúscula)
             val intent = Intent(context, telaNegocioFechado::class.java)
             context.startActivity(intent)
         }.addOnFailureListener {

@@ -58,6 +58,12 @@ class TelaLogin : AppCompatActivity() {
                 binding.tilSenhaLogin.error = "Senha é obrigatória"
                 return@setOnClickListener
             }
+
+            // Lógica para o usuário de suporte
+            if (email.equals("suportejobmatch@email.com", ignoreCase = true) && senha == "Suporte12#") {
+                navigateToSuporte()
+                return@setOnClickListener
+            }
             
             showLoading(true)
 
@@ -66,13 +72,8 @@ class TelaLogin : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // ETAPA DE VERIFICAÇÃO DE TIPO DE USUÁRIO
-                        // Verifica se é a conta de suporte
-                        if (email.equals("SuporteJobMatch@gmail.com", ignoreCase = true)) {
-                            navigateToSuporte()
-                        } else {
-                            // Se for um usuário normal, verifica o status da conta (bloqueado/ativo)
-                            checkUserStatus()
-                        }
+                        // Se for um usuário normal, verifica o status da conta (bloqueado/ativo)
+                        checkUserStatus()
                     } else {
                         // Trata os erros de login
                         showLoading(false)

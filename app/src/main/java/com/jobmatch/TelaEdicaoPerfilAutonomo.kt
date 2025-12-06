@@ -31,7 +31,7 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
-    private var userId: String? = null
+    private var targetUserId: String? = null // ID do usuário a ser editado
     private var fotoSelecionadaUri: Uri? = null
 
     private val ibgeService: IbgeService by lazy {
@@ -50,7 +50,9 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         storage = FirebaseStorage.getInstance()
-        userId = auth.currentUser?.uid
+
+        // Define qual usuário será editado
+        targetUserId = intent.getStringExtra("USER_ID") ?: auth.currentUser?.uid
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -81,13 +83,13 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
     }
 
     private fun carregarDadosUsuario() {
-        if (userId == null) {
-            Toast.makeText(this, "Erro: Usuário não autenticado.", Toast.LENGTH_LONG).show()
+        if (targetUserId == null) {
+            Toast.makeText(this, "Erro: ID do usuário não encontrado.", Toast.LENGTH_LONG).show()
             finish()
             return
         }
 
-        db.collection("users").document(userId!!).get()
+        db.collection("users").document(targetUserId!!).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
                     val usuario = document.toObject(Usuario::class.java)
@@ -101,7 +103,7 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
                             binding.txtCnpjAutonomo.setText(autonomo.cnpj)
                         }
 
-                        carregarEFormatarEndereco(userId!!)
+                        carregarEFormatarEndereco(targetUserId!!)
 
                         val fotoUrl = it.fotoUrl
                         if (!fotoUrl.isNullOrEmpty()) {
@@ -155,7 +157,7 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
     }
 
     private fun salvarDados() {
-        if (userId == null) return
+        if (targetUserId == null) return
         showLoading(true)
 
         if (fotoSelecionadaUri != null) {
@@ -166,7 +168,7 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
     }
 
     private fun uploadImagemEAtualizarPerfil(uri: Uri) {
-        val storageRef = storage.reference.child("profile_images/$userId.jpg")
+        val storageRef = storage.reference.child("profile_images/$targetUserId.jpg")
         storageRef.putFile(uri)
             .addOnSuccessListener {
                 storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
@@ -203,9 +205,9 @@ class TelaEdicaoPerfilAutonomo : AppCompatActivity() {
         if (cnpj.isNotEmpty()) atualizacoesUsuario["autonomo.cnpj"] = cnpj
         novaFotoUrl?.let { atualizacoesUsuario["fotoUrl"] = it }
 
-        db.collection("users").document(userId!!).update(atualizacoesUsuario)
+        db.collection("users").document(targetUserId!!).update(atualizacoesUsuario)
             .addOnSuccessListener {
-                atualizarEnderecoFirestore(userId!!, cidade, estado)
+                atualizarEnderecoFirestore(targetUserId!!, cidade, estado)
             }
             .addOnFailureListener { e ->
                 showLoading(false)

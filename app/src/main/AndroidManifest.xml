@@ -23,8 +23,12 @@
             android:name=".TelaNegocioAutonomo"
             android:exported="false" />
         <activity
+            android:name=".SobreNosActivity"
+            android:exported="false" />
+        <activity
             android:name=".telaEntrada"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,7 +37,8 @@
         </activity> <!-- Todas as outras telas não são de entrada -->
         <activity
             android:name=".TelaLogin"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".TelaPerfilAutonomo"
             android:exported="false" />
@@ -74,13 +79,16 @@
             android:exported="false" />
         <activity
             android:name=".TelaCodigoSenha"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".TelaRecuperarSenha"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".TelaCadastro"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".CadastrarServico"
@@ -89,6 +97,9 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".FragmentContainerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TelaNegocioFechado"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

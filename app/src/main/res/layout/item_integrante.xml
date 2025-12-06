@@ -44,11 +44,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="LinkedIn"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textStyle="bold"
             android:drawablePadding="4dp"
             app:drawableStartCompat="@drawable/ic_linkedin" 
-            app:drawableTint="?attr/colorPrimary"
+            app:drawableTint="@color/linkedin_blue"
             app:layout_constraintTop_toBottomOf="@+id/tv_nome_integrante"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

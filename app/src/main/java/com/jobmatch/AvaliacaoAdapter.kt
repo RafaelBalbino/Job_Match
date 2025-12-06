@@ -28,8 +28,8 @@ class AvaliacaoAdapter(
                     transformations(CircleCropTransformation())
                 }
 
-                // Agora esta linha funciona, pois o campo foi adicionado à classe Avaliacao
-                tvServicoPrestado.text = "Serviço Prestado: ${avaliacao.servicoNome ?: "Não informado"}"
+                // Correção: Usa o novo campo descricaoServico
+                tvServicoPrestado.text = "Serviço Prestado: ${avaliacao.descricaoServico}"
 
                 avaliacao.dataHora?.let {
                     val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())

@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <!-- Seção de Informações do Usuário -->
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_user_avatar"
             android:layout_width="56dp"
@@ -29,10 +30,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/btn_block_user"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_user_avatar"
             app:layout_constraintTop_toTopOf="@+id/iv_user_avatar"
             tools:text="Nome do Usuário" />
@@ -41,32 +41,63 @@
             android:id="@+id/tv_user_email"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             app:layout_constraintEnd_toEndOf="@+id/tv_user_name"
             app:layout_constraintStart_toStartOf="@+id/tv_user_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_user_name"
             tools:text="usuario.email@example.com" />
 
-        <ImageButton
-            android:id="@+id/btn_block_user"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Bloquear ou Desbloquear Usuário"
-            app:layout_constraintEnd_toStartOf="@+id/btn_delete_user"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_block_24" 
-            app:tint="@android:color/holo_orange_dark"/>
-
-        <ImageButton
-            android:id="@+id/btn_delete_user"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Deletar Usuário"
+        <!-- Linha Divisória -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_delete_24"
-            app:tint="@android:color/holo_red_dark" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_user_avatar" />
+
+        <!-- Seção de Ações -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageButton
+                android:id="@+id/btn_edit_user"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Editar Usuário"
+                app:srcCompat="@drawable/ic_editar_24"
+                app:tint="?attr/colorPrimary" />
+
+            <ImageButton
+                android:id="@+id/btn_block_user"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Bloquear ou Desbloquear Usuário"
+                app:srcCompat="@drawable/ic_block_24"
+                app:tint="@color/status_pendente" />
+
+            <ImageButton
+                android:id="@+id/btn_delete_user"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Deletar Usuário"
+                app:srcCompat="@drawable/ic_delete_24"
+                app:tint="?attr/colorError" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
