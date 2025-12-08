@@ -13,7 +13,7 @@ import com.jobmatch.databinding.ActivityTelaMudancaSucessoBinding
 class TelaMudancaSucesso : AppCompatActivity() {
 
     private lateinit var binding: ActivityTelaMudancaSucessoBinding
-    private val TEMPO_DE_ESPERA: Long = 3000 // 3 segundos
+    private val TEMPO_DE_ESPERA: Long = 7000 // 3 segundos
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

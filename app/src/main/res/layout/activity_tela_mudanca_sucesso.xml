@@ -32,10 +32,10 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="289dp"
-        android:layout_height="54dp"
+        android:layout_width="287dp"
+        android:layout_height="129dp"
         android:layout_marginTop="32dp"
-        android:text="Sua senha foi alterada com sucesso! Agora realize a entrada de sessão pressionando o botão abaixo!"
+        android:text="Foi realizada a solicitação para a mudança de senha! Procure na sua caixa de e-mail para realizar a nova senha! (caso não encontre a mensagem no email principal, procure no lixo eletrônico!)"
         android:textAlignment="center"
         android:textSize="16sp"
         android:textStyle="bold"

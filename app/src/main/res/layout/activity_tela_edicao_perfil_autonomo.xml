@@ -148,8 +148,8 @@
                     android:id="@+id/txt_cidade"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingStart="16dp"
-                    android:gravity="center_vertical" />
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
