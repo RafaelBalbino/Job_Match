@@ -40,9 +40,6 @@ class TelaMenuPerfil : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        // Define uma imagem de placeholder enquanto a foto do perfil carrega
-        binding.imgPerfilUsuario.setImageResource(R.drawable.ic_profile_placeholder)
-
         // Ajusta o padding da tela para não sobrepor as barras do sistema (status bar, etc.)
         ViewCompat.setOnApplyWindowInsetsListener(binding.layoutRootMenu) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

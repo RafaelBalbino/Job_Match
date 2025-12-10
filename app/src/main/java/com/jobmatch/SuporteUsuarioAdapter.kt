@@ -8,7 +8,7 @@ import coil.load
 import com.jobmatch.databinding.ItemUsuarioSuporteBinding
 
 class SuporteUsuarioAdapter(
-    private var userList: List<Usuario>,
+    private var userList: MutableList<Usuario> = mutableListOf(),
     private val listener: OnUserActionListener
 ) : RecyclerView.Adapter<SuporteUsuarioAdapter.UserViewHolder>() {
 
@@ -16,7 +16,7 @@ class SuporteUsuarioAdapter(
     interface OnUserActionListener {
         fun onBlockUser(user: Usuario)
         fun onDeleteUser(user: Usuario)
-        fun onEditUser(user: Usuario) // Adicionada a função para edição
+        fun onEditUser(user: Usuario)
     }
 
     inner class UserViewHolder(val binding: ItemUsuarioSuporteBinding) : RecyclerView.ViewHolder(binding.root)
@@ -58,9 +58,10 @@ class SuporteUsuarioAdapter(
 
     override fun getItemCount() = userList.size
 
-    // Função para atualizar a lista de usuários quando novos dados forem carregados
-    fun updateUsers(newUsers: List<Usuario>) {
-        userList = newUsers
+    // Função para atualizar a lista de usuários de forma segura
+    fun submitList(newUsers: List<Usuario>) {
+        userList.clear()
+        userList.addAll(newUsers)
         notifyDataSetChanged()
     }
 }

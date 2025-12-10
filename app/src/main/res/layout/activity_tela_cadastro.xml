@@ -75,7 +75,7 @@
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/LinhaGuiaDireita"
-        app:layout_constraintStart_toStartOf="@+id/LinhaGuiaEsquerda"
+        app:layout_constraintStart_toStartOf="@id/LinhaGuiaEsquerda"
         app:layout_constraintTop_toBottomOf="@+id/lbl_segundo">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -148,7 +148,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_telefone">
+                app:layout_constraintTop_toBottomOf="@id/til_telefone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_estado"
@@ -173,7 +173,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
-                    android:layout_weight="2.5"
+                    android:layout_weight="2.0"
                     android:hint="Cidade">
 
                     <AutoCompleteTextView
@@ -205,7 +205,7 @@
                 app:endIconMode="password_toggle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ll_location">
+                app:layout_constraintTop_toBottomOf="@id/ll_location">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txt_senha"
@@ -225,7 +225,7 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_senha"
+                app:layout_constraintTop_toBottomOf="@id/til_senha"
                 tools:visibility="visible" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -238,7 +238,7 @@
                 app:endIconMode="password_toggle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_password_restrictions">
+                app:layout_constraintTop_toBottomOf="@id/tv_password_restrictions">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txt_confirmar_senha"
@@ -331,7 +331,7 @@
                 android:text="@string/politicas_de_privacidade"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_specialization" />
+                app:layout_constraintTop_toBottomOf="@id/til_specialization" />
 
             <Button
                 android:id="@+id/btn_envia_cadastro"

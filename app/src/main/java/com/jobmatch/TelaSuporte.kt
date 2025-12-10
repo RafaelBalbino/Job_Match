@@ -18,7 +18,7 @@ class TelaSuporte : AppCompatActivity(), SuporteUsuarioAdapter.OnUserActionListe
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private lateinit var adapter: SuporteUsuarioAdapter
-    private val userList = mutableListOf<Usuario>()
+    private var authStateListener: FirebaseAuth.AuthStateListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,11 +29,36 @@ class TelaSuporte : AppCompatActivity(), SuporteUsuarioAdapter.OnUserActionListe
         auth = FirebaseAuth.getInstance()
 
         setupRecyclerView()
-        loadUsers()
+        setupAuthStateListener()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Começa a ouvir o estado de autenticação
+        authStateListener?.let { auth.addAuthStateListener(it) }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // Para de ouvir para evitar memory leaks
+        authStateListener?.let { auth.removeAuthStateListener(it) }
+    }
+
+    private fun setupAuthStateListener() {
+        authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+            val user = firebaseAuth.currentUser
+            if (user != null) {
+                // O usuário está 100% logado, agora podemos carregar os dados
+                loadUsers()
+            } else {
+                // O usuário fez logout, podemos redirecionar para o login se necessário
+                Log.w("TelaSuporte", "Usuário deslogado, estado do listener mudou.")
+            }
+        }
     }
 
     private fun setupRecyclerView() {
-        adapter = SuporteUsuarioAdapter(userList, this)
+        adapter = SuporteUsuarioAdapter(mutableListOf(), this)
         binding.rvUsuariosSuporte.layoutManager = LinearLayoutManager(this)
         binding.rvUsuariosSuporte.adapter = adapter
     }
@@ -46,21 +71,21 @@ class TelaSuporte : AppCompatActivity(), SuporteUsuarioAdapter.OnUserActionListe
                 binding.progressBar.visibility = View.GONE
                 if (!documents.isEmpty) {
                     val allUsers = documents.toObjects(Usuario::class.java)
-                    // Filtra para não exibir a própria conta de suporte
                     val filteredUsers = allUsers.filter { it.email != "suportejobmatch@email.com" }
-                    userList.clear()
-                    userList.addAll(filteredUsers)
-                    adapter.updateUsers(userList)
+                    adapter.submitList(filteredUsers)
                 } else {
                     Toast.makeText(this, "Nenhum usuário encontrado.", Toast.LENGTH_SHORT).show()
                 }
             }
             .addOnFailureListener { e ->
                 binding.progressBar.visibility = View.GONE
-                Toast.makeText(this, "Erro ao carregar usuários: ${e.message}", Toast.LENGTH_SHORT).show()
+                // Este erro não deve mais acontecer
+                Toast.makeText(this, "Erro ao carregar usuários: ${e.message}", Toast.LENGTH_LONG).show()
+                Log.e("TelaSuporte", "Erro de permissão do Firestore", e)
             }
     }
 
+    // ... (o resto das suas funções onEditUser, onBlockUser, onDeleteUser permanecem iguais)
     override fun onEditUser(user: Usuario) {
         val targetActivity = if (user.autonomo != null) {
             TelaEdicaoPerfilAutonomo::class.java

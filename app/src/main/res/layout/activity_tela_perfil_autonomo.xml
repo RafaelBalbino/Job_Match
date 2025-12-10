@@ -18,7 +18,7 @@
             android:id="@+id/tbPerfilAutonomo"
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
-            android:background="#009688"
+            android:background="?attr/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -33,7 +33,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tbPerfilAutonomo"
             app:srcCompat="@drawable/ic_voltar_24"
-            app:tint="#FFFFFF" />
+            app:tint="?attr/colorOnPrimary" />
 
         <ImageView
             android:id="@+id/imgViewCompartilhar"
@@ -45,7 +45,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tbPerfilAutonomo"
             app:srcCompat="@drawable/ic_compartilhar_24"
-            app:tint="#FFFFFF" />
+            app:tint="?attr/colorOnPrimary" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/LinhaGuiaCabecalho"
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Nome Perfil Autonomo"
-            android:textColor="#000000"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="(99) 99999-9999"
-            android:textColor="#555555"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="16sp"
             android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,11 +83,11 @@
             android:id="@+id/txtViewEndereco"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#555555"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtViewTelefone"
+            app:layout_constraintTop_toBottomOf="@id/txtViewTelefone"
             tools:text="Cidade - Estado" />
 
         <FrameLayout
@@ -98,7 +98,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtViewEndereco">
+            app:layout_constraintTop_toBottomOf="@id/txtViewEndereco">
 
             <ImageView
                 android:id="@+id/imgViewBG_Perfil"
@@ -106,7 +106,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="Imagem de Fundo do Perfil"
                 android:scaleType="centerCrop"
-                android:background="#CCCCCC" />
+                android:background="?attr/colorSurfaceVariant" />
 
             <ImageView
                 android:id="@+id/imgViewPerfil_Icon"
@@ -114,7 +114,7 @@
                 android:layout_height="64dp"
                 android:layout_gravity="center"
                 android:contentDescription="Ícone de Perfil Padrão"
-                app:tint="#333333"
+                app:tint="?attr/colorOnSurfaceVariant"
                 android:alpha="0.8"
                 app:srcCompat="@drawable/ic_usuario_padrao_24" />
 
@@ -134,7 +134,7 @@
             app:layout_constraintEnd_toStartOf="@+id/btnEditarPerfil"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frmLayoutPerfil"
+            app:layout_constraintTop_toBottomOf="@id/frmLayoutPerfil"
             app:layout_constraintWidth_max="250dp" />
 
         <Button
@@ -151,7 +151,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@+id/btnCadastrarServico"
-            app:layout_constraintTop_toTopOf="@+id/btnCadastrarServico"
+            app:layout_constraintTop_toTopOf="@id/btnCadastrarServico"
             app:layout_constraintWidth_max="250dp" />
 
         <HorizontalScrollView
@@ -182,8 +182,8 @@
                     android:paddingVertical="8dp"
                     android:text="Popular"
                     android:textSize="18sp"
-                    android:textColor="#FFFFFF"
-                    android:background="#009688"
+                    android:textColor="@color/branco"
+                    android:background="@color/verde_agua"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -196,7 +196,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:text="Meus Serviços"
-            android:textColor="#000000"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -212,7 +212,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtViewServicos" />
+            app:layout_constraintTop_toBottomOf="@id/txtViewServicos" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/containerServicos"

@@ -25,7 +25,7 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header" />
+        app:layout_constraintTop_toBottomOf="@id/header" />
 
     <!-- Found State: Results RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
@@ -38,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header"
+        app:layout_constraintTop_toBottomOf="@id/header"
         app:spanCount="2"
         tools:listitem="@layout/item_servico_encontrado"
         tools:visibility="gone" />
@@ -53,7 +53,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header" />
+        app:layout_constraintTop_toBottomOf="@id/header" />
         
     <!-- Error/Not Found State: -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,7 +64,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header"
+        app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintVertical_bias="0.3"
         tools:visibility="visible">
 
@@ -85,12 +85,12 @@
             android:layout_marginTop="16dp"
             android:text="@string/item_nao_encontrado"
             android:textAlignment="center"
-            android:textColor="@color/preto"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/error_image" />
+            app:layout_constraintTop_toBottomOf="@id/error_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

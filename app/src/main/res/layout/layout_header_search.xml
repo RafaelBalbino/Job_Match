@@ -28,10 +28,10 @@
         android:textColor="?attr/colorOnPrimary"
         android:textSize="25sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/back_button"
+        app:layout_constraintBottom_toBottomOf="@id/back_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/back_button" />
+        app:layout_constraintTop_toTopOf="@id/back_button" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/search_card"
@@ -58,6 +58,7 @@
                 app:boxBackgroundMode="none"
                 app:hintEnabled="false"
                 app:startIconDrawable="@drawable/ic_pesquisa_24"
+                app:startIconTint="?android:attr/textColorHint"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -82,7 +83,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_filtro_24" />
+                app:srcCompat="@drawable/ic_filtro_24"
+                app:tint="?android:attr/textColorSecondary" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

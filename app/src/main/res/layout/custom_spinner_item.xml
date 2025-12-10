@@ -7,7 +7,7 @@
     android:gravity="center_vertical"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
-    android:textColor="@color/preto"
+    android:textColor="?android:attr/textColorPrimary"
     android:minHeight="48dp"
-    android:textColorHint="@color/preto"/>
+    android:textColorHint="?android:attr/textColorHint"/>
 

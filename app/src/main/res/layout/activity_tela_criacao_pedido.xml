@@ -5,6 +5,7 @@
     android:id="@+id/Main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="20dp"
     tools:context=".TelaCriacaoPedido">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -18,8 +19,9 @@
             style="@style/Widget.App.Toolbar.Centered"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_voltar_24"
             app:title="@string/creation_pedido_title"
-            app:navigationIcon="@drawable/ic_voltar_24" />
+            app:titleTextColor="?attr/colorOnPrimary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
