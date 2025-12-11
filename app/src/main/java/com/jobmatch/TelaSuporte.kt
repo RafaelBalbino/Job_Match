@@ -34,8 +34,18 @@ class TelaSuporte : AppCompatActivity(), SuporteUsuarioAdapter.OnUserActionListe
 
     override fun onStart() {
         super.onStart()
-        // Começa a ouvir o estado de autenticação
+        // Começa a ouvir o estado de autenticação para detectar logouts
         authStateListener?.let { auth.addAuthStateListener(it) }
+
+        // Carrega os usuários sempre que a tela se torna visível
+        // Isso garante que a lista esteja atualizada após edições.
+        if (auth.currentUser != null) {
+            loadUsers()
+        } else {
+            // Se não há usuário logado, não há o que carregar.
+            // O AuthStateListener pode lidar com o redirecionamento se necessário.
+            Log.w("TelaSuporte", "Nenhum usuário logado para carregar a lista.")
+        }
     }
 
     override fun onStop() {
@@ -46,13 +56,13 @@ class TelaSuporte : AppCompatActivity(), SuporteUsuarioAdapter.OnUserActionListe
 
     private fun setupAuthStateListener() {
         authStateListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
-            if (user != null) {
-                // O usuário está 100% logado, agora podemos carregar os dados
-                loadUsers()
-            } else {
+            if (firebaseAuth.currentUser == null) {
                 // O usuário fez logout, podemos redirecionar para o login se necessário
                 Log.w("TelaSuporte", "Usuário deslogado, estado do listener mudou.")
+                // Opcional: Redirecionar para a tela de login
+                // val intent = Intent(this, TelaLogin::class.java)
+                // intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                // startActivity(intent)
             }
         }
     }
@@ -110,7 +120,7 @@ class TelaSuporte : AppCompatActivity(), SuporteUsuarioAdapter.OnUserActionListe
                 user.uid?.let {
                     db.collection("users").document(it)
                         .update("isBlocked", newBlockedStatus)
-                        .addOnSuccessListener { 
+                        .addOnSuccessListener {
                             Toast.makeText(this, "Usuário $pastParticiple com sucesso!", Toast.LENGTH_SHORT).show()
                             loadUsers() // Recarrega a lista para refletir a mudança
                         }
