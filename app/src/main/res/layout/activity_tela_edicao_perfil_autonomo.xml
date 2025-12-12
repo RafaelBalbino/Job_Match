@@ -44,7 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="2dp"
             android:layout_marginTop="16dp"
-            android:background="@color/verde_agua"
+            android:background="?attr/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnVoltarPerfilAutonomo" />
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/edit_profile_section_personal"
-            android:textColor="@color/verde_agua"
+            android:textColor="?attr/colorPrimary"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -103,7 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="phone" />
-        </com.google.android.material.textfield.TextInputLayout>
+        </end.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:id="@+id/ll_location_edit_autonomo"
@@ -200,7 +200,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/edit_profile_section_photo"
-            android:textColor="@color/verde_agua"
+            android:textColor="?attr/colorPrimary"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
