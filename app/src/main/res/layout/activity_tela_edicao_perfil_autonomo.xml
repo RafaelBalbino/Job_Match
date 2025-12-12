@@ -19,12 +19,14 @@
             style="@style/Widget.Material3.Button.IconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="26dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:contentDescription="@string/voltar_icone_descricao"
             app:icon="@drawable/ic_voltar_24"
             app:iconSize="28dp"
-            app:iconTint="?attr/colorPrimary" />
+            app:iconTint="?attr/colorPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView5"
@@ -103,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="phone" />
-        </end.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:id="@+id/ll_location_edit_autonomo"
